@@ -1,0 +1,116 @@
+:root {
+    --grey: #F2F2F2;
+    --chaki: #274001;
+    --moss: #467302;
+    --green: #72A603;
+    --brgreen: #C0D904;
+    --white: #FFF;
+    --black: #000;
+    --title: 'Barlow Condensed', sans-serif;
+    --text: 'Montserrat Alternates', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--grey);
+}
+
+/* -----------navigation style ------------------*/
+
+nav {
+    margin: 0 auto;
+    font-family: var(--title);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-weight:500;
+    font-size: 1.2em;
+    max-width: 1200px;
+}
+
+.nav-ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    margin: 0;
+    padding:0 1em;
+}
+
+.nav-li {
+    list-style-type: none;
+    color: var(--black);
+    display: flex;
+    padding: 0.5em;
+    align-items: center;
+    margin: 0.5em;
+}
+
+.nav-li a {
+    text-decoration: none;
+    color: var(--black);
+}
+
+.nav-li:first-child {
+    margin-right: auto;
+    font-weight: bold;
+    font-size: 1.5em;
+    font-family: var(--text);
+}
+
+.nav-ul .icon{
+    font-size: 1.2em;
+    color: var(--brgreen);
+}
+
+.dropdown-parent-el {
+    position: relative;
+}
+
+.dropdown-ul {
+    display: none;
+    position: absolute;
+    bottom: -4.5em;
+    right: 0; 
+    background-color: var(--grey);
+    box-shadow: -1px 2px 5px var(--chaki);
+    list-style-type: none;
+    margin: 0;
+    padding: 0.5em;
+    font-size: smaller;
+    gap: 0.5em;
+}
+
+.dropdown-ul .icon{
+    color: black;
+    font-size: smaller;
+    padding-left: 0.7em;
+}
+
+/* nav :hover styles */
+.nav-li:hover {
+    box-shadow: -1px 2px 5px var(--chaki);
+}
+
+.nav-li:last-child:hover, .nav-li:first-child:hover {
+    box-shadow: none;
+}
+
+.dropdown-parent-el:hover .dropdown-ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdown-parent-el:hover .icon{
+    color: var(--chaki)
+}
+
+.nav-more-li:hover .icon, .nav-more-li:hover a{
+    color: var(--moss);
+}
+/* -----------END OF navigation style ------------------*/
