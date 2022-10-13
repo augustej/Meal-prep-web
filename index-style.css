@@ -38,6 +38,8 @@ nav {
     align-items: stretch;
     margin: 0;
     padding:0 1em;
+    flex-flow: row wrap;
+
 }
 
 .nav-li {
@@ -82,12 +84,18 @@ nav {
     padding: 0.5em;
     font-size: smaller;
     gap: 0.5em;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .dropdown-ul .icon{
     color: black;
     font-size: smaller;
     padding-left: 0.7em;
+}
+.menu-icon, .mobile{
+    display:none;
 }
 
 /* nav :hover styles */
@@ -101,9 +109,6 @@ nav {
 
 .dropdown-parent-el:hover .dropdown-ul {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .dropdown-parent-el:hover .icon{
@@ -112,5 +117,88 @@ nav {
 
 .nav-more-li:hover .icon, .nav-more-li:hover a{
     color: var(--moss);
+}
+.text-for-icon {
+    display: none;
+}
+
+@media (max-width: 860px) {
+
+    .nav-li:first-child {
+        flex-basis: 100%;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1em;
+        font-family: var(--text);
+        margin: 0.2em auto;
+        padding-bottom: 0;
+    }
+    .nav-li {
+        padding: 0.2em;
+    }
+    .nav-ul {
+        justify-content: space-evenly;
+    }
+    .dropdown-ul {
+        bottom: -5.2em;
+    }
+}
+
+@media (max-width: 715px) {
+
+    .nav-ul {
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+    }
+    .nav-li{
+        margin: 1em;
+        font-size: 0.8em;
+    }
+    .text-for-icon {
+        display: block;
+    }
+    .dropdown-ul {
+        bottom: -5.5em;
+    }
+}
+
+@media (max-width: 600px) {
+    .nav-ul{
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+    }
+    .nav-li{
+        display:none;
+        padding: 0.2em;
+        margin: 0;
+    } 
+    
+    .menu-icon {
+        display: inline;
+        align-self: stretch;
+        margin: 0.2em;
+    }
+    .nav-li:first-child {
+        display: flex;
+        flex-basis: 100%;
+        margin: 0;
+    }
+    /* responsive */
+    .responsive{
+        display: flex;       
+        flex-direction: column;
+        align-items: flex-start;
+    } 
+
+    .responsive .nav-li:first-child {
+        margin: 0 auto;
+    }
+
+    .responsive .nav-li {
+        box-shadow: none;
+    }
 }
 /* -----------END OF navigation style ------------------*/
