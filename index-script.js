@@ -1,3 +1,4 @@
+// Creating navigation burger
 function mobileNavTransformation() {
     var mobileNavItems = document.querySelectorAll('.web-mob, .mobile, .nav-ul');
 
@@ -12,3 +13,9 @@ function mobileNavTransformation() {
         }
     })
 }
+
+// Importing current date into HTML
+var dateElementInHtml = document.querySelector('#date');
+var date = new Date();
+var year = date.getFullYear();
+dateElementInHtml.textContent = year;
