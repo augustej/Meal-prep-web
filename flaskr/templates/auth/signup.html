@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="block-content">
+    <h1>Registracija</h1>
+    <section class="inner-block">
+    <form class="signup-form reg-form" method="POST">
+        <div class="outer">
+            <div class="inner">
+                <label for="signup-email">El. paštas:</label>
+                <input type="email" id="signup-email" name="signup-email" required/>
+            </div>
+            <div class="inner">
+                <label>Vardas:</label>
+                <input type="text" id="signup-name" name="signup-name" required/>
+            </div>
+            <div class="inner">
+                <label for="signup-password1">Slaptažodis:</label>
+                <input type="password" id="signup-password1" name="signup-password1" required />
+            </div>
+            <div class="inner">
+                <label for="signup-password2">Slaptažodis:</label>
+                <input type="password" id="signup-password2" name="signup-password2" required />
+            </div>
+        </div>
+        <div class="button-highlight">
+            <button class="button" type="submit">Registruotis</button>
+        </div>
+    </form>
+
+    </section>
+
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="block-content">
+    <h1>Paieška</h1>
+    <section class="inner-block">
+    <form class="search-form reg-form" method="POST">
+        <div class="outer">
+            <div class="inner">
+                <label for="search-input">Įveskite raktažodį:</label>
+                <input type="text" id="search-input" name="search-input" required/>
+            </div>
+        <div class="button-highlight">
+            <button class="button" type="submit">Ieškoti</button>
+        </div>
+    </form>
+
+    </section>
+
+</section>{% endblock %}
