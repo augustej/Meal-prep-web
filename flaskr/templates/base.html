@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savaitės Meniu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,400;1,700&family=Comforter+Brush&display=swap" rel="stylesheet">
+    <link href="../static/index-style.css" rel="stylesheet" />
+
+</head>
+<body>
+    <nav>
+        <ul class="nav-ul">
+            <li class="nav-li title">
+                <a href="/">
+                    Savaitės Meniu
+                </a>            
+                <a href="javascript:void(0);" class="icon menu-icon nav-li" onclick="mobileNavTransformation()">
+                    <i class="fa-solid fa-bars"></i>
+                </a>
+            </li>
+            <li class="nav-li home web-mob">
+                <a href="/">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </li>
+            <li class="nav-li recipes web-mob"><a href="recipes">Receptai</a></li>
+            <li class="nav-li week-plan web-mob"><a href="calendar">Planas</a></li>
+            <li class="nav-li shop-list web-mob"><a href="groc_list">Prekių sąrašas</a></li>
+            <li class="nav-li search web-mob"><a href="search"><i class="fa-solid fa-magnifying-glass icon"></i></a></li>
+        </ul>
+    </nav>
+    <div class="divider"></div>
+
+    {% block content %}
+
+    {% endblock %}
+
+    <footer>
+        <small>
+            <i class="fa-solid fa-carrot icon"></i>
+            Sukurta lengvesniam gyvenimui
+            <i class="fa-solid fa-carrot icon"></i>
+        </small>
+        <small>        
+            &#169<span id="date"></span> &middot&middot&middot Augustė Jan
+        </small>
+    </footer>
+    <script src="../static/index-script.js"></script>
+    <script src="https://kit.fontawesome.com/4d9826a017.js" crossorigin="anonymous"></script>
+</body>
+</html>
