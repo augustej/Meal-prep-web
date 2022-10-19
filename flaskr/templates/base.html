@@ -22,15 +22,15 @@
                     <i class="fa-solid fa-bars"></i>
                 </a>
             </li>
-            <li class="nav-li home web-mob">
+            <li class="nav-li home web-mob {% block navhome %} {% endblock %}">
                 <a href="/">
                     <i class="fa-solid fa-house"></i>
                 </a>
             </li>
-            <li class="nav-li recipes web-mob"><a href="recipes">Receptai</a></li>
-            <li class="nav-li week-plan web-mob"><a href="calendar">Planas</a></li>
-            <li class="nav-li shop-list web-mob"><a href="groc_list">Prekių sąrašas</a></li>
-            <li class="nav-li search web-mob"><a href="search"><i class="fa-solid fa-magnifying-glass icon"></i></a></li>
+            <li class="nav-li recipes web-mob {% block navrecipes %} {% endblock %}" ><a href="recipes">Receptai</a></li>
+            <li class="nav-li week-plan web-mob {% block navcalendar %} {% endblock %}"><a href="calendar">Planas</a></li>
+            <li class="nav-li shop-list web-mob {% block navgroceries %} {% endblock %}"><a href="groc_list">Prekių sąrašas</a></li>
+            <li class="nav-li search web-mob {% block navsearch %} {% endblock %}"><a href="search"><i class="fa-solid fa-magnifying-glass icon"></i></a></li>
         </ul>
     </nav>
     <div class="divider"></div>
@@ -39,15 +39,48 @@
 
     {% endblock %}
 
+    <div class="divider"></div>
+
     <footer>
-        <small>
-            <i class="fa-solid fa-carrot icon"></i>
-            Sukurta lengvesniam gyvenimui
-            <i class="fa-solid fa-carrot icon"></i>
-        </small>
-        <small>        
-            &#169<span id="date"></span> &middot&middot&middot Augustė Jan
-        </small>
+
+        <div class="footer-nav">
+            <h2>Savaitės Meniu</h2>
+            <ul>
+                <li><a href="/">Pagrindinis</a></li>
+                <li><a href="recipes">Receptai</a></li>
+                <li><a href="calendar">Maisto planas</a></li>
+                <li><a href="groc_list">Prekių sąrašas</a></li>
+                <li><a href="register">Registruotis</a></li>
+                <li><a href="/">Sąlygos</a></li>
+            </ul>
+        </div>
+
+        <div class="divider mobile-visible"></div>
+
+        <div class="message-me">
+            <section class="contact-me form-style">
+                <h2>Parašyk!</h2>
+                <div class="decoration-line"></div>
+                <form>
+                    <label for="#message-theme">Tema</label>
+                    <input type="text" id="message-theme" required>
+                    <label for="#message-email">El. paštas</label>
+                    <input type="email" id="message-email" required>
+                    <label for="#message-text">Žinutė</label>
+                    <textarea id="message-text" required></textarea>
+                    <button class="button">Siųsti</button>
+                </form>
+            </section>
+        </div>
+
+        <div class="copyrights">
+            <small>
+                Sukurta lengvesniam gyvenimui
+            </small>
+            <small>        
+                &#169<span id="date"></span> &middot&middot&middot Savaitės Meniu &middot&middot&middot Augustė Jan
+            </small>
+        </div>
     </footer>
     <script src="../static/index-script.js"></script>
     <script src="https://kit.fontawesome.com/4d9826a017.js" crossorigin="anonymous"></script>
