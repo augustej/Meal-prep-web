@@ -35,6 +35,16 @@
     </nav>
     <div class="divider"></div>
 
+    {% with messages= get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for message in messages %}
+                {{message}}
+            {% endfor%}
+        {% endif %}
+    {% endwith%}
+
+
+
     {% block content %}
 
     {% endblock %}
@@ -52,6 +62,7 @@
                 <li><a href="groc_list">Prekių sąrašas</a></li>
                 <li><a href="register">Registruotis</a></li>
                 <li><a href="/">Sąlygos</a></li>
+                <li><a href="logout">Atsijungti</a></li>
             </ul>
         </div>
 
