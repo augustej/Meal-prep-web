@@ -1,9 +1,9 @@
 :root {
-    --grey: #cecdcd;
-    --chaki: #5f396b;
-    --moss: #5f396b;
-    --green: #5f396b;
-    --brgreen: #5f396b;
+    --grey: rgb(206, 205, 205);
+    --brgrey: rgb(242, 242, 242);
+    --textgrey: rgb(83, 81, 81);
+    --purple: #6b3964;
+    --orange: #f0b95a;
     --white: #FFF;
     --black: #000;
     --title: 'Comforter Brush', cursive;
@@ -20,19 +20,28 @@ body {
     background-color: var(--white);
     font-family: var(--text);
     color: var(--black);
+}
 
+h1{
+    font-family: var(--text);
+    font-weight: 500;
+    font-size: 1.5em;
+    color: var(--purple);
 }
 
 h2{
     font-weight: 300;
-    font-size: 1.3em;
+    font-size: 2em;
     padding-top: 0.5em;
+    letter-spacing: 0.05em;
+    font-family: var(--title);
+
 }
 
 .decoration-line {
     height: 3px;
     width: 10%;
-    background-color: var(--green);
+    background-color: var(--purple);
     border-radius: 5px;
 }
 
@@ -69,7 +78,7 @@ nav {
     display: flex;
     padding: 0 0.5em;
     align-items: center;
-    margin: 0.5em 0 0.2em 0;
+    margin: 0.5em 0 0 0;
 }
 
 .nav-li a {
@@ -92,23 +101,16 @@ nav {
 
 .nav-ul .icon{
     font-size: 1.1em;
-    color: var(--brgreen);
+    color: var(--purple);
 }
 
 .menu-icon, .mobile{
     display:none;
 }
 
-
-@media (max-width: 860px) {
-
-    .nav-li {
-        padding: 0 0.2em;
-    }
-    .nav-ul {
-        justify-content: space-evenly;
-    }
-} 
+.active{
+    border-bottom: 2px solid var(--purple);
+}
 
 @media (max-width: 785px) {
     .nav-ul{
@@ -155,34 +157,29 @@ nav {
 /* ------------INTRODUCTION SECTION ------------------- */
 
 .introduction{
-    max-width: 1000px;
+    background-color: var(--brgrey);
     margin: 0 auto;
-    padding: 1em;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+}
+
+.introduction-elements{
+    margin: 0 auto;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
 }
 
 .introduction img {
-    margin-top: 1em;
-    grid-column: 5/11;
-    grid-row: 1/9;
-    width: 100%;
-    height: 400px;
+    width: 50%;
+    height: 500px;
     object-fit: cover;
-    box-shadow: -1px 3px 10px var(--black);
-    border-radius: 10px;
+    box-shadow: 2px -3px 10px var(--black);
 }
 
 .introduction .text-section {
-    background-color: rgba(255, 255, 255, 0.9);
-    margin: 2em;
     padding: 2em;
-    grid-column: 1/8;
-    grid-row: 2/11;
-    z-index: 1;
-    box-shadow: -1px 2px 5px var(--moss);
-    border-radius: 10px;
 }
 
 .introduction .text-section li {
@@ -194,46 +191,72 @@ nav {
 
 .introduction h1{
     margin: 0.2em;
-    font-weight: 500;
-    font-size: 2em;
     text-transform: uppercase;
+    font-weight: 700;
+}
+
+.introduction h1 .text-highlight{
+    text-transform: none;
+    padding: 0.2em;
+    color: var(--black);
+    font-weight: 100;
+
 }
 
 .introduction .text-highlight{
-    font-size: 1.5em;
-    color: var(--green);
+    font-size: 2em;
+    color: var(--purple);
     padding: 0.5em;
+    font-family: var(--title);
 }
 
+@media (max-width: 950px) {
+
+    .introduction h1{
+        display: flex;
+        flex-direction: column;
+    }
+    .introduction h1 .text-highlight{
+        flex-basis: 100%;
+    }
+}
+
+
 @media (max-width: 715px) {
-    .introduction{
-        grid-template-rows: repeat(7, 1fr);
-    }
-    .introduction img {
-        height: 200px;
-        grid-column: 1/10;
-        grid-row: 1/5;
-    }
-    .introduction .text-section {
-        margin: 2em 0;
-        grid-column: 2/11;
-        grid-row: 2/8;
-        padding: 1em;
-    }
+    .introduction-elements{
+        flex-direction: column-reverse;    }
+
     .introduction .text-section li {
-        margin-left:-1.2em;
-        padding: 0.2em;
+        padding: 0.5em;
         line-height: 1em;
         list-style: none;
     }
     .introduction .text-highlight{
         font-size: 1em;
-        color: var(--green);
+        color: var(--purple);
+        font-family: var(--text);
+        font-style: italic;
         padding: 0;
     }
+
     .introduction h1{
+        display: inline;
+    }
+
+    .introduction h1 .text-highlight {
         font-size: 1.5em;
-        margin-bottom: -1em;
+        font-family: var(--title);
+    }
+
+    .introduction img{
+        height: 200px;
+        width:100%;
+    }
+}
+@media (max-width: 450px) {
+    .introduction h1{
+        display: flex;
+
     }
 }
 
@@ -242,92 +265,141 @@ nav {
 /* _________________Login-prompt ------------ */
 
 .login-prompt {
-    background-color: #274001;
-    color: var(--grey);
+    background-color: var(--purple);
+    color: var(--white);
     padding: 2em;
     text-align: center;
-    font-size: 1.2em;
 }
 
 .login-prompt p{
     margin-top: 0;
+    font-style: italic;
 }
 
 .button h2{
     padding: 0;
     margin: 0;
-    font-weight: inherit;
+    font-family: var(--text);
+    font-weight: 700;
+    letter-spacing: 0.005em;
+    font-size: large;
+
 }
 
 .button {
-    border-radius: 15px;
-    padding: 0.5em 2.5em;
-    font-family: var(--title);
+    padding: 1em 2.5em;
+    font-family: var(--text);
     text-transform: uppercase;
-    font-weight: 500;
-    letter-spacing: 0.2em;
     border: none;
+    background-color: var(--orange);
+    color: var(--white);
 }
 
 .button:hover {
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: var(--black);
 }
 
 /* _________________Login-prompt END ------------ */
+
+/* _________________FOOTER ------------ */
+
+footer {
+    margin: 0 auto;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.3em;
+    padding: 1em;
+    color: var(--textgrey);
+}
+
+.footer-nav ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-nav a{
+    text-decoration: none;
+    color: var(--textgrey);
+    font-size: 0.8em;
+    line-height: 2em;
+}
+
+.footer-nav h2{
+    font-family: var(--text);
+    font-size: medium;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
 /* _________________CONTACT ME ------------ */
 
+.message-me{
+    flex-basis: 70%;
+}
+
 .form-style{
-    padding: 1em;
+    padding:0 1em 1em 1em;
     max-width: 800px;
     margin: 1em auto;
 }
 
-.form-style p{
-    margin: 0;
-    padding: 0;
-    text-align: center;
+.form-style h2{
+    margin-top:0;
+    padding-top:0;
 }
+
 .form-style form{
-    background-color: #FFF;
+    background-color: var(--brgrey);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 1em;
     gap: 1em;
-    border-radius: 10px;
-    box-shadow: -1px 2px 5px var(--moss);
     margin-top: 1em;
 }
 .form-style form label {
     flex-basis: 20%;
     text-align: right;
+    color: var(--purple);
+    text-transform: uppercase;
+    font-size: smaller;
+    font-weight: 600;
 }
 .form-style form input, .form-style form textarea {
     flex-basis: 70%;
-    background-color: var(--grey);
+    background-color: var(--white);
     border: none;
     box-shadow: 1px 0px 2px rgba(39, 64, 1, 0.5);
     font-family: var(--text);
     padding: 0.5em;
 }
-
-.form-style .button:hover{
-    box-shadow: 1px 0px 3px rgba(39, 64, 1, 0.5);
-}
-
 /* _________________END CONTACT ME ------------ */
 
+.mobile-visible{
+    display:none;
+}
 
-/* _________________FOOTER ------------ */
-
-footer {
+.copyrights{
+    margin-top: 2em;
+    flex-basis: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.3em;
-    padding: 1em;
-    color: black;
+}
+
+@media (max-width: 600px){
+    .message-me{
+        flex-basis: 100%;
+    }
+    .mobile-visible{
+        margin:1em 0;
+        display:flex;
+    }
 }
 
 /* _________________FOOTER  end------------ */
@@ -336,7 +408,7 @@ footer {
 
 .block-content{
     max-width: 800px;
-    box-shadow: 0px 3px 8px var(--chaki);
+    box-shadow: 0px 3px 8px var(--purple);
     margin: 0 auto;
     padding: 0;
     display: flex;
@@ -344,7 +416,7 @@ footer {
     justify-content: center;
     align-self: center;
     background-color: var(--grey);
-    color: var(--chaki);
+    color: var(--purple);
 }
 
 .inner-block{
@@ -404,12 +476,12 @@ footer {
     flex-basis: 70%;
 }
 .reg-form .button{
-    background-color: var(--chaki);
+    background-color: var(--purple);
     color: var(--grey)
 }
 .reg-form .button:hover{
     background-color: rgba(39, 64, 1, 0.2);
-    color: var(--chaki)
+    color: var(--purple)
 }
 .button-highlight{
     width: 100%;
