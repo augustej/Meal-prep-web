@@ -1,13 +1,13 @@
 :root {
-    --grey: #F2F2F2;
-    --chaki: #274001;
-    --moss: #467302;
-    --green: #72A603;
-    --brgreen: #C0D904;
+    --grey: #cecdcd;
+    --chaki: #5f396b;
+    --moss: #5f396b;
+    --green: #5f396b;
+    --brgreen: #5f396b;
     --white: #FFF;
     --black: #000;
-    --title: 'Barlow Condensed', sans-serif;
-    --text: 'Montserrat Alternates', sans-serif;
+    --title: 'Comforter Brush', cursive;
+    --text: 'Bitter', serif;
 }
 
 * {
@@ -17,18 +17,13 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--grey);
+    background-color: var(--white);
     font-family: var(--text);
-    color: var(--chaki);
+    color: var(--black);
 
-}
-
-h1{
-    font-family: var(--text);
 }
 
 h2{
-    font-family: var(--title);
     font-weight: 300;
     font-size: 1.3em;
     padding-top: 0.5em;
@@ -41,16 +36,23 @@ h2{
     border-radius: 5px;
 }
 
+.divider{
+    height: 1px;
+    width: 100%;
+    background-color: var(--grey);
+}
+
 /* -----------navigation style ------------------*/
 
 nav {
     margin: 0 auto;
-    font-family: var(--title);
+    font-family: var(--text);
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    font-weight:500;
-    font-size: 1.2em;
+    letter-spacing: 0.05em;
+    font-weight:700;
+    font-size: 1.1em;
     max-width: 1200px;
+    padding: 0.5em 0 0 0;
 }
 
 .nav-ul {
@@ -60,16 +62,14 @@ nav {
     margin: 0;
     padding:0 1em;
     flex-flow: row wrap;
-
 }
 
 .nav-li {
     list-style-type: none;
-    color: var(--black);
     display: flex;
-    padding: 0.5em;
+    padding: 0 0.5em;
     align-items: center;
-    margin: 0.5em;
+    margin: 0.5em 0 0.2em 0;
 }
 
 .nav-li a {
@@ -79,114 +79,38 @@ nav {
 
 .nav-li:first-child {
     margin-right: auto;
-    font-weight: bold;
-    font-size: 1.5em;
-    font-family: var(--text);
+    font-size: 2.5em;
+    font-family: var(--title);
+    text-transform: capitalize;
+    font-weight: 100;
+    color: #5f396b;
+}
+
+.title a{
+    color:#5f396b;
 }
 
 .nav-ul .icon{
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: var(--brgreen);
 }
 
-.dropdown-parent-el {
-    position: relative;
-}
-
-.dropdown-ul {
-    display: none;
-    position: absolute;
-    bottom: -4.5em;
-    right: 0; 
-    background-color: var(--grey);
-    box-shadow: -1px 2px 5px var(--chaki);
-    border-radius: 10px;
-    list-style-type: none;
-    margin: 0;
-    padding: 0.5em;
-    font-size: smaller;
-    gap: 0.5em;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-.dropdown-ul .icon{
-    color: black;
-    font-size: smaller;
-    padding-left: 0.7em;
-}
 .menu-icon, .mobile{
     display:none;
 }
 
-/* nav :hover styles */
-.nav-li:hover {
-    box-shadow: -1px 2px 5px var(--chaki);
-    border-radius: 10px;
-}
-
-.nav-li:last-child:hover, .nav-li:first-child:hover {
-    box-shadow: none;
-}
-
-.dropdown-parent-el:hover .dropdown-ul {
-    display: flex;
-}
-
-.dropdown-parent-el:hover .icon{
-    color: var(--chaki)
-}
-
-.nav-more-li:hover .icon, .nav-more-li:hover a{
-    color: var(--moss);
-}
-.text-for-icon {
-    display: none;
-}
 
 @media (max-width: 860px) {
 
-    .nav-li:first-child {
-        flex-basis: 100%;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1em;
-        font-family: var(--text);
-        margin: 0.2em auto;
-        padding-bottom: 0;
-    }
     .nav-li {
-        padding: 0.2em;
+        padding: 0 0.2em;
     }
     .nav-ul {
         justify-content: space-evenly;
     }
-    .dropdown-ul {
-        bottom: -5.2em;
-    }
-}
+} 
 
-@media (max-width: 715px) {
-
-    .nav-ul {
-        justify-content: space-around;
-        align-items: center;
-        flex-direction: row;
-    }
-    .nav-li{
-        margin: 1em;
-        font-size: 0.8em;
-    }
-    .text-for-icon {
-        display: block;
-    }
-    .dropdown-ul {
-        bottom: -5.5em;
-    }
-}
-
-@media (max-width: 600px) {
+@media (max-width: 785px) {
     .nav-ul{
         flex-direction: row;
         align-items: center;
@@ -202,12 +126,14 @@ nav {
     .menu-icon {
         display: inline;
         align-self: stretch;
-        margin: 0.2em;
+        margin: 0;
     }
     .nav-li:first-child {
         display: flex;
         flex-basis: 100%;
-        margin: 0;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 0 auto;
     }
     /* responsive */
     .responsive{

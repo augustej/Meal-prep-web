@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, flash
 
 auth = Blueprint('auth', __name__)
 
@@ -9,6 +9,7 @@ def login():
     else:
         typed_email = request.form.get('login-email')
         typed_pass = request.form.get('login-password')
+
         print(typed_email, typed_pass)
         return render_template('auth/login.html')
 
