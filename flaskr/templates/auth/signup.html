@@ -2,25 +2,25 @@
 
 {% block content%}
 <section class="block-content">
-    <h1>Registracija</h1>
     <section class="inner-block">
+    <h1>Registracija</h1>
     <form class="signup-form reg-form" method="POST">
         <div class="outer">
             <div class="inner">
                 <label for="signup-email">El. paštas:</label>
-                <input type="email" id="signup-email" name="signup-email" required/>
+                <input type="email" id="signup-email" name="signup-email"  placeholder="El. paštas"/>
             </div>
             <div class="inner">
                 <label>Vardas:</label>
-                <input type="text" id="signup-name" name="signup-name" required/>
+                <input type="text" id="signup-name" name="signup-name"  placeholder="Vardas"/>
             </div>
             <div class="inner">
                 <label for="signup-password1">Slaptažodis:</label>
-                <input type="password" id="signup-password1" name="signup-password1" required />
+                <input type="password" id="signup-password1" name="signup-password1"  placeholder="Slaptažodis" />
             </div>
             <div class="inner">
-                <label for="signup-password2">Slaptažodis:</label>
-                <input type="password" id="signup-password2" name="signup-password2" required />
+                <label for="signup-password2">Pakartoti slaptažodį:</label>
+                <input type="password" id="signup-password2" name="signup-password2"  placeholder="Pakartokite slaptažodį"/>
             </div>
         </div>
         <div class="button-highlight">
