@@ -1,40 +1,30 @@
 {% extends "base.html" %}
+{% block navhome %} active {% endblock %}
 
 {% block content %}
 
-    <section class="introduction">
-        <div class="text-section">
-            <h1>Savaitės Meniu</h1>
 
-            <h2>Esminiai maisto planavimo <span class="title-highlight">privalumai</span>:</h2>
-            <div class="decoration-line"></div>
-            <ul>
-                <li>Sutaupote <span class="text-highlight">laiką</span>, rečiau važiuodami apsipirkti</li>
-                <li>Sutaupote <span class="text-highlight">pinigus</span>, išmesdami mažiau sugedusio maisto</li>
-                <li>Maitinatės <span class="text-highlight">sveikiau</span>, rečiau užsisakydami maisto pristatymą į namus</li>
-                <li>Sumažinate <span class="text-highlight">streso</span>, nebegalvodami, ką čia pagaminti</li>
-            </ul>
+    <section class="introduction">
+        <div class="introduction-elements">
+            <div class="text-section">
+                <h1>Kodėl verta kurti <span class="text-highlight">Savaitės Meniu?</span></h1>
+                <div class="decoration-line"></div>
+                <ul>
+                    <li>Sutaupote <span class="text-highlight">laiką</span>, rečiau važiuodami apsipirkti</li>
+                    <li>Sutaupote <span class="text-highlight">pinigus</span>, išmesdami mažiau sugedusio maisto</li>
+                    <li>Maitinatės <span class="text-highlight">sveikiau</span>, rečiau užsisakydami maisto pristatymą į namus</li>
+                    <li>Sumažinate <span class="text-highlight">streso</span>, nebegalvodami, ką čia pagaminti</li>
+                </ul>
+            </div>
+            <img src="../static/images/intro1s.jpg" alt="table with food"/>
         </div>
-        <img src="../static/images/intro1s.jpg" alt="table with food"/>
     </section>
+
+
     <section class="login-prompt">
-        <p>Prisijunk ir susikurk asmeninį savaitės planą!</p>
+        <p>Prisijunk prie planuotojų šeimos ir susikurk asmeninį savaitės planą!</p>
         <a href="login"><button class="button"><h2>Prisijungti</h2></button></a>
     </section>
 
-    <section class="contact-me form-style">
-        <p>Turi klausimų ar komentarų?</p>
-        <h2>Parašyk!</h2>
-        <div class="decoration-line"></div>
-        <form>
-            <label for="#message-theme">Tema</label>
-            <input type="text" id="message-theme" required>
-            <label for="#message-email">El. paštas</label>
-            <input type="email" id="message-email" required>
-            <label for="#message-text">Žinutės tekstas</label>
-            <textarea id="message-text" required></textarea>
-            <button class="button">Siųsti</button>
-        </form>
-    </section>
     
     {% endblock %}
