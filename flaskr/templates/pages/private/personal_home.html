@@ -3,5 +3,85 @@
 
 
 {% block content%}
-<p>Malonu Jus matyti, {{ name }} </p>
+<secion class="personal-home-page">
+    <p class="greeting">Skanios dienos    <span class="highlight">,   {{ name }} !</span></p>
+    <div class="center-asides-container">
+        <aside class="favorite-recipes-aside">
+            <h4>Mėgstami receptai</h4>
+        </aside>
+        <section class="todays-menu-section">
+            <div class="day-menu-title">
+                <div class="decor-triangle-left"></div>
+                <h1>Dienos meniu</h1>
+                <div class="decor-triangle-right"></div>
+            </div>
+            <ul class="day-menu-ul">
+                <li class="day-menu-li">
+                    <h2>Pusryčiai</h2>
+                    <div class="breakfast-item">
+                        <!-- <a href="calendar">
+                            <button class="button">Pridėti</button>
+                        </a> -->
+                        <div class="imported-recipe">
+                            <h3>Granola</h3>
+                            <img src="../../../static/images/granola.jpg" />
+                        </div>
+                    </div>
+                </li>
+                <li class="day-menu-li">
+                    <h2>Pietūs</h2>
+                    <div class="lunch-item">
+                        <a href="calendar">
+                            <button class="button">Pridėti</button>
+                        </a>
+                        <!-- <div class="imported-recipe">
+                            <h3>Tacos</h3>
+                            <img src="../../../static/images/tacos.jpg" />
+                        </div> -->
+                    </div>
+                </li>
+                <li class="day-menu-li">
+                    <h2>Užkandžiai</h2>
+                    <div class="snack-item">
+                        <a href="calendar">
+                            <button class="button">Pridėti</button>
+                        </a>                        
+                        <!-- <div class="imported-recipe">
+                            <h3>Humuso sumuštinukai</h3>
+                            <img src="../../../static/images/humus-sandwich.jpg" />
+                        </div> -->
+                    </div>
+                </li>
+                <li class="day-menu-li">
+                    <h2>Vakarienė</h2>
+                    <div class="dinner-item">
+                        <a href="calendar">
+                            <button class="button">Pridėti</button>
+                        </a>
+                        <!-- <div class="imported-recipe">
+                            <h3>Thai salotos</h3>
+                            <img src="../../../static/images/thaidinner.jpg" />
+                        </div> -->
+                    </div>
+                </li>
+            </ul>
+            <a href="calendar">
+                <button class="button modify-menu">Pakeisti</button>
+            </a>
+        </section>
+        <aside class="tommorows-menu-aside">
+            <h4>Rytojaus meniu</h4>
+        </aside>
+    </div>
+    <div class="week-plan-section full-width-purple-element">
+        <p>Kas toliau numatyta šią savaitę?</p>
+        <a href="calendar">
+            <button class="button">
+                Savaitės planas
+            </button>
+        </a>
+    </div>
+</section>
+
+
 {% endblock %}
