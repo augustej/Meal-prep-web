@@ -20,12 +20,13 @@ def login():
         if user:
             if check_password_hash(user.password, typed_pass):
                 login_user(user, remember=True)
+                return redirect(url_for('public_pages.home'))
             else:
                 flash('Neteisingas slaptažodis', category="error")
+                return render_template('auth/login.html')
         else:
             flash('Nėra tokio vartotojo', category="error")
-        print(typed_email, typed_pass)
-        return redirect(url_for('public_pages.home'))
+        return render_template('auth/login.html')
 
 @auth.route('/logout')
 @login_required
