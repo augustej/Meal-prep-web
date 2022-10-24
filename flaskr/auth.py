@@ -12,6 +12,8 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
+        vartotojas = User.query.all()
+        print(vartotojas, "VARTOTOJAS")
         return render_template('auth/login.html')
     else:
         typed_email = request.form.get('login-email')
