@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from .model import User, Product, Foodtype, productMeasurements, Measurement, productFoodtypes, Ingredient
+from .model import User, Product, Foodtype, productMeasurements, Measurement, productFoodtypes, Ingredient, Recipe
 import csv
 from . import db
 from flask_sqlalchemy import SQLAlchemy
@@ -11,23 +11,14 @@ public_pages = Blueprint('public_pages', __name__)
 def home():
     if current_user.is_authenticated:
         modified_name = name_modification_for_greeting(current_user.name)
-        initialDbLoad()
+        # initialDbLoad()
         return render_template('pages/private/personal_home.html', name=modified_name)
     else:
         return render_template('pages/public/index.html')
 
 @public_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
-    if request.method == 'POST':
-        typed_in_product = request.form.get('product-search')
-        print(typed_in_product)
-        products = Product.query.filter(Product.name.startswith(typed_in_product)).all()
-        print(products)
-        return render_template('pages/public/recipes.html', products = products)
-    # print(Product.query.filter_by(name="bulve").first().vegan)
-    else:
-        products = Product.query.all()
-        return render_template('pages/public/recipes.html', products = products)
+    return render_template('pages/public/recipes.html')
 
 @public_pages.route('/search_product_by_name')
 def product_search_on_type():
@@ -37,17 +28,29 @@ def product_search_on_type():
         # data modification, because sqlalchemy response can't be jsonified
         products_list = []
         for item in products:
-            new_product = item.__dict__
-            new_product.pop('_sa_instance_state')
+            # for each product, find valid measurments from productMeasurments table
+            tableLinesWithMeasurmentsOfCurrentProduct = db.session.query(productMeasurements).filter(productMeasurements.c.product_id == item.id).all()
+            measurement_name_list = []
+            for tableLine in tableLinesWithMeasurmentsOfCurrentProduct:
+                measurement_item = Measurement.query.filter_by(id=tableLine.product_measurement_id).first().name
+                measurement_name_list.append(measurement_item)
+            new_product = {"name":item.name, "measurement": measurement_name_list}
             products_list.append(new_product)
     return products_list
 
 @public_pages.route('/ingredient-add-to-recipe', methods=['GET', 'POST'])
 def add_ingredient():
-    print(request, "requestas")
     if request.method == "POST":
         data = request.get_json()
-        new_ingredient = Ingredient(name = data['name'], amount=data['amount'], measurement=data["measurement"] )
+        recipeToAddIngredientTo = Recipe.query.filter_by(name="inprogress").first()
+        if recipeToAddIngredientTo == None:
+            recipeToAddIngredientTo = Recipe(name="inprogress")
+            db.session.add(recipeToAddIngredientTo)
+            db.session.commit()
+        product_id = Product.query.filter_by(name=data['name']).first().id
+        measurement_id = Measurement.query.filter_by(name=data['measurement']).first().id
+        recipe_id = recipeToAddIngredientTo.id
+        new_ingredient = Ingredient(name = data['name'], amount=data['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
         db.session.add(new_ingredient)
         db.session.commit()
         answer= {"name": "true"}

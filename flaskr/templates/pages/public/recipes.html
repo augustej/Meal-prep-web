@@ -6,12 +6,17 @@
 
 <h1>Recipes</h1>
 
-<input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
-<input id="product-amount-input" type="number" name="product-amount-input" autocomplete="off"/>
-<input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off"/>
-<button id="add_ingredient_to_recipe" type="submit">prideti</button>
-    
+<div id="recipe-creation-div">
+
+    <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
+    <input id="product-amount-input" type="number" min="0.25" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
+    <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
+    <button id="add_ingredient_to_recipe" type="submit" disabled>prideti</button>
 
     <ul class="product-search"> 
     </ul>
+    <ul class="product-measurement"> 
+    </ul>
+
+</div>
 {% endblock %}
