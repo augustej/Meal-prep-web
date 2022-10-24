@@ -83,9 +83,26 @@ addRecipeArea.addEventListener("click", e => {
         productMeasurmentParentUlItem.innerHTML = ""
     }
     enableORdisableIngredientSubmitButton()
-    // adding ingredient to Ingredients table
+    // adding ingredient to Ingredients table and showing it on the screen
     if (e.target == addIngredientButton){
         createIngredientDictItem()
+        addIngredientToTable(ingredientDict)
+        // creating DOM items for confirmed element
+        var confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingredients-ul")
+        var firstpElement = document.createElement('p');
+        firstpElement.appendChild(document.createTextNode(inputAreaProductSearch.value))
+        var secondpElement = document.createElement('p');
+        secondpElement.appendChild(document.createTextNode(inputAreaProductAmount.value + ' ' + inputAreaProductMeasurement.value))
+        var liElement = document.createElement('li');
+        liElement.appendChild(firstpElement)
+        liElement.appendChild(secondpElement)
+        liElement.setAttribute('class', 'confirmed-ingredients-li')
+        confirmedIngredientsParentUlItem.appendChild(liElement)
+        inputAreaProductAmount.value = ""
+        inputAreaProductSearch.value = ""
+        inputAreaProductMeasurement.value = ""
+        enableORdisableIngredientSubmitButton()
+
     }
     
 })
@@ -154,7 +171,7 @@ function createIngredientDictItem (){
     productAmount = document.querySelector("#product-amount-input").value
     productMeasurement = document.querySelector("#product-measurement-input").value
     ingredientDict = {"name":productName, "amount": productAmount, "measurement":productMeasurement}
-    addIngredientToTable(ingredientDict)
+    return ingredientDict
 }
 
 // adding ingredients to Ingredients table

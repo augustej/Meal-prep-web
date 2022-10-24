@@ -1,6 +1,7 @@
+from traceback import print_tb
 from flask import Blueprint, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from .model import User, Product, Foodtype, productMeasurements, Measurement, productFoodtypes, Ingredient, Recipe
+from .model import User, Product, Foodtype, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
 import csv
 from . import db
 from flask_sqlalchemy import SQLAlchemy
@@ -28,12 +29,11 @@ def product_search_on_type():
         # data modification, because sqlalchemy response can't be jsonified
         products_list = []
         for item in products:
-            # for each product, find valid measurments from productMeasurments table
-            tableLinesWithMeasurmentsOfCurrentProduct = db.session.query(productMeasurements).filter(productMeasurements.c.product_id == item.id).all()
+            # for each product, find valid measurments 
             measurement_name_list = []
-            for tableLine in tableLinesWithMeasurmentsOfCurrentProduct:
-                measurement_item = Measurement.query.filter_by(id=tableLine.product_measurement_id).first().name
-                measurement_name_list.append(measurement_item)
+            measurement_objects_list = item.productMeasurements
+            for measurObject in measurement_objects_list:
+                measurement_name_list.append(measurObject.name)
             new_product = {"name":item.name, "measurement": measurement_name_list}
             products_list.append(new_product)
     return products_list
@@ -57,7 +57,55 @@ def add_ingredient():
     else: 
         answer= {"name": "else"}
     return answer
-        
+
+@public_pages.route('/confirmed-recipe', methods=['POST'])
+def add_recipe():
+    name = request.form.get('new-recipe-title')
+    instruction = request.form.get('recipe-preparation')
+    user_id=current_user.id
+    cookingtime = request.form.get('preparation-time')
+    current_recipe = Recipe.query.filter_by(name="inprogress").first()
+    current_recipe.name = name
+    current_recipe.instruction=instruction
+    current_recipe.user_id = user_id
+    current_recipe.cookingtime=cookingtime
+    allProductsOfRecipe = Ingredient.query.filter_by(recipe_id=current_recipe.id).all()
+    numberOfIngredients = len(allProductsOfRecipe)
+    foodDict ={}
+    for oneProductOfRecipe in allProductsOfRecipe:
+        singleProductId = oneProductOfRecipe.product_id
+        singleIngredientId=oneProductOfRecipe.id
+        insertStatementIngredient =recipeIngredients.insert().values(ingredients_id=singleIngredientId, recipe_id=current_recipe.id)
+        db.session.execute(insertStatementIngredient)
+        db.session.commit()
+    # for singleProductId in allProductIdOfRecipe:
+        productObject = Product.query.filter_by(id=singleProductId).first()
+
+         # check each ingredient to determine food type recipetypes
+        foodtypeObjectList = productObject.productFoodtypes
+        foodTypesList=[]
+        for singleFoodTypeObject in foodtypeObjectList:
+            if (singleFoodTypeObject.name == 'mėsa') or (singleFoodTypeObject.name == 'žuvis'):
+                if not singleFoodTypeObject.id in foodTypesList:
+                    foodTypesList.append(singleFoodTypeObject.id)
+            elif singleFoodTypeObject.id in foodDict:
+                foodDict[singleFoodTypeObject.id] += 1
+            else:
+                foodDict[singleFoodTypeObject.id] = 1
+    for keys in foodDict:
+        if foodDict[keys] == numberOfIngredients:
+            foodTypesList.append(keys)
+
+    for value in foodTypesList:
+        insertStatement =recipeTypes.insert().values(recipe_foodtype_id=value, recipe_id=current_recipe.id)
+        db.session.execute(insertStatement)
+        db.session.commit()
+    
+    db.session.add(current_recipe)
+    db.session.commit()
+    return render_template('pages/public/recipes.html')
+
+
 
 @public_pages.route('/search')
 def search():

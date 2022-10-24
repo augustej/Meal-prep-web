@@ -40,13 +40,13 @@ class Product(db.Model):
 
 
 recipeIngredients = db.Table('recipeIngredients',
-    db.Column('ingredients_id', db.Integer, db.ForeignKey('ingredient.id'), primary_key=True),
-    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
+    db.Column('ingredients_id', db.Integer, db.ForeignKey('ingredient.id')),
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'))
 )
 
 recipeTypes = db.Table('recipeTypes',
-    db.Column('recipe_foodtype_id', db.Integer, db.ForeignKey('foodtype.id'), primary_key=True),
-    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True),
+    db.Column('recipe_foodtype_id', db.Integer, db.ForeignKey('foodtype.id')),
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id')),
 )
 
 class Ingredient(db.Model):
