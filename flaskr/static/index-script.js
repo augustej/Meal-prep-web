@@ -79,8 +79,10 @@ addRecipeArea.addEventListener("click", e => {
         }
     }
     if (e.target.closest('ul') == productMeasurmentParentUlItem){
-        inputAreaProductMeasurement.value = e.target.innerText
-        productMeasurmentParentUlItem.innerHTML = ""
+        if (e.target !=productMeasurmentParentUlItem){
+            inputAreaProductMeasurement.value = e.target.innerText
+            productMeasurmentParentUlItem.innerHTML = ""
+        }   
     }
     enableORdisableIngredientSubmitButton()
     // adding ingredient to Ingredients table and showing it on the screen

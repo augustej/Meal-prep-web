@@ -6,36 +6,5 @@
 
 <h1>Recipes</h1>
 
-<div id="recipe-creation-div">
-    <form class="adding-recipe" method="POST" action="confirmed-recipe">
-    <label for="new-recipe-title">Recepto pavadinimas</label>
-    <input type="text" class="new-recipe-title" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">
-    <label for="all-ingredients">Ingredientai</label>
-    <div id="all-ingredients">
-        <ul class="confirmed-ingredients-ul">
-        </ul>
-        <label for="product-search-input">Produkto pavadinimas</label>
-        <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
-        <label for="product-amount-input">Produkto kiekis</label>
-        <input id="product-amount-input" type="number" min="0.25" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
-        <label for="product-measurement-input">Produkto matavimo vienetai</label>
-        <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
-        <button id="add_ingredient_to_recipe" type="submit" disabled>Pridėti ingredientą</button>
-
-        <ul class="product-search"> 
-        </ul>
-        <ul class="product-measurement"> 
-        </ul>
-    </div>
-    <label for="recipe-preparation">Paruošimas</label>
-    <textarea id="recipe-preparation" name="recipe-preparation" required></textarea>
-    <label for="preparation-time">Paruošimo laikas</label>
-    <input type="number" id="preparation-time" name="preparation-time">
-    <label for="add-image-of-recipe">Pridėkite recepto nuotrauką</label>
-    <input type="file">
-    <button class="confirm-recipe">Išsaugoti receptą</button>
-    </form>
-    
-
-</div>
+<button><a href="add_recipe">Pridėti receptą </a></button>
 {% endblock %}
