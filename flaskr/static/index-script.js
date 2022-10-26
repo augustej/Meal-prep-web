@@ -71,7 +71,13 @@ addRecipeArea.addEventListener("input", e => {
 })
 
 addRecipeArea.addEventListener("click", e => {
+    console.log("CLICKED")
     console.log(e.target)
+    var deleteIngredientButton = document.querySelectorAll(".deleteIngredientBtn")
+    console.log(deleteIngredientButton)
+
+
+
     // select element from list, saving it's value inside input and hiding list suggestions
     if (e.target.closest('ul') == productSearchParentUlItem){
         inputAreaProductSearch.value = e.target.innerText
@@ -103,25 +109,24 @@ addRecipeArea.addEventListener("click", e => {
     // adding ingredient to Ingredients table and showing it on the screen
     if (e.target == addIngredientButton){
         createIngredientDictItem()
-        addIngredientToTable(ingredientDict)
-        // creating DOM items for confirmed element
-        var confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingredients-ul")
-        var firstpElement = document.createElement('p');
-        firstpElement.appendChild(document.createTextNode(inputAreaProductSearch.value))
-        var secondpElement = document.createElement('p');
-        secondpElement.appendChild(document.createTextNode(inputAreaProductAmount.value + ' ' + inputAreaProductMeasurement.value))
-        var liElement = document.createElement('li');
-        liElement.appendChild(firstpElement)
-        liElement.appendChild(secondpElement)
-        liElement.setAttribute('class', 'confirmed-ingredients-li')
-        confirmedIngredientsParentUlItem.appendChild(liElement)
-        inputAreaProductAmount.value = ""
-        inputAreaProductSearch.value = ""
-        inputAreaProductMeasurement.value = ""
-        enableORdisableIngredientSubmitButton()
-        unLockNextInputFields("False")
+        addIngredientToTable(ingredientDict).then((data)=> {
+            currentIngredientsId = data.ingredientId
+             creatingDomForConfirmedIngredients(currentIngredientsId)
+        })
     }
-    
+    if (deleteIngredientButton){
+        deleteIngredientButton.forEach(item => {
+            if (item == e.target){
+                let itemID = item.id
+                let prefixlength = 'deleteIngredientBtn'.length
+                let ingredientsID = itemID.substring(prefixlength)
+                console.log(ingredientsID)
+                // TODO CONTACT BACKEND to delete item from Ingredients, where id = ingredientsID
+                // TODO delete item's parent node
+
+            }
+        })
+    }
 })
 
 // Listening for fileInputs in all document, to style "Choose file" button
@@ -140,14 +145,12 @@ fileInputs.forEach(input =>{
 async function checkForProductInDb(
     productSearchString
 ){
-    console.log(productSearchString, "funkcijoj")
     const response = await fetch(
         '/search_product_by_name?product-search-input=' + productSearchString, 
         {
             method: 'GET',
         }
     );
-    console.log("FUNKCIJOJE")
     return response.json();
 }
 
@@ -202,10 +205,9 @@ function createIngredientDictItem (){
     return ingredientDict
 }
 
-// adding ingredients to Ingredients table
+// adding ingredients to Ingredients table, returns Ingredients table id
 async function addIngredientToTable(ingredientDict
 ){
-    console.log(ingredientDict, 'funkcijoj')
     const response = await fetch(
         '/ingredient-add-to-recipe', 
         {
@@ -216,7 +218,6 @@ async function addIngredientToTable(ingredientDict
             body: JSON.stringify(ingredientDict)
         }
     );
-    console.log(response.body)
     return response.json();
 }
 
@@ -234,4 +235,29 @@ function onFileAddShowName(buttonClickedID, fileAddedID){
         buttonClicked.parentNode.removeChild(element)
     }
     buttonClicked.parentNode.appendChild(p)
+}
+
+async function creatingDomForConfirmedIngredients(currentIngredientsId){
+    // creating DOM items for confirmed element
+    let confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingredients-ul")
+    let firstpElement = document.createElement('p');
+    firstpElement.appendChild(document.createTextNode(inputAreaProductSearch.value))
+    let secondpElement = document.createElement('p');
+    secondpElement.appendChild(document.createTextNode(inputAreaProductAmount.value + ' ' + inputAreaProductMeasurement.value))
+    let liElement = document.createElement('li');
+    let thirdElement = document.createElement('button');
+    thirdElement.appendChild(document.createTextNode('X'))
+    thirdElement.setAttribute('class', 'deleteIngredientBtn')
+    thirdElement.setAttribute('id', `deleteIngredientBtn${currentIngredientsId}`)
+    thirdElement.setAttribute('type', 'button')
+    liElement.appendChild(firstpElement)
+    liElement.appendChild(secondpElement)
+    liElement.appendChild(thirdElement)
+    liElement.setAttribute('class', 'confirmed-ingredients-li')
+    confirmedIngredientsParentUlItem.appendChild(liElement)
+    inputAreaProductAmount.value = ""
+    inputAreaProductSearch.value = ""
+    inputAreaProductMeasurement.value = ""
+    enableORdisableIngredientSubmitButton()
+    unLockNextInputFields("False")
 }

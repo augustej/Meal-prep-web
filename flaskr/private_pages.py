@@ -57,7 +57,9 @@ def add_ingredient():
         new_ingredient = Ingredient(name = data['name'], amount=data['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
         db.session.add(new_ingredient)
         db.session.commit()
-        answer= {"name": "true"}
+        answer= {}
+        answer['ingredientId'] = new_ingredient.id
+        print(answer, "ANSWER")
     else: 
         answer= {"name": "else"}
     return answer
@@ -118,7 +120,7 @@ def add_recipe():
     
     db.session.add(current_recipe)
     db.session.commit()
-    return render_template('pages/public/recipes.html', src=filePath)
+    return render_template('pages/public/recipes.html')
 
 
 def allowed_file(filename):
