@@ -20,6 +20,22 @@ var date = new Date();
 var year = date.getFullYear();
 dateElementInHtml.textContent = year;
 
+// variables for add-recipe modal functionality
+var modal = document.querySelector("#recipe-creation-div");
+var addRecipeBtn = document.querySelector("#add-recipe-button");
+var closeAddRecipeBtn = document.querySelector("#close-add-recipe");
+addRecipeBtn.onclick = function() {
+    modal.style.display = "block";
+  }
+closeAddRecipeBtn.onclick = function() {
+    modal.style.display = "none";
+  }
+window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
 //Event listener for product search in add-recipe functionality
 var addRecipeArea = document.querySelector('#recipe-creation-div')
 var productSearchString = ""
@@ -29,7 +45,6 @@ var inputAreaProductMeasurement = document.querySelector('#product-measurement-i
 var productMeasurmentParentUlItem = document.querySelector(".product-measurement")
 var productSearchParentUlItem = document.querySelector('.product-search');
 var addIngredientButton = document.querySelector("#add_ingredient_to_recipe")
-
 
 addRecipeArea.addEventListener("input", e => {
     // searching for a product and modifying DOM to display that
@@ -52,7 +67,7 @@ addRecipeArea.addEventListener("input", e => {
     }
     // if form has all input, enable "submit" button
     enableORdisableIngredientSubmitButton()
-
+    //add file style decoration
 })
 
 addRecipeArea.addEventListener("click", e => {
@@ -104,11 +119,22 @@ addRecipeArea.addEventListener("click", e => {
         inputAreaProductSearch.value = ""
         inputAreaProductMeasurement.value = ""
         enableORdisableIngredientSubmitButton()
-
+        unLockNextInputFields("False")
     }
     
 })
 
+// Listening for fileInputs in all document, to style "Choose file" button
+var fileInputs = document.querySelectorAll(".input")
+fileInputs.forEach(input =>{
+    input.addEventListener('change', e =>{
+        let fileAdded = e.target
+        let fileAddedID = fileAdded.id
+        let buttonClicked = e.target.closest('label')
+        let buttonClickedID=buttonClicked.id
+        onFileAddShowName(buttonClickedID, fileAddedID)
+    })
+})
 
 // product search for recipe, to add ingredients
 async function checkForProductInDb(
@@ -192,4 +218,20 @@ async function addIngredientToTable(ingredientDict
     );
     console.log(response.body)
     return response.json();
+}
+
+//style changes of "choose file" button
+function onFileAddShowName(buttonClickedID, fileAddedID){
+    let buttonClicked = document.getElementById(buttonClickedID)
+    let fileInput = document.getElementById(fileAddedID);   
+    let filename = fileInput.files[0].name;
+    let p = document.createElement('p')
+    p.setAttribute('class','addedFilename')
+    p.appendChild(document.createTextNode(filename))
+    if (buttonClicked.nextElementSibling){
+        //delete sibliing
+        let element =buttonClicked.nextElementSibling
+        buttonClicked.parentNode.removeChild(element)
+    }
+    buttonClicked.parentNode.appendChild(p)
 }

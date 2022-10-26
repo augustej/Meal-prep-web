@@ -3,11 +3,16 @@
     --brgrey: rgb(242, 242, 242);
     --textgrey: rgb(83, 81, 81);
     --purple: rgb(107, 57, 100);
+    --midpurple:rgb(129, 95, 125);
+    --brpurple:rgb(179, 165, 175);
     --orange: rgb(240, 185, 90);
+    --brorange:rgb(242, 230, 210);
     --white: #FFF;
     --black: #000;
     --title: 'Comforter Brush', cursive;
     --text: 'Bitter', serif;
+    --purpleboxshadow: 1px 0px 2px rgba(107, 57, 100, 0.5);
+
 }
 
 * {
@@ -74,7 +79,47 @@ h2{
 .button:hover {
     background-color: var(--black);
 }
+.button:disabled{
+    background-color: var(--grey);
 
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.addedFilename{
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.close {
+    color: var(--white);
+    position: absolute;
+    top: -0.2em;
+    right: 0.2em;
+    padding: 0.2em;
+    font-size: 2em;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--purple);
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /* navigation style ------------------*/
 
@@ -375,7 +420,7 @@ footer {
     flex-basis: 70%;
     background-color: var(--white);
     border: none;
-    box-shadow: 1px 0px 2px rgba(39, 64, 1, 0.5);
+    box-shadow: var(--purpleboxshadow);
     font-family: var(--text);
     padding: 0.5em;
 }
@@ -552,7 +597,7 @@ aside h4{
     border-bottom: 1px solid var(--purple);
 }
 
-.todays-menu-section{
+.outer-card-shape{
     max-width: 700px;
     background-color: var(--brgrey);
     display: flex;
@@ -565,7 +610,7 @@ aside h4{
     box-shadow: 1px 1px 10px var(--textgrey);
 }
 
-.todays-menu-section h1{
+.outer-card-shape h1{
     font-size: 4em;
     letter-spacing: 0.1em;
     font-family: var(--title);
@@ -574,7 +619,7 @@ aside h4{
     padding: 0 1em;
 }
 
-.day-menu-title{
+.card-title{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -595,11 +640,14 @@ aside h4{
     height: 5.625em;
 }
 
-.day-menu-ul{
+.card-ul{
     list-style: none;
     padding: 0;
     margin: 0;
     width: 80%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .day-menu-ul button{
@@ -607,7 +655,7 @@ aside h4{
     font-weight: 100;
 }
 
-.day-menu-li{
+.card-li{
     display: flex;
     flex-direction: row;
     padding: 2em 0; 
@@ -615,17 +663,15 @@ aside h4{
     align-items:center;
     border-bottom: 1px solid var(--purple);
 }
-.day-menu-li:first-child{
+.card-li:first-child{
     padding-top: 0; 
 }
 
-
-.day-menu-li h2{
+.card-li h2{
     font-size: large;
     font-family: var(--text);
     text-transform: uppercase;
     font-weight: 600;
-
 }
 
 .day-menu-li div{
@@ -672,13 +718,13 @@ div.imported-recipe{
     aside{
         display: none;
     }
-    .todays-menu-section{
+    .outer-card-shape{
         width:90%;
     }
 }
 
 @media (max-width: 800px){
-    .todays-menu-section{
+    .outer-card-shape{
         width: 90%;
     }
 
@@ -689,7 +735,7 @@ div.imported-recipe{
 @media (max-width: 600px){
 
 
-    .todays-menu-section h1{
+    .outer-card-shape h1{
         font-size: 4em;
         letter-spacing: 0.1em;
         font-family: var(--title);
@@ -704,10 +750,181 @@ div.imported-recipe{
 }
 
 @media (max-width: 500px){
-    .todays-menu-section h1{
+    .outer-card-shape h1{
         font-size: 2.5em;
     }
 }
 /* END Personal HOMEPAGE STYLE--------- */
+/* ADD RECIPE FUNCTIONALITY in RECIPES */
 
+.recipe-creation-div .new-recipe-li{
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding-top: 0;
+    width: 100%;
+}
 
+.recipe-creation-div .new-recipe-li h2{
+    padding-top: 0;
+}
+
+.recipe-creation-div .new-recipe-li input, .recipe-creation-div .new-recipe-li textarea{
+    max-width: 100%;
+    background-color: var(--white);
+    border: none;
+    box-shadow: var(--purpleboxshadow);
+    font-family: var(--text);
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+.confirmed-ingredients-ul{
+    padding:0.5em;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap; 
+    margin-bottom: 1em;
+}
+
+.confirmed-ingredients-li{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch; 
+    width: 45%;
+}
+
+.confirmed-ingredients-li p{
+    margin: 0.1em;
+    font-size: 0.8em;
+}
+
+.confirmed-ingredients-li p:first-child{
+    text-transform: uppercase;
+    color: var(--purple);
+    font-weight: 600;
+}
+
+.ingredient-input-and-button{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-ingredient-field{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ingredient-label-and-input-area{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:stretch;
+    width: 100%;
+    max-width: 400px;
+}
+
+.ingredient-label-and-input-area label{
+    font-style: italic;
+}
+
+.ingredient-label-and-input-area ul{
+    width:100%;
+    padding:0;
+    position:absolute;
+    top:1.8em;
+    z-index: 1;
+    box-shadow: var(--purpleboxshadow);
+    color: var(--white);
+}
+
+.ingredient-label-and-input-area li{
+    text-align: left;
+    padding: 0.5em;
+    list-style: none;
+    background-color: var(--midpurple);
+    width:100%;
+}
+
+.ingredient-label-and-input-area li:hover{
+    background-color: var(--purple);
+}
+
+.ingredient-input-area{
+    display:flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+    position:relative;
+}
+
+.card-li.prep-time-file-add{
+    padding-top: 0;
+    align-items: flex-start;
+}
+
+.new-recipe-li.half-size{
+    max-width: 40%;
+    align-items: flex-start;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+}
+
+.prep-time{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.prep-time input{
+    width: 40%;
+    max-width: 70px;
+}
+
+.confirm-recipe{
+    margin: 2em auto;
+    text-align: center;
+}
+
+@media (max-width: 750px){
+    .ingredient-label-and-input-area{
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
+    .add-ingredient-field{
+        gap:1em;
+        flex-basis: 80%;
+    }
+    .ingredient-input-and-button button{
+        margin-top: 1em;
+    }
+}
+
+@media (max-width: 600px){
+    .recipe-creation-div h1{
+        font-size: 2em;
+    }
+    .new-recipe-li.half-size{
+        max-width: 100%;
+    }
+    
+    .new-recipe-li.half-size:last-child{
+        border-top: #5f396b solid;
+    }
+    
+    .card-li.prep-time-file-add{
+    flex-direction: column;
+    gap:2em;
+    }
+}
+/* END ADD RECIPE FUNCTIONALITY in RECIPES */
