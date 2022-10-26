@@ -6,5 +6,75 @@
 
 <h1>Recipes</h1>
 
-<button><a href="add_recipe">Pridėti receptą </a></button>
+<button id="add-recipe-button">Pridėti receptą</button>
+
+<div id="recipe-creation-div" class="modal recipe-creation-div">
+    <span class="close" id="close-add-recipe">&times;</span>
+
+    <form class="adding-recipe outer-card-shape" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
+        <div class="card-title"><h1>Naujas receptas</h1></div>
+        <ul class="card-ul">
+            <li class="card-li new-recipe-li">
+                <label for="new-recipe-title"><h2>Recepto pavadinimas</h2></label>
+                <input type="text" class="new-recipe-title" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">        
+            </li>
+            <li class="card-li new-recipe-li">
+                <label for="all-ingredients"><h2>Ingredientai</h2></label>
+                <div id="all-ingredients">    
+                    <ul class="confirmed-ingredients-ul"></ul>
+                    <div class="ingredient-input-and-button">
+                            <div class="add-ingredient-field">
+                                <div class="ingredient-label-and-input-area">
+                                        <label for="product-search-input">Produkto pavadinimas</label>
+                                        <div class="ingredient-input-area">
+                                            <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
+                                            <ul class="product-search"> 
+                                            </ul>
+                                        </div>
+                                </div>
+                                <div class="ingredient-label-and-input-area">
+                                    <label for="product-amount-input">Kiekis</label>
+                                    <div class="ingredient-input-area">
+                                        <input id="product-amount-input" type="number" min="0.25" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
+                                    </div>
+                                </div>
+                                <div class="ingredient-label-and-input-area">
+                                    <label for="product-measurement-input">Matavimo vienetai</label>
+                                    <div class="ingredient-input-area">
+                                        <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
+                                        <ul class="product-measurement"> 
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="add_ingredient_to_recipe" type="submit" disabled class="button">Pridėti</button>    
+                    </div>
+                </div>
+            </li>
+            <li class="card-li new-recipe-li">
+                <label for="recipe-preparation"><h2>Paruošimas</h2></label>
+                <textarea id="recipe-preparation" name="recipe-preparation" required spellcheck=”false”></textarea>
+            </li>
+            <li class="card-li prep-time-file-add">
+                <div class="new-recipe-li half-size">
+                    <label for="preparation-time"><h2>Paruošimo laikas</h2></label>
+                    <div class="prep-time">
+                        <input type="number" id="preparation-time" name="preparation-time" min="0">
+                        <p>min</p>
+                    </div>
+                </div>
+                <div class="new-recipe-li half-size">
+                    <h2>Recepto nuotrauka</h2>
+                    <label for="recipe-image" id="recipe-image-label" class="button">
+                        Pridėti
+                        <input type="file" name="recipe-image" id="recipe-image" class="input">
+                    </label>
+                </div>
+            </li>
+                
+            <button class="confirm-recipe button">Išsaugoti receptą</button>
+        </ul>
+    </form>    
+</div>
+
 {% endblock %}
