@@ -57,10 +57,21 @@ def add_ingredient():
         new_ingredient = Ingredient(name = data['name'], amount=data['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
         db.session.add(new_ingredient)
         db.session.commit()
-        answer= {"name": "true"}
+        answer= {}
+        answer['ingredientId'] = new_ingredient.id
+        print(answer, "ANSWER")
     else: 
         answer= {"name": "else"}
     return answer
+
+@private_pages.route('/delete-ingredient')
+def delete_ingredient():
+    if request.method == 'GET':
+        ingredientId = request.args.get('ingredientid')
+        print(ingredientId, "ID")
+        Ingredient.query.filter(Ingredient.id==ingredientId).delete()
+        db.session.commit()
+        return ingredientId
 
 @private_pages.route('/confirmed-recipe', methods=['POST'])
 def add_recipe():
@@ -118,7 +129,7 @@ def add_recipe():
     
     db.session.add(current_recipe)
     db.session.commit()
-    return render_template('pages/public/recipes.html', src=filePath)
+    return render_template('pages/public/recipes.html')
 
 
 def allowed_file(filename):
