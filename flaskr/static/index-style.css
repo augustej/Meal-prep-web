@@ -807,6 +807,19 @@ div.imported-recipe{
     text-transform: uppercase;
     color: var(--purple);
     font-weight: 600;
+    flex-basis: 60%;
+}
+
+.deleteIngredientBtn {
+    border: none;
+    box-shadow: var(--purpleboxshadow);
+    background-color: var(--grey);
+    color: var(--white)
+}
+.deleteIngredientBtn:hover{
+    background-color: var(--white);
+    color: var(--purple)
+
 }
 
 .ingredient-input-and-button{

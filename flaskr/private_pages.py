@@ -64,6 +64,15 @@ def add_ingredient():
         answer= {"name": "else"}
     return answer
 
+@private_pages.route('/delete-ingredient')
+def delete_ingredient():
+    if request.method == 'GET':
+        ingredientId = request.args.get('ingredientid')
+        print(ingredientId, "ID")
+        Ingredient.query.filter(Ingredient.id==ingredientId).delete()
+        db.session.commit()
+        return ingredientId
+
 @private_pages.route('/confirmed-recipe', methods=['POST'])
 def add_recipe():
     name = request.form.get('new-recipe-title')
