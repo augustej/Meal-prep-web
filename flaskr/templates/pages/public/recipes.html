@@ -22,6 +22,17 @@
                 <label for="all-ingredients"><h2>Ingredientai</h2></label>
                 <div id="all-ingredients">    
                     <ul class="confirmed-ingredients-ul"></ul>
+                    <div class="ingredients-subtitle ingredient-input-and-button">
+                        <button id="add-ingredient-subtitle" type="button" class="button add-ingredient-subtitle">+</button>    
+                        <div class="add-ingredient-field subtitle">
+                            <div class="ingredient-label-and-input-area">
+                                <label for="ingredient-subtitle-input" class="ingredient-subtitle-input">Papildomas ingredientų grupės pavadinimas</label>
+                                <div class="ingredient-subtitle-dropdown-area">
+                                    <input id="ingredient-subtitle-input" type="text" name="ingredient-subtitle-input" autocomplete="off" placeholder="pvz: 'Torto pagrindui'"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="ingredient-input-and-button">
                             <div class="add-ingredient-field">
                                 <div class="ingredient-label-and-input-area">
@@ -69,6 +80,43 @@
                         Pridėti
                         <input type="file" name="recipe-image" id="recipe-image" class="input">
                     </label>
+                </div>
+            </li>
+            <li class="card-li portions-and-category">
+                <div class="new-recipe-li half-size">
+                    <label for="portions"><h2>Porcijos</h2></label>
+                    <div class="portions">
+                        <input type="number" id="portions" name="portions" min="1">
+                        <p>asm.</p>
+                    </div>
+                </div>
+                <div class="new-recipe-li half-size">
+                    <label for="meal-category-input"><h2>Kategorija</h2></label>
+                        <div class="meal-category-area">
+                            <div>
+                                <input id="breakfast" type="checkbox" name="coursetype" value="Pusryčiai"/>
+                                <label for="breakfast" class="meal-category-li">Pusryčiai</label>
+                            </div>
+                            <div>
+                                <input id="main" type="checkbox" name="coursetype" value="Pietūs/Vakarienė
+                                "/>
+                                <label for="main" class="meal-category-li">Pietūs/Vakarienė</label>                           
+                            </div>
+                            <div>
+                                <input id="snacks" type="checkbox" name="coursetype" value="Užkandžiai
+                                "/>
+                                <label for="snacks" class="meal-category-li">Užkandžiai</label>                             
+                            </div>
+                            <div>
+                                <input id="dessert" type="checkbox" name="coursetype" value="Desertas
+                                "/>
+                                <label for="dessert" class="meal-category-li">Desertai</label>   
+                            </div>
+                            <div>
+                                <input id="side" type="checkbox" name="coursetype" value="Garnyras"/>
+                                <label for="side" class="meal-category-li">Garnyras</label>
+                            </div>
+                        </div>
                 </div>
             </li>
                 

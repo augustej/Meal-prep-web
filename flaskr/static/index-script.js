@@ -71,6 +71,11 @@ var inputAreaProductMeasurement = document.querySelector('#product-measurement-i
 var productMeasurmentParentUlItem = document.querySelector(".product-measurement")
 var productSearchParentUlItem = document.querySelector('.product-search');
 var addIngredientButton = document.querySelector("#add_ingredient_to_recipe")
+var addIngredientSubtitleButton = document.querySelector("#add-ingredient-subtitle")
+var confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingredients-ul")
+var confirmRecipeBtn = document.querySelector(".confirm-recipe")
+var mealCategoryParentUlItem = document.querySelector('.meal-category-ul')
+var mealCategoryInput = document.querySelector("#meal-category-input")
 
 modal.addEventListener("input", e => {
     // searching for a product and modifying DOM to display that
@@ -97,6 +102,18 @@ modal.addEventListener("input", e => {
 
 modal.addEventListener("click", e => {
     var deleteIngredientButton = document.querySelectorAll(".deleteIngredientBtn")
+    var deleteSubtitleBtn = document.querySelectorAll(".deleteSubtitleBtn")
+
+    if (e.target == addIngredientSubtitleButton){
+        let ingredientSubtitleDropdown = document.querySelector('.ingredient-subtitle-dropdown-area')
+        if (ingredientSubtitleDropdown.style.display == "block"){
+            displayIngredientSubtitle()
+            ingredientSubtitleDropdown.style.display = "none"
+        }
+        else {
+            ingredientSubtitleDropdown.style.display = "block"
+        }
+    }
 
     // select element from list, saving it's value inside input and hiding list suggestions
     if (e.target.closest('ul') == productSearchParentUlItem){
@@ -104,7 +121,7 @@ modal.addEventListener("click", e => {
         productSearchParentUlItem.innerHTML = ""
         unLockNextInputFields("True")
     }
-    // displaying proper measurement units list (dropdown) for picked product
+        // displaying proper measurement units list (dropdown) for picked product
     if (e.target == inputAreaProductMeasurement){
         productMeasurmentParentUlItem.innerHTML = ""
         if (!inputAreaProductMeasurement.hasAttribute('readonly')){
@@ -153,8 +170,20 @@ modal.addEventListener("click", e => {
             }
         })
     }
-})
 
+    if (e.target == confirmRecipeBtn){
+        analyseIngredientSubtitles()
+        updateIngredientTableWithSubtitles(ingredientSubtitleList)
+    }
+    // delete subtitles
+    if (deleteSubtitleBtn){
+        deleteSubtitleBtn.forEach(suvtitleItem =>{
+            if (e.target == suvtitleItem){
+                suvtitleItem.parentElement.remove()
+            }
+        })
+    }
+})
 
 // product search for recipe, to add ingredients
 async function checkForProductInDb(
@@ -171,7 +200,7 @@ async function checkForProductInDb(
 
 // Creating items in DOM for dropdowns
 function createListItemInDom (item, parentElement, className) {
-    var li = document.createElement('li');
+    let li = document.createElement('li');
     li.appendChild(document.createTextNode(item))
     li.setAttribute("class", className)
     parentElement.appendChild(li)
@@ -238,7 +267,6 @@ async function addIngredientToTable(ingredientDict
 
 // creating DOM items for a confirmed Ingredient
 async function creatingDomForConfirmedIngredients(currentIngredientsId){
-    let confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingredients-ul")
     let firstpElement = document.createElement('p');
     firstpElement.appendChild(document.createTextNode(inputAreaProductSearch.value))
     let secondpElement = document.createElement('p');
@@ -253,6 +281,7 @@ async function creatingDomForConfirmedIngredients(currentIngredientsId){
     liElement.appendChild(secondpElement)
     liElement.appendChild(thirdElement)
     liElement.setAttribute('class', 'confirmed-ingredients-li')
+    liElement.setAttribute('id', `ingredientID${currentIngredientsId}`)
     confirmedIngredientsParentUlItem.appendChild(liElement)
     inputAreaProductAmount.value = ""
     inputAreaProductSearch.value = ""
@@ -269,6 +298,56 @@ function deleteIngredient(IngredientsID){
             method: 'GET',
         }
     )
+    return
+}
+
+
+function displayIngredientSubtitle(){
+    let ingredientSubtitleInput = document.querySelector("#ingredient-subtitle-input")
+    if (ingredientSubtitleInput.value.length > 0){       
+        let li = document.createElement('li');
+        let buttonElement = document.createElement('button');
+        buttonElement.appendChild(document.createTextNode('X'))
+        buttonElement.setAttribute('class', 'deleteSubtitleBtn')
+        buttonElement.setAttribute('type', 'button')
+        li.appendChild(document.createTextNode(ingredientSubtitleInput.value))
+        li.appendChild(buttonElement)
+        li.setAttribute("class", "ingredient-subtitle confirmed-ingredients-li")
+        confirmedIngredientsParentUlItem.appendChild(li)
+        ingredientSubtitleInput.value = ""
+    }
+}
+ 
+function analyseIngredientSubtitles(){
+    let confirmedIngredientsLiItems = document.querySelectorAll(".confirmed-ingredients-li")
+    let subtitleText = ""
+    ingredientSubtitleList = []
+    confirmedIngredientsLiItems.forEach(NodeItem => {
+        if (NodeItem.classList.contains('ingredient-subtitle')){
+                subtitleText = NodeItem.innerText
+            }
+            else {
+                let idname = NodeItem.id
+                let length = "ingredientID".length
+                let id = idname.substring(length)
+                let ingredientSubtitleDict = {}
+                ingredientSubtitleDict['id'] = id
+                ingredientSubtitleDict['subtitle'] = subtitleText
+                ingredientSubtitleList.push(ingredientSubtitleDict)
+            }
+        })
+    return ingredientSubtitleList
+ }
+
+function updateIngredientTableWithSubtitles(ingredientSubtitleList){
+    fetch('/ingredient-update-subtitle',
+    {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(ingredientSubtitleList)    
+    })
     return
 }
 

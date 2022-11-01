@@ -839,6 +839,7 @@ div.imported-recipe{
 .ingredient-label-and-input-area{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items:stretch;
     width: 100%;
@@ -847,9 +848,10 @@ div.imported-recipe{
 
 .ingredient-label-and-input-area label{
     font-style: italic;
+    align-self: center;
 }
 
-.ingredient-label-and-input-area ul{
+.ingredient-label-and-input-area ul, .meal-category-ul{
     width:100%;
     padding:0;
     position:absolute;
@@ -859,7 +861,7 @@ div.imported-recipe{
     color: var(--white);
 }
 
-.ingredient-label-and-input-area li{
+.ingredient-label-and-input-area li, .meal-category-ul li{
     text-align: left;
     padding: 0.5em;
     list-style: none;
@@ -871,7 +873,7 @@ div.imported-recipe{
     background-color: var(--purple);
 }
 
-.ingredient-input-area{
+.ingredient-input-area, .meal-category-area{
     display:flex;
     flex-direction: column;
     justify-content: stretch;
@@ -879,26 +881,34 @@ div.imported-recipe{
     position:relative;
 }
 
-.card-li.prep-time-file-add{
+.ingredient-input-area{
+    width:50%;
+}
+
+.card-li.prep-time-file-add, .card-li.portions-and-category{
     padding-top: 0;
     align-items: flex-start;
 }
 
 .new-recipe-li.half-size{
-    max-width: 40%;
     align-items: flex-start;
     justify-content: space-between;
     display: flex;
     flex-direction: column;
 }
 
-.prep-time{
+.new-recipe-li.half-size:first-child{
+    max-width: 40%;
+    margin-right: 1em;
+}
+
+.prep-time, .portions{
     display: flex;
     flex-direction: row;
     gap: 1em;
 }
 
-.prep-time input{
+.prep-time input, .portions input{
     width: 40%;
     max-width: 70px;
 }
@@ -906,6 +916,47 @@ div.imported-recipe{
 .confirm-recipe{
     margin: 2em auto;
     text-align: center;
+}
+
+.button.add-ingredient-subtitle{
+    font-size: 1.5em;
+    padding: 0 0.2em;
+    margin: 0.5em 0.5em 0.5em 0;
+}
+
+.ingredient-subtitle-input{
+    font-style: normal;    
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    flex-basis: 80%;
+    padding: 0.2em 0;
+}
+
+.ingredients-subtitle.ingredient-input-and-button{
+    justify-content: flex-start;
+}
+
+.ingredient-subtitle-dropdown-area{
+    display: none;
+}
+
+.add-ingredient-field.subtitle{
+    width: 80%;
+    margin: 1em;
+}
+
+.meal-category-area div{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1em;
+    font-style: italic;
+}
+
+.recipe-creation-div .new-recipe-li .meal-category-area input{
+    max-width: 20%;
 }
 
 @media (max-width: 750px){
@@ -921,6 +972,12 @@ div.imported-recipe{
     .ingredient-input-and-button button{
         margin-top: 1em;
     }
+    .ingredient-input-area{
+        width: 100%;
+    }
+    .ingredient-label-and-input-area label{
+        align-self:auto;
+    }
 }
 
 @media (max-width: 600px){
@@ -935,9 +992,10 @@ div.imported-recipe{
         border-top: #5f396b solid;
     }
     
-    .card-li.prep-time-file-add{
+    .card-li.prep-time-file-add, .card-li.portions-and-category {
     flex-direction: column;
     gap:2em;
     }
 }
+
 /* END ADD RECIPE FUNCTIONALITY in RECIPES */

@@ -3,7 +3,7 @@ from flask_login import current_user
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS
 import os
 from werkzeug.utils import secure_filename
-from .model import User, Product, Foodtype, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
+from .model import Coursetype, User, Product, Foodtype, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
 
 private_pages = Blueprint('private_pages', __name__)
@@ -59,7 +59,6 @@ def add_ingredient():
         db.session.commit()
         answer= {}
         answer['ingredientId'] = new_ingredient.id
-        print(answer, "ANSWER")
     else: 
         answer= {"name": "else"}
     return answer
@@ -68,7 +67,6 @@ def add_ingredient():
 def delete_ingredient():
     if request.method == 'GET':
         ingredientId = request.args.get('ingredientid')
-        print(ingredientId, "ID")
         Ingredient.query.filter(Ingredient.id==ingredientId).delete()
         db.session.commit()
         return ingredientId
@@ -79,6 +77,7 @@ def add_recipe():
     instruction = request.form.get('recipe-preparation')
     user_id=current_user.id
     cookingtime = request.form.get('preparation-time')
+    portions = request.form.get('portions')
     current_recipe = Recipe.query.filter_by(name="inprogress").first()
 
     # adding image
@@ -95,6 +94,8 @@ def add_recipe():
     current_recipe.instruction=instruction
     current_recipe.user_id = user_id
     current_recipe.cookingtime=cookingtime
+    current_recipe.portions=portions
+
     allProductsOfRecipe = Ingredient.query.filter_by(recipe_id=current_recipe.id).all()
     numberOfIngredients = len(allProductsOfRecipe)
     foodDict ={}
@@ -127,10 +128,27 @@ def add_recipe():
         db.session.execute(insertStatement)
         db.session.commit()
     
+    recipesCourseTypeList = request.form.getlist('coursetype')
+    for courseTypeItem in recipesCourseTypeList:
+        current_CourseType = Coursetype.query.filter_by(name=courseTypeItem.strip()).first()
+        CourseTypeID = current_CourseType.id
+        insertStatement1 = recipeCoursetype.insert().values(recipe_id = current_recipe.id, coursetype_id=CourseTypeID)
+        db.session.execute(insertStatement1)
+
     db.session.add(current_recipe)
     db.session.commit()
     return render_template('pages/public/recipes.html')
 
+@private_pages.route('/ingredient-update-subtitle', methods=['POST'])
+def update_ingredient_subtitle():
+    if request.method == "POST":
+        datalist = request.get_json()
+        for item in datalist:
+            IngredientToModify = Ingredient.query.filter_by(id=item['id']).first()
+            IngredientToModify.subtitle = item['subtitle']
+            db.session.add(IngredientToModify)
+        db.session.commit()
+    return datalist
 
 def allowed_file(filename):
     return '.' in filename and \
