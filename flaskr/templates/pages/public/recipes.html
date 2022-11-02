@@ -11,15 +11,15 @@
 <div id="recipe-creation-div" class="modal recipe-creation-div">
     <span class="close" id="close-add-recipe">&times;</span>
 
-    <form class="adding-recipe outer-card-shape" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
+    <form class="adding-recipe outer-card-shape" name="add-recipe-form" id="add-recipe-form" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
         <div class="card-title"><h1>Naujas receptas</h1></div>
         <ul class="card-ul">
-            <li class="card-li new-recipe-li">
+            <li class="new-recipe-li bottom-border">
                 <label for="new-recipe-title"><h2>Recepto pavadinimas</h2></label>
                 <input type="text" class="new-recipe-title" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">        
             </li>
-            <li class="card-li new-recipe-li">
-                <label for="all-ingredients"><h2>Ingredientai</h2></label>
+            <li class="new-recipe-li bottom-border">
+                <label for="all-ingredients"class="ingredient-title"><h2>Ingredientai</h2></label>
                 <div id="all-ingredients">    
                     <ul class="confirmed-ingredients-ul"></ul>
                     <div class="ingredients-subtitle ingredient-input-and-button">
@@ -62,11 +62,11 @@
                     </div>
                 </div>
             </li>
-            <li class="card-li new-recipe-li">
+            <li class="new-recipe-li bottom-border">
                 <label for="recipe-preparation"><h2>Paruošimas</h2></label>
                 <textarea id="recipe-preparation" name="recipe-preparation" required spellcheck=”false”></textarea>
             </li>
-            <li class="card-li prep-time-file-add">
+            <li class="prep-time-file-add bottom-border">
                 <div class="new-recipe-li half-size">
                     <label for="preparation-time"><h2>Paruošimo laikas</h2></label>
                     <div class="prep-time">
@@ -82,7 +82,7 @@
                     </label>
                 </div>
             </li>
-            <li class="card-li portions-and-category">
+            <li class="portions-and-category bottom-border">
                 <div class="new-recipe-li half-size">
                     <label for="portions"><h2>Porcijos</h2></label>
                     <div class="portions">
@@ -90,7 +90,7 @@
                         <p>asm.</p>
                     </div>
                 </div>
-                <div class="new-recipe-li half-size">
+                <div class="half-size new-recipe-li">
                     <label for="meal-category-input"><h2>Kategorija</h2></label>
                         <div class="meal-category-area">
                             <div>
@@ -120,7 +120,7 @@
                 </div>
             </li>
                 
-            <button class="confirm-recipe button" type="submit">Išsaugoti receptą</button>
+            <button class="confirm-recipe button" type="button">Išsaugoti receptą</button>
         </ul>
     </form>    
 </div>

@@ -76,6 +76,9 @@ var confirmedIngredientsParentUlItem = document.querySelector(".confirmed-ingred
 var confirmRecipeBtn = document.querySelector(".confirm-recipe")
 var mealCategoryParentUlItem = document.querySelector('.meal-category-ul')
 var mealCategoryInput = document.querySelector("#meal-category-input")
+var ingredientDictList = []
+var addRecipeForm = document.querySelector("#add-recipe-form")
+sessionStorage.setItem("indexOfIngredient", 0);
 
 modal.addEventListener("input", e => {
     // searching for a product and modifying DOM to display that
@@ -124,7 +127,7 @@ modal.addEventListener("click", e => {
         // displaying proper measurement units list (dropdown) for picked product
     if (e.target == inputAreaProductMeasurement){
         productMeasurmentParentUlItem.innerHTML = ""
-        if (!inputAreaProductMeasurement.hasAttribute('readonly')){
+        if (!inputAreaProductAmount.hasAttribute('readonly')){
             currentProductData.then((data)=> {
                 data.forEach(item =>{
                     let array = item.measurement
@@ -150,14 +153,14 @@ modal.addEventListener("click", e => {
     }
 
     enableORdisableIngredientSubmitButton()
-    // adding ingredient to Ingredients table and showing it on the screen
+    // adding ingredient to ingredientDictList and showing it on the screen
     if (e.target == addIngredientButton){
         createIngredientDictItem()
-        addIngredientToTable(ingredientDict).then((data)=> {
-            currentIngredientsId = data.ingredientId
-             creatingDomForConfirmedIngredients(currentIngredientsId)
-        })
+        ingredientDictList.push(ingredientDict)
+        indexOfDictItem = ingredientDict['index']
+        creatingDomForConfirmedIngredients(indexOfDictItem)
     }
+
     // delete ingredient from Ingredients table and removing it from the screen
     if (deleteIngredientButton){
         deleteIngredientButton.forEach(item => {
@@ -173,7 +176,10 @@ modal.addEventListener("click", e => {
 
     if (e.target == confirmRecipeBtn){
         analyseIngredientSubtitles()
-        updateIngredientTableWithSubtitles(ingredientSubtitleList)
+        addIngredientToTable(ingredientDictList).then((data) =>{
+            addRecipeForm.submit()
+        })
+       
     }
     // delete subtitles
     if (deleteSubtitleBtn){
@@ -211,13 +217,13 @@ function unLockNextInputFields(boolStatment) {
     if (boolStatment == "True"){
         if (inputAreaProductAmount.hasAttribute('readonly')){
             inputAreaProductAmount.removeAttribute('readonly')
-            inputAreaProductMeasurement.removeAttribute('readonly')
+            // inputAreaProductMeasurement.removeAttribute('readonly')
         }
     }
     else{
         if (!inputAreaProductAmount.hasAttribute('readonly')){
             inputAreaProductAmount.setAttribute('readonly', 'True')
-            inputAreaProductMeasurement.setAttribute('readonly', 'True')
+            // inputAreaProductMeasurement.setAttribute('readonly', 'True')
         }    
     }
 }
@@ -244,29 +250,32 @@ function createIngredientDictItem (){
     productName = inputAreaProductSearch.value
     productAmount = inputAreaProductAmount.value
     productMeasurement = inputAreaProductMeasurement.value
-    ingredientDict = {"name":productName, "amount": productAmount, "measurement":productMeasurement}
+    let data =  parseInt(sessionStorage.getItem("indexOfIngredient"));
+
+    ingredientDict = {"name":productName, "amount": productAmount, "measurement":productMeasurement, "index":data}
+    updatedIndex = data + 1
+    sessionStorage.setItem("indexOfIngredient", updatedIndex);
     return ingredientDict
 }
 
-// adding ingredients to Ingredients table, returns Ingredients table id
-async function addIngredientToTable(ingredientDict
-){
-    const response = await fetch(
+
+async function addIngredientToTable(ingredientDictList){
+    fetch(
         '/ingredient-add-to-recipe', 
         {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-              },
-            body: JSON.stringify(ingredientDict)
+                },
+            body: JSON.stringify(ingredientDictList)
         }
     );
-    return response.json();
+    return
 }
 
+// creating DOM items for an Ingredient
 
-// creating DOM items for a confirmed Ingredient
-async function creatingDomForConfirmedIngredients(currentIngredientsId){
+function creatingDomForConfirmedIngredients(indexOfDictItem){
     let firstpElement = document.createElement('p');
     firstpElement.appendChild(document.createTextNode(inputAreaProductSearch.value))
     let secondpElement = document.createElement('p');
@@ -275,13 +284,12 @@ async function creatingDomForConfirmedIngredients(currentIngredientsId){
     let thirdElement = document.createElement('button');
     thirdElement.appendChild(document.createTextNode('X'))
     thirdElement.setAttribute('class', 'deleteIngredientBtn')
-    thirdElement.setAttribute('id', `deleteIngredientBtn${currentIngredientsId}`)
+    thirdElement.setAttribute('id', `deleteIngredientBtn${indexOfDictItem}`)
     thirdElement.setAttribute('type', 'button')
     liElement.appendChild(firstpElement)
     liElement.appendChild(secondpElement)
     liElement.appendChild(thirdElement)
     liElement.setAttribute('class', 'confirmed-ingredients-li')
-    liElement.setAttribute('id', `ingredientID${currentIngredientsId}`)
     confirmedIngredientsParentUlItem.appendChild(liElement)
     inputAreaProductAmount.value = ""
     inputAreaProductSearch.value = ""
@@ -290,17 +298,15 @@ async function creatingDomForConfirmedIngredients(currentIngredientsId){
     unLockNextInputFields("False")
 }
 
-// delete Ingredient from table
+// delete Ingredient from ingredientDictList
 function deleteIngredient(IngredientsID){
-    fetch(
-        '/delete-ingredient?ingredientid=' + IngredientsID,
-        {
-            method: 'GET',
+    for (dictItem of ingredientDictList){
+        if (dictItem.index == IngredientsID){
+            dictItemIndex = ingredientDictList.indexOf(dictItem)
+            ingredientDictList.splice(dictItemIndex, 1)
         }
-    )
-    return
+    }
 }
-
 
 function displayIngredientSubtitle(){
     let ingredientSubtitleInput = document.querySelector("#ingredient-subtitle-input")
@@ -322,34 +328,20 @@ function analyseIngredientSubtitles(){
     let confirmedIngredientsLiItems = document.querySelectorAll(".confirmed-ingredients-li")
     let subtitleText = ""
     ingredientSubtitleList = []
+    let i = 0
     confirmedIngredientsLiItems.forEach(NodeItem => {
         if (NodeItem.classList.contains('ingredient-subtitle')){
-                subtitleText = NodeItem.innerText
+                subtitleChild = NodeItem.innerText
+                // cut inner text of button ("X")
+                subtitleText = subtitleChild.substring(0, subtitleChild.length - 2)
             }
             else {
-                let idname = NodeItem.id
-                let length = "ingredientID".length
-                let id = idname.substring(length)
-                let ingredientSubtitleDict = {}
-                ingredientSubtitleDict['id'] = id
-                ingredientSubtitleDict['subtitle'] = subtitleText
-                ingredientSubtitleList.push(ingredientSubtitleDict)
+                ingredientDictList[i]['subtitle'] = subtitleText
+                i += 1
             }
         })
-    return ingredientSubtitleList
+    return ingredientDictList
  }
-
-function updateIngredientTableWithSubtitles(ingredientSubtitleList){
-    fetch('/ingredient-update-subtitle',
-    {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-          },
-        body: JSON.stringify(ingredientSubtitleList)    
-    })
-    return
-}
 
 // END OF ADD RECIPE FUNCTIONS____________________________________________________________
 

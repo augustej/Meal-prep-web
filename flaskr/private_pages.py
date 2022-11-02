@@ -1,6 +1,6 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS
+from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os
 from werkzeug.utils import secure_filename
 from .model import Coursetype, User, Product, Foodtype, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
@@ -45,31 +45,25 @@ def product_search_on_type():
 @private_pages.route('/ingredient-add-to-recipe', methods=['GET', 'POST'])
 def add_ingredient():
     if request.method == "POST":
+
         data = request.get_json()
         recipeToAddIngredientTo = Recipe.query.filter_by(name="inprogress").first()
         if recipeToAddIngredientTo == None:
             recipeToAddIngredientTo = Recipe(name="inprogress")
             db.session.add(recipeToAddIngredientTo)
             db.session.commit()
-        product_id = Product.query.filter_by(name=data['name']).first().id
-        measurement_id = Measurement.query.filter_by(name=data['measurement']).first().id
-        recipe_id = recipeToAddIngredientTo.id
-        new_ingredient = Ingredient(name = data['name'], amount=data['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
-        db.session.add(new_ingredient)
-        db.session.commit()
+        for ingredientItem in data:
+            product_id = Product.query.filter_by(name=ingredientItem['name']).first().id
+            measurement_id = Measurement.query.filter_by(name=ingredientItem['measurement']).first().id
+            recipe_id = recipeToAddIngredientTo.id
+            new_ingredient = Ingredient(name = ingredientItem['name'], subtitle =ingredientItem['subtitle'], amount=ingredientItem['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
+            db.session.add(new_ingredient)
+            db.session.commit()
         answer= {}
         answer['ingredientId'] = new_ingredient.id
     else: 
         answer= {"name": "else"}
     return answer
-
-@private_pages.route('/delete-ingredient')
-def delete_ingredient():
-    if request.method == 'GET':
-        ingredientId = request.args.get('ingredientid')
-        Ingredient.query.filter(Ingredient.id==ingredientId).delete()
-        db.session.commit()
-        return ingredientId
 
 @private_pages.route('/confirmed-recipe', methods=['POST'])
 def add_recipe():
@@ -137,18 +131,8 @@ def add_recipe():
 
     db.session.add(current_recipe)
     db.session.commit()
-    return render_template('pages/public/recipes.html')
+    return redirect(url_for('public_pages.recipes'))
 
-@private_pages.route('/ingredient-update-subtitle', methods=['POST'])
-def update_ingredient_subtitle():
-    if request.method == "POST":
-        datalist = request.get_json()
-        for item in datalist:
-            IngredientToModify = Ingredient.query.filter_by(id=item['id']).first()
-            IngredientToModify.subtitle = item['subtitle']
-            db.session.add(IngredientToModify)
-        db.session.commit()
-    return datalist
 
 def allowed_file(filename):
     return '.' in filename and \
