@@ -3,7 +3,7 @@ from flask_login import current_user
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os
 from werkzeug.utils import secure_filename
-from .model import Coursetype, User, Product, Foodtype, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
+from .model import Coursetype, User, Product, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
 
 private_pages = Blueprint('private_pages', __name__)
@@ -132,6 +132,22 @@ def add_recipe():
     db.session.add(current_recipe)
     db.session.commit()
     return redirect(url_for('public_pages.recipes'))
+
+@private_pages.route('/check_if_favorite', methods=['GET'])
+def checkIfFavorite():
+    if request.method == 'GET':
+        recipeID = request.args.get('recipeID')
+        addToFavorites = request.args.get('addToFavorites')
+
+        if addToFavorites == "YES":
+            statement = favoriteRecipes.insert().values(user_id = current_user.id, recipe_id=recipeID)
+            print(statement, "statement")
+            db.session.execute(statement)
+        else:
+            db.session.query(favoriteRecipes).filter_by(user_id = current_user.id, recipe_id=recipeID).delete()
+    db.session.commit()
+    return addToFavorites
+
 
 
 def allowed_file(filename):

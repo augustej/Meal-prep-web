@@ -1,6 +1,6 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from .model import User, Product, Foodtype, productMeasurements, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
+from .model import User, Product, Foodtype, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
 import csv
 from . import db
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +25,69 @@ def recipes():
 def search():
     return render_template('pages/public/search.html')
 
+@public_pages.route('/single_recipe')
+def render_single_recipe():
+    IDofRecipe = request.args.get('recipeID')
+    recipeToVisualize = Recipe.query.filter_by(id=IDofRecipe).first()
+    fullPicturePath = recipeToVisualize.picture
+    modifiedPicturePath=""
+    if fullPicturePath:
+        modifiedPicturePath = '..' + fullPicturePath.split("flaskr")[1]
+
+    # calculate calories of a recipe
+    ingredientItems = recipeToVisualize.ingredients
+    portionsOfRecipe =recipeToVisualize.portions
+    kcalOfRecipe = 0
+    for ingredient in ingredientItems:
+        idofproduct = ingredient.product_id
+        idofMeasurm = ingredient.measurement_id
+        ingredientAmount = ingredient.amount
+        kcalKoeficient = db.session.query(productMeasurements).filter_by(
+            product_measurement_id=idofMeasurm, product_id=idofproduct).first(
+            ).product_conversion_to_gram
+        kcalOfIngredient = kcalKoeficient * ingredientAmount
+        kcalOfRecipe += kcalOfIngredient
+    kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)
+
+    # modify recipe instructions to get each row
+    sentenceList = []
+    sentence = ""
+    for letter in recipeToVisualize.instruction:
+        if "\n" != letter :
+            sentence += letter
+        else:
+            sentenceList.append(sentence)
+            sentence = ""
+    if sentence != "":
+        sentenceList.append(sentence)
+    subtitleList = []
+    for ingredientItem in recipeToVisualize.ingredients:
+        subtitleItem = ingredientItem.subtitle
+        if subtitleItem not in subtitleList:
+            subtitleList.append(subtitleItem)
+    
+    # prepare ingredient measurement name dict
+    measurmentDict = {}
+    allMeasurements = Measurement.query.all()
+    for item in allMeasurements:
+        measurmentDict[item.id] = item.name
+
+    #check if recipe is favorited
+    ifFavorited=db.session.query(favoriteRecipes).filter_by(recipe_id=recipeToVisualize.id, user_id=current_user.id).first()
+    if ifFavorited:
+        favoriteValue=" favorited"
+    else:
+        favoriteValue=""
+
+    return render_template('pages/public/singleRecipe.html', 
+        favoriteValue=favoriteValue,
+        recipe=recipeToVisualize, 
+        subtitlelist=subtitleList, 
+        picturepath=modifiedPicturePath, 
+        sentencelist=sentenceList,
+        calories=kcalPerPortion,
+        measurmentDict=measurmentDict
+        )
 
 def name_modification_for_greeting(name):
     last_two_letters = name[-2:]

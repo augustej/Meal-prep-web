@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block navrecipes %} active {% endblock %}
+
+{% block content%}
+<div class="single-recipe-outer-shape">
+    <div class="single-recipe-inner-shape">
+        <div class="card-title">
+            <div class="decor-triangle-left purple"></div>
+            <h1 class="recipe-name-display"> {{ recipe.name }} </h1>
+            <div class="decor-triangle-right purple"></div>
+
+        </div>
+
+        <div class="text-and-picture-display">
+            <div class="heart-and-image">
+                <i class="fa-solid fa-heart favorite-heart{{ favoriteValue }}" id="heartID{{recipe.id}}"></i>
+                <div class="image-side-display">
+                    {% if picturepath != "" %}
+                        <img src={{ picturepath }}/>
+                    {% else %}
+                        <img src='../../../static/images/intro1s.jpg'/>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-side-display">
+                <div class="course-type-display">
+                    {% for course in recipe.recipeCoursetype %}
+                        <h2>{{ course.name }}</h2>
+                    {% endfor %}
+
+                </div>
+                <div class="cooking-time-display title-value">
+                    <h3>Gaminimo laikas:</h3>
+                    <p>{{recipe.cookingtime}} min</p>
+                </div>
+                <div class="portions-display title-value">
+                    <h3>Porcijos:</h3>
+                    <p>{{recipe.portions}}</p>
+                </div>
+                <div class="recipetypes-display title-value">
+                    <h3>Tipas:</h3>
+                    {% for type in recipe.recipetypes %}
+                        <p>{{ type.name }}</p>
+                    {% endfor %}
+                </div>
+                <div class="calories-display title-value">
+                    <h3>Energetinė vertė: </h3>
+                    <p>{{calories}} kcal/porcijoje</p>
+                </div>
+                
+            </div>
+           
+            
+        </div>
+        <div class="ingredients-and-preparation-display">
+            <div class="ingredients-of-recipe">
+                <h2>Ingredientai</h2>
+                <!-- display ingredients with subtitles -->
+                    {% for subtitle in subtitlelist %}
+                        {% if subtitle %}
+                        <h3 class="subtitle-name-display">{{ subtitle }}</h3>
+                            <ul class="subtitle-display-ul">
+                                {% for ingredient in recipe.ingredients %}
+                                    {% if ingredient.subtitle == subtitle %}
+                                        <li class="subtitle-display-li">
+                                            <p>{{ ingredient.name}}</p> 
+                                            <div class="ingredient-amount-measure-display">
+                                                <p>{{ ingredient.amount }}</p>
+                                                <p>
+                                                {% for key in measurmentDict %}
+                                                    {% if key == ingredient.measurement_id %}
+                                                        {{measurmentDict[key]}}
+                                                    {% endif%}
+                                                {% endfor %}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endfor %}
+                    <!-- display ingredients without subtitles -->
+                    {% for ingredient in recipe.ingredients %}
+                        {% if not ingredient.subtitle %}
+                        <li class="subtitle-display-li">
+                            <p>{{ ingredient.name}}</p>                             <div class="ingredient-amount-measure-display">
+                                <p>{{ ingredient.amount }}</p>
+                                <p>
+                                {% for key in measurmentDict %}
+                                    {% if key == ingredient.measurement_id %}
+                                        {{measurmentDict[key]}}
+                                    {% endif%}
+                                {% endfor %}
+                                </p>
+                            </div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+            </div>
+            <div class="preparation-of-recipe-display">
+                <h2>Paruošimas</h2>
+                <ol class="preparation-display-ol">
+                    {% for sentence in sentencelist%}
+                    <li>{{ sentence }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
