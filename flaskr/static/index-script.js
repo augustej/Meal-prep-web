@@ -358,7 +358,7 @@ function redirectToSingleRecipePage(recipeID){
 var singleRecipeBtn = document.querySelector('#single-recipe')
 if (singleRecipeBtn){
 singleRecipeBtn.addEventListener('click', event =>{
-    redirectToSingleRecipePage(15)
+    redirectToSingleRecipePage(17)
 } )
 }
 

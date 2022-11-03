@@ -3,10 +3,91 @@
 {% block navrecipes %} active {% endblock %}
 
 {% block content%}
+<div class="recipes-outer-shape">
+    <div class="title-for-recipes-page top-purple-full-width">
+        <h1>Receptai</h1>
+    </div>
+    <div class="recipes-inner-shape">
+        <div class="search-element">
 
-<h1>Recipes</h1>
+        </div>
+        <div class="my-added-recipes all-cards-area">
+            <h2>Mano receptai</h2>
+            <div class="recipes-display-area">
+                {% for recipe in myRecipes %}
+                <div class="recipe-card">
+                    <h3 class="recipe-name-for-card">{{ recipe.name }}</h3>
+                    {% if myRecipesPictDict[recipe.id] != "" %}
+                    <img src='{{ myRecipesPictDict[recipe.id] }}'/>
+                    {% else %}
+                    <img src='../../../static/images/intro1s.jpg'/>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="href-link-to-all-recipes">
+                <a href="">Žiūrėti visus >></a>
+            </div>
+            <button id="add-recipe-button" class="button">Pridėti naują receptą</button>
 
-<button id="add-recipe-button">Pridėti receptą</button>
+        </div>
+        <div class="my-favorited-recipes all-cards-area">
+            <h2>Mėgstamiausi receptai</h2>
+            <div class="recipes-display-area">
+                {% for recipe in myfavoriteRecipes %}
+                <div class="recipe-card">
+                    <h3 class="recipe-name-for-card">{{ recipe.name }}</h3>
+                    {% if myRecipesPictDict[recipe.id] != "" %}
+                    <img src='{{ myRecipesPictDict[recipe.id] }}'/>
+                    {% else %}
+                    <img src='../../../static/images/intro1s.jpg'/>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="all-recipes all-cards-area">
+            <h2>Įvairūs receptai</h2>
+            <div class="recipes-display-area">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" id="single-recipe">SIngleRecipe</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div id="recipe-creation-div" class="modal recipe-creation-div">
     <span class="close" id="close-add-recipe">&times;</span>
@@ -125,6 +206,5 @@
     </form>    
 </div>
 
-<button type="button" id="single-recipe">SIngleRecipe</button>
 
 {% endblock %}

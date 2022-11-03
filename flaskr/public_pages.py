@@ -18,7 +18,33 @@ def home():
 
 @public_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
-    return render_template('pages/public/recipes.html')
+    if request.method == 'GET':
+        myRecipes = Recipe.query.filter_by(user_id=current_user.id).all()
+        myfavoriteRecipesdata = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
+        recipeIDList = []
+        for recipeItem in  myfavoriteRecipesdata:
+            recipeID = recipeItem.recipe_id
+            recipeIDList.append(recipeID)
+        myfavoriteRecipes = Recipe.query.filter(Recipe.id.in_(recipeIDList)).all()
+        
+        # combining myrecipes and my favorite recipes into one list, to create one picture dictionary for template
+        inMyRecipes = set(myRecipes)
+        inMyFavorites = set(myfavoriteRecipes)
+        inMyRecipesNotFavorites = inMyRecipes - inMyFavorites
+        fullListofRecipesForPicturesDict = list(inMyRecipesNotFavorites) + myfavoriteRecipes
+
+        myRecipesPictDict ={}
+        for singlerecipe in fullListofRecipesForPicturesDict:
+            fullPicturePath = singlerecipe.picture
+            if fullPicturePath:
+                modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+            else:
+                modifiedPicturePath=''
+            myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
+        
+        
+    return render_template('pages/public/recipes.html', myRecipes=myRecipes, myfavoriteRecipes=myfavoriteRecipes, 
+        myRecipesPictDict=myRecipesPictDict)
 
 
 @public_pages.route('/search')
