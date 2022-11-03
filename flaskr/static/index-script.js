@@ -51,17 +51,19 @@ function onFileAddShowName(buttonClickedID, fileAddedID){
 var modal = document.querySelector("#recipe-creation-div");
 var addRecipeBtn = document.querySelector("#add-recipe-button");
 var closeAddRecipeBtn = document.querySelector("#close-add-recipe");
-addRecipeBtn.onclick = function() {
-    modal.style.display = "block";
-  }
-closeAddRecipeBtn.onclick = function() {
-    modal.style.display = "none";
-  }
-window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+if (addRecipeBtn){
+    addRecipeBtn.onclick = function() {
+        modal.style.display = "block";
     }
-  }
+    closeAddRecipeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    }
+}
 
 //Event listeners for add-recipe functionality
 var productSearchString = ""
@@ -80,6 +82,7 @@ var ingredientDictList = []
 var addRecipeForm = document.querySelector("#add-recipe-form")
 sessionStorage.setItem("indexOfIngredient", 0);
 
+if (modal){
 modal.addEventListener("input", e => {
     // searching for a product and modifying DOM to display that
     if (e.target == inputAreaProductSearch){
@@ -190,6 +193,7 @@ modal.addEventListener("click", e => {
         })
     }
 })
+}
 
 // product search for recipe, to add ingredients
 async function checkForProductInDb(
@@ -345,3 +349,34 @@ function analyseIngredientSubtitles(){
 
 // END OF ADD RECIPE FUNCTIONS____________________________________________________________
 
+function redirectToSingleRecipePage(recipeID){
+    location.replace('/single_recipe?recipeID='+recipeID)
+    return
+}
+
+
+var singleRecipeBtn = document.querySelector('#single-recipe')
+if (singleRecipeBtn){
+singleRecipeBtn.addEventListener('click', event =>{
+    redirectToSingleRecipePage(15)
+} )
+}
+
+// add recipe to favorites
+var heartBtn = document.querySelector('.favorite-heart')
+if (heartBtn){
+heartBtn.addEventListener('click', e=>{
+    console.log('clicked')
+    let prefixlength = 'heartID'.length
+    let heartID = heartBtn.id
+    let extractedRecipeID=heartID.substring(prefixlength)
+    if (heartBtn.classList.contains('favorited')){
+        heartBtn.classList.remove('favorited')
+        fetch('/check_if_favorite?recipeID='+extractedRecipeID+'&addToFavorites=NO')
+    }
+    else{
+        heartBtn.classList.add('favorited')
+        fetch('/check_if_favorite?recipeID='+extractedRecipeID+'&addToFavorites=YES')
+    }
+})
+}
