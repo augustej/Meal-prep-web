@@ -3,58 +3,62 @@
 {% block navrecipes %} active {% endblock %}
 
 {% block content%}
-<div class="recipes-outer-shape">
-    <div class="title-for-recipes-page top-purple-full-width">
-        <h1>Receptai</h1>
-    </div>
-    <div class="recipes-inner-shape">
-        <div class="search-element">
-
-        </div>
-        <div class="my-added-recipes all-cards-area">
-            <h2>Mano receptai</h2>
-            <div class="recipes-display-area">
-                {% for recipe in myRecipes %}
-                <div class="recipe-card">
-                    <h3 class="recipe-name-for-card">{{ recipe.name }}</h3>
+<section class="recipes-page page-outer-container">
+    <h1 class="title-for-recipes-page wide-purple-bk page-title-text">Receptai</h1>
+    <div class="recipes-inner-container page-inner-container">
+        
+        <h2 class="bold-uppercase-normal">Mano receptai</h2>
+        <div class="recipes-page-multiple-cards multiple-recipe-cards">
+            {% for recipe in myRecipes %}
+                <a href="single_recipe?recipeID={{recipe.id}}" class="recipe-card-cube">
+                    <h3 class="text-unimportant-title">                    
+                            {{ recipe.name }}
+                    </h3>
                     {% if myRecipesPictDict[recipe.id] != "" %}
-                    <img src='{{ myRecipesPictDict[recipe.id] }}'/>
+                    <img src='{{ myRecipesPictDict[recipe.id] }}'/>                        
+
                     {% else %}
                     <img src='../../../static/images/intro1s.jpg'/>
                     {% endif %}
-                </div>
-                {% endfor %}
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="href-link-to-all-recipes">
+            <a href="my-recipes" class="text-unimportant-title">Žiūrėti visus >></a>
+        </div>
+        <button id="add-recipe-button" class="button">Pridėti naują receptą</button>
+
+        <div class="divider"></div>
+        <h2 class="bold-uppercase-normal">Mėgstamiausi receptai</h2>
+        <div class="recipes-page-multiple-cards multiple-recipe-cards">
+            {% for recipe in myfavoriteRecipes %}
+            <div class="recipe-card-cube">
+                <h3 class="text-unimportant-title">
+                    <a href="single_recipe?recipeID={{recipe.id}}">
+                        {{ recipe.name }}
+                    </a>
+                </h3>
+                {% if myRecipesPictDict[recipe.id] != "" %}
+                <img src='{{ myRecipesPictDict[recipe.id] }}'/>
+                {% else %}
+                <img src='../../../static/images/intro1s.jpg'/>
+                {% endif %}
             </div>
-            <div class="href-link-to-all-recipes">
-                <a href="">Žiūrėti visus >></a>
-            </div>
-            <button id="add-recipe-button" class="button">Pridėti naują receptą</button>
+            {% endfor %}
 
         </div>
-        <div class="my-favorited-recipes all-cards-area">
-            <h2>Mėgstamiausi receptai</h2>
-            <div class="recipes-display-area">
-                {% for recipe in myfavoriteRecipes %}
-                <div class="recipe-card">
-                    <h3 class="recipe-name-for-card">{{ recipe.name }}</h3>
-                    {% if myRecipesPictDict[recipe.id] != "" %}
-                    <img src='{{ myRecipesPictDict[recipe.id] }}'/>
-                    {% else %}
-                    <img src='../../../static/images/intro1s.jpg'/>
-                    {% endif %}
-                </div>
-                {% endfor %}
-
-            </div>
+        <div class="href-link-to-all-recipes">
+            <a href="my-favorites" class="text-unimportant-title">Žiūrėti visus >></a>
         </div>
-        <div class="all-recipes all-cards-area">
-            <h2>Įvairūs receptai</h2>
-            <div class="recipes-display-area">
 
-            </div>
+        <div class="divider"></div>
+        <h2 class="bold-uppercase-normal">Įvairūs receptai</h2>
+        <div class="recipes-page-multiple-cards multiple-recipe-cards">
+
         </div>
     </div>
-</div>
+</section>
 
 
 <button type="button" id="single-recipe">SIngleRecipe</button>
@@ -89,35 +93,34 @@
 
 
 
-<div id="recipe-creation-div" class="modal recipe-creation-div">
+<div id="recipe-creation-div" class="modal">
     <span class="close" id="close-add-recipe">&times;</span>
 
-    <form class="adding-recipe outer-card-shape" name="add-recipe-form" id="add-recipe-form" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
-        <div class="card-title"><h1>Naujas receptas</h1></div>
+    <form class="centered-card" id="add-recipe-form" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
+        <h1 class="page-title-text">Naujas receptas</h1>
+        <div class="divider"></div>
         <ul class="card-ul">
             <li class="new-recipe-li bottom-border">
-                <label for="new-recipe-title"><h2>Recepto pavadinimas</h2></label>
-                <input type="text" class="new-recipe-title" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">        
+                <label for="new-recipe-title"><h2 class="bold-uppercase-normal">Recepto pavadinimas</h2></label>
+                <input type="text" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">        
             </li>
             <li class="new-recipe-li bottom-border">
-                <label for="all-ingredients"class="ingredient-title"><h2>Ingredientai</h2></label>
+                <label for="all-ingredients"><h2 class="bold-uppercase-normal">Ingredientai</h2></label>
                 <div id="all-ingredients">    
                     <ul class="confirmed-ingredients-ul"></ul>
-                    <div class="ingredients-subtitle ingredient-input-and-button">
+                    <div class="ingredient-input-and-button subtitle-add-container">
                         <button id="add-ingredient-subtitle" type="button" class="button add-ingredient-subtitle">+</button>    
-                        <div class="add-ingredient-field subtitle">
-                            <div class="ingredient-label-and-input-area">
-                                <label for="ingredient-subtitle-input" class="ingredient-subtitle-input">Papildomas ingredientų grupės pavadinimas</label>
+                            <div class="ingredient-label-and-input-area subtitle">
+                                <label for="ingredient-subtitle-input" class="ingredient-subtitle-input bold-uppercase-small">Papildomas ingredientų grupės pavadinimas</label>
                                 <div class="ingredient-subtitle-dropdown-area">
                                     <input id="ingredient-subtitle-input" type="text" name="ingredient-subtitle-input" autocomplete="off" placeholder="pvz: 'Torto pagrindui'"/>
                                 </div>
                             </div>
-                        </div>
                     </div>
                     <div class="ingredient-input-and-button">
                             <div class="add-ingredient-field">
                                 <div class="ingredient-label-and-input-area">
-                                        <label for="product-search-input">Produkto pavadinimas</label>
+                                        <label for="product-search-input" class="text-unimportant-title">Produkto pavadinimas</label>
                                         <div class="ingredient-input-area">
                                             <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
                                             <ul class="product-search"> 
@@ -125,13 +128,13 @@
                                         </div>
                                 </div>
                                 <div class="ingredient-label-and-input-area">
-                                    <label for="product-amount-input">Kiekis</label>
+                                    <label for="product-amount-input" class="text-unimportant-title">Kiekis</label>
                                     <div class="ingredient-input-area">
                                         <input id="product-amount-input" type="number" min="0.25" max="10000" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
                                     </div>
                                 </div>
                                 <div class="ingredient-label-and-input-area">
-                                    <label for="product-measurement-input">Matavimo vienetai</label>
+                                    <label for="product-measurement-input" class="text-unimportant-title">Matavimo vienetai</label>
                                     <div class="ingredient-input-area">
                                         <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
                                         <ul class="product-measurement"> 
@@ -144,19 +147,19 @@
                 </div>
             </li>
             <li class="new-recipe-li bottom-border">
-                <label for="recipe-preparation"><h2>Paruošimas</h2></label>
+                <label for="recipe-preparation"><h2 class="bold-uppercase-normal">Paruošimas</h2></label>
                 <textarea id="recipe-preparation" name="recipe-preparation" required spellcheck=”false”></textarea>
             </li>
             <li class="prep-time-file-add bottom-border">
                 <div class="new-recipe-li half-size">
-                    <label for="preparation-time"><h2>Paruošimo laikas</h2></label>
+                    <label for="preparation-time"><h2 class="bold-uppercase-normal">Paruošimo laikas</h2></label>
                     <div class="prep-time">
                         <input type="number" id="preparation-time" name="preparation-time" min="0">
                         <p>min</p>
                     </div>
                 </div>
                 <div class="new-recipe-li half-size">
-                    <h2>Recepto nuotrauka</h2>
+                    <h2 class="bold-uppercase-normal">Recepto nuotrauka</h2>
                     <label for="recipe-image" id="recipe-image-label" class="button">
                         Pridėti
                         <input type="file" name="recipe-image" id="recipe-image" class="input">
@@ -165,15 +168,15 @@
             </li>
             <li class="portions-and-category bottom-border">
                 <div class="new-recipe-li half-size">
-                    <label for="portions"><h2>Porcijos</h2></label>
+                    <label for="portions"><h2 class="bold-uppercase-normal">Porcijos</h2></label>
                     <div class="portions">
                         <input type="number" id="portions" name="portions" min="1">
                         <p>asm.</p>
                     </div>
                 </div>
                 <div class="half-size new-recipe-li">
-                    <label for="meal-category-input"><h2>Kategorija</h2></label>
-                        <div class="meal-category-area">
+                    <label for="meal-category-input"><h2 class="bold-uppercase-normal">Kategorija</h2></label>
+                        <div class="meal-category-area text-unimportant-title">
                             <div>
                                 <input id="breakfast" type="checkbox" name="coursetype" value="Pusryčiai"/>
                                 <label for="breakfast" class="meal-category-li">Pusryčiai</label>

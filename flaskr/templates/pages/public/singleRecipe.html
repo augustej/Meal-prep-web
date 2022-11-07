@@ -3,11 +3,10 @@
 {% block navrecipes %} active {% endblock %}
 
 {% block content%}
-<div class="single-recipe-outer-shape">
-    <div class="title-for-recipes-page top-purple-full-width">
-        <h1 class="recipe-name-display"> {{ recipe.name }} </h1>
-    </div>
-    <div class="single-recipe-inner-shape">
+
+<section class="single-recipe-page page-outer-container">
+    <h1 class="recipe-name-display wide-purple-bk page-title-text"> {{ recipe.name }} </h1>
+    <div class="single-recipe-inner-shape page-inner-container">
 
         <div class="text-and-picture-display">
             <div class="heart-and-image">
@@ -20,58 +19,56 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="text-side-display">
-                <div class="course-type-display">
+            <ul class="text-side-display dashboard-card-shape">
+                <li class="course-type-display">
                     {% for course in recipe.recipeCoursetype %}
-                        <h2>{{ course.name }}</h2>
+                        <h2 class="bold-uppercase-normal">{{ course.name }}</h2>
                     {% endfor %}
-
-                </div>
-                <div class="cooking-time-display title-value">
-                    <h3>Gaminimo laikas:</h3>
+                </li>
+                <li class="cooking-time-display text-side-display--value">
+                    <h3 class="text-unimportant-title">Gaminimo laikas:</h3>
                     <p>{{recipe.cookingtime}} min</p>
-                </div>
-                <div class="portions-display title-value">
-                    <h3>Porcijos:</h3>
+                </li>
+                <li class="portions-display text-side-display--value">
+                    <h3 class="text-unimportant-title">Porcijos:</h3>
                     <p>{{recipe.portions}}</p>
-                </div>
-                <div class="recipetypes-display title-value">
-                    <h3>Tipas:</h3>
+                </li>
+                <li class="recipetypes-display text-side-display--value">
+                    <h3 class="text-unimportant-title">Tipas:</h3>
                     {% for type in recipe.recipetypes %}
                         <p>{{ type.name }}</p>
                     {% endfor %}
-                </div>
-                <div class="calories-display title-value">
-                    <h3>Energetinė vertė: </h3>
+                </li>
+                <li class="calories-display text-side-display--value">
+                    <h3 class="text-unimportant-title">Energetinė vertė: </h3>
                     <p>{{calories}} kcal/porcijoje</p>
-                </div>
+                </li>
                 
-            </div>
+            </ul>
            
             
         </div>
         <div class="ingredients-and-preparation-display">
-            <div class="ingredients-of-recipe">
-                <h2>Ingredientai</h2>
-                <!-- display ingredients with subtitles -->
+            <div class="ingredients-of-recipe dashboard-card-shape">
+                <div class="ingredients-of-recipe--text-area">
+                    <h2 class="bold-uppercase-normal">Ingredientai</h2>
+                    <!-- display ingredients with subtitles -->
                     {% for subtitle in subtitlelist %}
                         {% if subtitle %}
-                        <h3 class="subtitle-name-display">{{ subtitle }}</h3>
+                        <h3 class="text-unimportant-title">{{ subtitle }}</h3>
                             <ul class="subtitle-display-ul">
                                 {% for ingredient in recipe.ingredients %}
                                     {% if ingredient.subtitle == subtitle %}
-                                        <li class="subtitle-display-li">
+                                        <li class="ingredient-list-li">
                                             <p>{{ ingredient.name}}</p> 
-                                            <div class="ingredient-amount-measure-display">
-                                                <p>{{ ingredient.amount }}</p>
-                                                <p>
-                                                {% for key in measurmentDict %}
-                                                    {% if key == ingredient.measurement_id %}
-                                                        {{measurmentDict[key]}}
-                                                    {% endif%}
-                                                {% endfor %}
-                                                </p>
-                                            </div>
+                                            <p>{{ ingredient.amount}}</p>
+                                            <p>
+                                            {% for key in measurmentDict %}
+                                                {% if key == ingredient.measurement_id %}
+                                                    {{measurmentDict[key]}}
+                                                {% endif%}
+                                            {% endfor %}
+                                            </p>
                                         </li>
                                     {% endif %}
                                 {% endfor %}
@@ -81,9 +78,9 @@
                     <!-- display ingredients without subtitles -->
                     {% for ingredient in recipe.ingredients %}
                         {% if not ingredient.subtitle %}
-                        <li class="subtitle-display-li">
-                            <p>{{ ingredient.name}}</p>                             <div class="ingredient-amount-measure-display">
-                                <p>{{ ingredient.amount }}</p>
+                            <li class="ingredient-list-li">
+                                <p>{{ ingredient.name}}</p>                             
+                                <p>{{ ingredient.amount}}</p>
                                 <p>
                                 {% for key in measurmentDict %}
                                     {% if key == ingredient.measurement_id %}
@@ -91,22 +88,23 @@
                                     {% endif%}
                                 {% endfor %}
                                 </p>
-                            </div>
-                        </li>
+                            </li>
                         {% endif %}
-                    {% endfor %}
+                        
 
+                    {% endfor %}
+                </div>
             </div>
-            <div class="preparation-of-recipe-display">
-                <h2>Paruošimas</h2>
+            <div class="preparation-of-recipe-display dashboard-card-shape">
+                <h2 class="bold-uppercase-normal">Paruošimas</h2>
                 <ol class="preparation-display-ol">
                     {% for sentence in sentencelist%}
-                    <li>{{ sentence }}</li>
+                    <li><p>{{ sentence }}</p></li>
                     {% endfor %}
                 </ol>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
 from .model import User, Product, Foodtype, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
-import csv
+import csv, math
 from . import db
 from flask_sqlalchemy import SQLAlchemy
 
@@ -19,33 +19,67 @@ def home():
 @public_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
     if request.method == 'GET':
-        myRecipes = Recipe.query.filter_by(user_id=current_user.id).all()
+        myRecipes = Recipe.query.filter_by(user_id=current_user.id).order_by(-Recipe.id).limit(5).all()
         myfavoriteRecipesdata = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
-        recipeIDList = []
-        for recipeItem in  myfavoriteRecipesdata:
-            recipeID = recipeItem.recipe_id
-            recipeIDList.append(recipeID)
-        myfavoriteRecipes = Recipe.query.filter(Recipe.id.in_(recipeIDList)).all()
-        
+        myfavoriteRecipes = convertDbTableDataToQueryList(myfavoriteRecipesdata)
+
         # combining myrecipes and my favorite recipes into one list, to create one picture dictionary for template
         inMyRecipes = set(myRecipes)
         inMyFavorites = set(myfavoriteRecipes)
         inMyRecipesNotFavorites = inMyRecipes - inMyFavorites
         fullListofRecipesForPicturesDict = list(inMyRecipesNotFavorites) + myfavoriteRecipes
-
-        myRecipesPictDict ={}
-        for singlerecipe in fullListofRecipesForPicturesDict:
-            fullPicturePath = singlerecipe.picture
-            if fullPicturePath:
-                modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
-            else:
-                modifiedPicturePath=''
-            myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
-        
+        myRecipesPictDict = createPictDictWithModifiedPaths(fullListofRecipesForPicturesDict)
         
     return render_template('pages/public/recipes.html', myRecipes=myRecipes, myfavoriteRecipes=myfavoriteRecipes, 
         myRecipesPictDict=myRecipesPictDict)
 
+@public_pages.route('/my-recipes', methods=['GET'])
+def myRecipes():
+    if request.method == 'GET':
+        myRecipesAmount = Recipe.query.filter_by(user_id = current_user.id).count()
+        pageNumber = request.args.get('page')
+        pageSize = 10
+        if not pageNumber:
+            myRecipes = Recipe.query.filter_by(user_id = current_user.id).order_by(-Recipe.id).limit(pageSize).all()
+        else:
+            pageNumber = int(pageNumber)
+            myRecipes = Recipe.query.filter_by(user_id = current_user.id).order_by(-Recipe.id).offset((pageNumber-1) * pageSize).limit(pageSize).all()
+
+        myRecipesPictDict = createPictDictWithModifiedPaths(myRecipes)
+
+        if myRecipesAmount > pageSize:
+            numberOfPages = math.ceil(myRecipesAmount/pageSize)
+        else:
+            numberOfPages = 1
+
+    return render_template('pages/public/myrecipes.html', 
+    myRecipes=myRecipes, 
+    myRecipesPictDict=myRecipesPictDict, numberOfPages=numberOfPages)
+
+
+@public_pages.route('/my-favorites', methods=['GET'])
+def myFavoriteRecipes():
+    if request.method == 'GET':
+        myFavoriteRecipesAmount = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).count()
+        pageNumber = request.args.get('page')
+        pageSize = 10
+        if not pageNumber:
+            myFavoriteRecipesData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).limit(pageSize).all()
+        else:
+            pageNumber = int(pageNumber)
+            myFavoriteRecipesData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).offset((pageNumber-1) * pageSize).limit(pageSize).all()
+
+        myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData)
+        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(myFavoriteRecipes)
+
+        if myFavoriteRecipesAmount > pageSize:
+            numberOfPages = math.ceil(myFavoriteRecipesAmount/pageSize)
+        else:
+            numberOfPages = 1
+
+    return render_template('pages/public/myfavorites.html', 
+    myRecipes=myFavoriteRecipes, 
+    myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
 
 @public_pages.route('/search')
 def search():
@@ -183,3 +217,23 @@ def initialDbLoad():
             db.session.add(new_product)
             i += 1 
         db.session.commit()
+
+
+def convertDbTableDataToQueryList(myfavoriteRecipesdata):
+    recipeIDList = []
+    for recipeItem in  myfavoriteRecipesdata:
+        recipeID = recipeItem.recipe_id
+        recipeIDList.append(recipeID)
+    myfavoriteRecipes = Recipe.query.filter(Recipe.id.in_(recipeIDList)).limit(5).all()
+    return myfavoriteRecipes
+        
+def createPictDictWithModifiedPaths(recipeList):
+    myRecipesPictDict ={}
+    for singlerecipe in recipeList:
+        fullPicturePath = singlerecipe.picture
+        if fullPicturePath:
+            modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+        else:
+            modifiedPicturePath=''
+        myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
+    return myRecipesPictDict
