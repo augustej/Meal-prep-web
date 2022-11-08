@@ -2,5 +2,27 @@
 {% block navcalendar %} active {% endblock %}
 
 {% block content%}
-<h1>Calendar</h1>
+
+<section class="calendar-page page-outer-container">
+    <h1 class="title-for-calendar-page wide-purple-bk page-title-text">Calendar</h1>
+    <div class="calendar-inner-container page-inner-container">
+        <div class="recipes-representation-outer-container">
+            <ul class="recipes-representation-bar multiple-recipe-cards">
+
+            </ul>
+        </div>
+        <div class="courstype-btn-list">
+            <div class="button" name="Pusryčiai">Pusryčiai</div>
+            <div class="button" name="Pietūs/Vakarienė">Pietūs/Vakarienė</div>
+        </div>
+
+
+        
+    </div>
+</section>
+
+{% endblock %}
+
+{% block js %}
+    <script src="../static/calendar.js"></script>
 {% endblock %}
