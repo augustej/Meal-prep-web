@@ -12,9 +12,9 @@
 
 </head>
 <body>
-    <nav>
+    <nav class="bold-uppercase-normal">
         <ul class="nav-ul">
-            <li class="nav-li title">
+            <li class="nav-li title curly-title-like">
                 <a href="/">
                     Savaitės Meniu
                 </a>            
@@ -54,8 +54,8 @@
     <footer>
 
         <div class="footer-nav">
-            <h2>Savaitės Meniu</h2>
-            <ul>
+            <h2 class="text-unimportant-title">Savaitės Meniu</h2>
+            <ul class="simple-text-small">
                 <li><a href="/">Pagrindinis</a></li>
                 <li><a href="recipes">Receptai</a></li>
                 <li><a href="calendar">Maisto planas</a></li>
@@ -70,9 +70,9 @@
 
         <div class="message-me">
             <section class="contact-me form-style">
-                <h2>Parašyk!</h2>
+                <h2 class="curly-title-like">Parašyk!</h2>
                 <div class="decoration-line"></div>
-                <form>
+                <form class="bold-uppercase-small">
                     <label for="#message-theme">Tema</label>
                     <input type="text" id="message-theme" required>
                     <label for="#message-email">El. paštas</label>
@@ -95,5 +95,7 @@
     </footer>
     <script src="../static/index-script.js"></script>
     <script src="https://kit.fontawesome.com/4d9826a017.js" crossorigin="anonymous"></script>
+    {% block js %}
+    {% endblock %}
 </body>
 </html>

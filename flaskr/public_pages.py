@@ -1,9 +1,10 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from .model import User, Product, Foodtype, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
-import csv
+from .model import User, Role, Product, Foodtype, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
+import csv, math
 from . import db
 from flask_sqlalchemy import SQLAlchemy
+
 
 public_pages = Blueprint('public_pages', __name__)
 
@@ -16,11 +17,6 @@ def home():
     else:
         return render_template('pages/public/index.html')
 
-@public_pages.route('/recipes', methods=['GET', 'POST'])
-def recipes():
-    return render_template('pages/public/recipes.html')
-
-
 @public_pages.route('/search')
 def search():
     return render_template('pages/public/search.html')
@@ -29,13 +25,18 @@ def search():
 def render_single_recipe():
     IDofRecipe = request.args.get('recipeID')
     recipeToVisualize = Recipe.query.filter_by(id=IDofRecipe).first()
+    adminUserId = User.query.filter_by(role_name = 'admin').first().id
+    # protect recipes created by other users:
+    if not (recipeToVisualize.user_id == current_user.id or recipeToVisualize.user_id == adminUserId):
+        return redirect(url_for('private_pages.recipes'))
+
     fullPicturePath = recipeToVisualize.picture
     modifiedPicturePath=""
     if fullPicturePath:
         modifiedPicturePath = '..' + fullPicturePath.split("flaskr")[1]
 
     # calculate calories of a recipe
-    ingredientItems = recipeToVisualize.ingredients
+    ingredientItems = recipeToVisualize.recipeIngredients
     portionsOfRecipe =recipeToVisualize.portions
     kcalOfRecipe = 0
     for ingredient in ingredientItems:
@@ -61,7 +62,7 @@ def render_single_recipe():
     if sentence != "":
         sentenceList.append(sentence)
     subtitleList = []
-    for ingredientItem in recipeToVisualize.ingredients:
+    for ingredientItem in recipeToVisualize.recipeIngredients:
         subtitleItem = ingredientItem.subtitle
         if subtitleItem not in subtitleList:
             subtitleList.append(subtitleItem)
@@ -105,6 +106,17 @@ def name_modification_for_greeting(name):
     return modified_name
 
 def initialDbLoad():
+
+    admin_user = User.query.filter_by(email = 'ajanickaite@gmail.com').first()
+    admin_role = Role(name='admin')
+    chef_role = Role(name='chef')
+    family_member_role=Role(name='family_member')
+    db.session.add(admin_role)
+    db.session.add(chef_role)
+    db.session.add(family_member_role)
+    admin_user.role_name = 'admin'
+    db.session.commit()
+
     with open('/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/type.csv') as typefile:
         csv_type_reader = csv.reader(typefile, delimiter=",")
         for row in csv_type_reader:
@@ -157,3 +169,5 @@ def initialDbLoad():
             db.session.add(new_product)
             i += 1 
         db.session.commit()
+
+
