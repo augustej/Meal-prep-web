@@ -57,7 +57,7 @@
                         {% if subtitle %}
                         <h3 class="text-unimportant-title">{{ subtitle }}</h3>
                             <ul class="subtitle-display-ul">
-                                {% for ingredient in recipe.ingredients %}
+                                {% for ingredient in recipe.recipeIngredients %}
                                     {% if ingredient.subtitle == subtitle %}
                                         <li class="ingredient-list-li">
                                             <p>{{ ingredient.name}}</p> 
@@ -76,7 +76,7 @@
                         {% endif %}
                     {% endfor %}
                     <!-- display ingredients without subtitles -->
-                    {% for ingredient in recipe.ingredients %}
+                    {% for ingredient in recipe.recipeIngredients %}
                         {% if not ingredient.subtitle %}
                             <li class="ingredient-list-li">
                                 <p>{{ ingredient.name}}</p>                             
@@ -107,4 +107,8 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block js %}
+    <script src="../static/singlerecipe.js"></script>
 {% endblock %}

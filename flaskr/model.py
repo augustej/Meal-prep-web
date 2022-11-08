@@ -7,6 +7,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True)
     name = db.Column(db.String(100))
     password = db.Column(db.String(150))  
+    role_name = db.Column(db.String(100), db.ForeignKey('role.name'))
+    chef_id = db.Column(db.Integer)
+
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
   
 class Measurement(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -71,7 +77,7 @@ class Ingredient(db.Model):
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100))
-    ingredients = db.relationship('Ingredient', secondary=recipeIngredients, lazy=True)
+    recipeIngredients = db.relationship('Ingredient', secondary=recipeIngredients, lazy=True)
     instruction = db.Column(db.String(10000))
     picture = db.Column(db.String(1000))
     cookingtime = db.Column(db.Integer)

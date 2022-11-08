@@ -9,14 +9,14 @@
         
         <div class="my-recipes-page-multiple-cards multiple-recipe-cards">
             {% for recipe in myRecipes %}
-            <div class="recipe-card-cube">
+            <a href="single_recipe?recipeID={{recipe.id}}" class="recipe-card-cube">
                 <h3 class="text-unimportant-title">{{ recipe.name }}</h3>
                 {% if myRecipesPictDict[recipe.id] != "" %}
                 <img src='{{ myRecipesPictDict[recipe.id] }}'/>
                 {% else %}
                 <img src='../../../static/images/intro1s.jpg'/>
                 {% endif %}
-            </div>
+            </a>
             {% endfor %}
         </div>
 
@@ -31,4 +31,8 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block js %}
+    <script src="../static/myfavorites-myrecipes.js"></script>
 {% endblock %}

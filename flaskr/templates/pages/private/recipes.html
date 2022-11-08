@@ -33,18 +33,16 @@
         <h2 class="bold-uppercase-normal">Mėgstamiausi receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
             {% for recipe in myfavoriteRecipes %}
-            <div class="recipe-card-cube">
+            <a href="single_recipe?recipeID={{recipe.id}}" class="recipe-card-cube">
                 <h3 class="text-unimportant-title">
-                    <a href="single_recipe?recipeID={{recipe.id}}">
-                        {{ recipe.name }}
-                    </a>
+                    {{ recipe.name }}
                 </h3>
                 {% if myRecipesPictDict[recipe.id] != "" %}
                 <img src='{{ myRecipesPictDict[recipe.id] }}'/>
                 {% else %}
                 <img src='../../../static/images/intro1s.jpg'/>
                 {% endif %}
-            </div>
+            </a>
             {% endfor %}
 
         </div>
@@ -55,15 +53,23 @@
         <div class="divider"></div>
         <h2 class="bold-uppercase-normal">Įvairūs receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
-
+            {% for recipe in adminRecipes %}
+            <a href="single_recipe?recipeID={{recipe.id}}" class="recipe-card-cube">
+                <h3 class="text-unimportant-title">
+                    {{ recipe.name }}
+                </h3>
+                {% if adminRecipesPictDict[recipe.id] != "" %}
+                <img src='{{ adminRecipesPictDict[recipe.id] }}'/>
+                {% endif %}
+            </a>
+            {% endfor %}
         </div>
     </div>
 </section>
 
-
-<button type="button" id="single-recipe">SIngleRecipe</button>
-
-
+{% block js %}
+    <script src="../static/recipes.js"></script>
+{% endblock %}
 
 
 
