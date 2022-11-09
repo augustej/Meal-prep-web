@@ -5,16 +5,125 @@
 
 <section class="calendar-page page-outer-container">
     <h1 class="title-for-calendar-page wide-purple-bk page-title-text">Calendar</h1>
+    <!-- <button class="button previous-day-btn", type="button">Previous</button>
+    <button class="button next-day-btn", type="button">Next</button> -->
     <div class="calendar-inner-container page-inner-container">
         <div class="recipes-representation-outer-container">
             <ul class="recipes-representation-bar multiple-recipe-cards">
 
             </ul>
         </div>
-        <div class="courstype-btn-list">
-            <div class="button" name="Pusryčiai">Pusryčiai</div>
-            <div class="button" name="Pietūs/Vakarienė">Pietūs/Vakarienė</div>
+
+        <div class="all-table">
+
+            <div class="courstype-btn-list calendar-column">
+                <div class="calendar-first-row-cell">
+                    <button class="previous-day-btn", type="button">&lt;</button>
+                    <button class="next-day-btn", type="button">&gt;</button>
+                </div> 
+
+                {% for coursetype in CoursetypeNames %}
+                <button class="calendar-button bold-uppercase-small calendar-cell" name="{{coursetype}}" type="button">{{coursetype}}</button>
+                {% endfor %}
+            </div>
+
+            <div class="calendar-table">
+            
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Pirmadienis</div> 
+                    <ul class="Monday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype">
+                                <button class="button add-item-to-calendar" type="button">+</button>
+                            </li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Antradienis</div> 
+                    <ul class="Tuesday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Trečiadienis</div> 
+                    <ul class="Wednesday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Ketvirtadienis</div> 
+                    <ul class="Thursday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Penktadienis</div> 
+                    <ul class="Friday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Šeštadienis</div> 
+                    <ul class="Saturday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Sekmadienis</div> 
+                    <ul class="Sunday week-day-ul">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="coursetype"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+            </div>
         </div>
+        <div class="recipetype-btn-list calendar-row">
+            {% for foodtype in foodtypeNames %}
+            <button class="calendar-button calendar-cell" name="{{foodtype}}" type="button">{{foodtype}}</button>
+            {% endfor %}
+        </div>
+        <button class="calendar-button favorites-btn calendar-first-row-cell"><i class="fa-solid fa-heart"></i></button> 
+
 
 
         

@@ -53,6 +53,7 @@ ul{
 
 /* TEXT-STYLES */
 .bold-uppercase-normal{
+    font-family: var(--text);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight:700;
@@ -61,6 +62,7 @@ ul{
 }
 
 .bold-uppercase-small{
+    font-family: var(--text);
     text-transform: uppercase;
     font-weight:700;
     font-size: 0.8rem;
@@ -279,6 +281,11 @@ input[type="file"] {
     color: var(--purple);
     text-decoration: none;
     cursor: pointer;
+}
+
+.return-to-previous-page{
+    align-self: center;
+    margin: 0 auto;
 }
 
 /* navigation style ------------------*/
@@ -1210,6 +1217,7 @@ aside h4{
 .page-outer-container{
     margin: 0 auto;
     background-color: var(--brgrey);
+
 }
 .page-inner-container{
     max-width: 1200px;
@@ -1254,9 +1262,15 @@ aside h4{
     color: var(--black);
 }
 
-/* my-recipes AND my-favorites page style */
+/* my-recipes AND my-favorites AND various-recipes page style */
 .my-recipes-inner-container{
     overflow: hidden;
+}
+
+.full-width-invisible-div{
+    width:100%;
+    text-align: center;
+    padding-bottom: 2em;
 }
 
 .page-numbers{
@@ -1279,8 +1293,86 @@ aside h4{
     cursor: pointer;
 }
 
+.back-to-recipes{
+    text-decoration: none;
+}
+
 /* Calendar style */
+
+.calendar-inner-container.page-inner-container{
+    max-width: 1400px;
+}
 
 .calendar-page .multiple-recipe-cards{
     max-height: 160px;
+}
+
+.all-table{
+    display: flex;
+    flex-direction: row;
+}
+.calendar-table{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items:flex-start;
+    flex-wrap: wrap;
+    /* overflow: hidden; */
+    max-height: 850px;
+}
+.calendar-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5em;
+    width: 20%;
+    max-width: 150px;
+    min-width: 150px;
+    background-color: antiquewhite;
+}
+.calendar-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5em;
+    width: 80%;
+    background-color: red;
+}
+
+.calendar-cell{
+    width: 100%;
+    height: 150px;
+    border: 1px solid black;
+}
+.calendar-first-row-cell{
+    width: 100%;
+    padding: 1em 0;
+    height: 50px;
+    text-align: center;
+}
+
+.week-day-ul{
+    width: 100%;
+}
+
+.week-day-ul li:not(:first-child){
+    margin-top: 0.5em;
+}
+
+.wrapped{
+    display: none;
+}
+
+.active-calendar-field{
+    background-color: aquamarine;
+}
+
+.activated-add-button{
+    background-color: red;
+}
+
+.not-displayed{
+    display: none;
 }

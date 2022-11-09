@@ -14,12 +14,21 @@ def profile():
 
 @private_pages.route('/calendar')
 def calendar():
-    myRecipes = Recipe.query.filter_by(user_id = current_user.id).order_by(-Recipe.id).limit(5).all()
-    myRecipesPictDict = createPictDictWithModifiedPaths(myRecipes)
-    print(myRecipes, "myrecipes")
+    CoursetypeQuery = Coursetype.query.all()
+    CoursetypeNames =[]
+    for item in CoursetypeQuery:
+        coursetypeName = item.name
+        CoursetypeNames.append(coursetypeName)
 
-    return render_template('/pages/private/calendar.html', myRecipes=myRecipes, 
-    myRecipesPictDict=myRecipesPictDict)
+    foodtypeQuery = Foodtype.query.all()
+    foodtypeNames = []
+    for item in foodtypeQuery:
+        foodtypeName = item.name
+        foodtypeNames.append(foodtypeName)
+
+    return render_template('/pages/private/calendar.html', 
+    CoursetypeNames=CoursetypeNames,
+    foodtypeNames=foodtypeNames)
 
 @private_pages.route('/groc_list')
 def groclist():
@@ -147,7 +156,6 @@ def checkIfFavorite():
     db.session.commit()
     return addToFavorites
 
-
 @private_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
     if request.method == 'GET':
@@ -192,7 +200,6 @@ def myRecipes():
     myRecipes=myRecipes, 
     myRecipesPictDict=myRecipesPictDict, numberOfPages=numberOfPages)
 
-
 @private_pages.route('/my-favorites', methods=['GET'])
 def myFavoriteRecipes():
     if request.method == 'GET':
@@ -205,7 +212,7 @@ def myFavoriteRecipes():
             pageNumber = int(pageNumber)
             myFavoriteRecipesData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).offset((pageNumber-1) * pageSize).limit(pageSize).all()
 
-        myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData, 5, 0)
+        myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData, pageSize, 0)
         myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(myFavoriteRecipes)
 
         if myFavoriteRecipesAmount > pageSize:
@@ -217,17 +224,56 @@ def myFavoriteRecipes():
     myRecipes=myFavoriteRecipes, 
     myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
 
+@private_pages.route('/coursetype-filter', methods=['GET'])
+def coursetypeFilter():
+    courstypeName = request.args.get('coursetype')
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    currentCoursetype_id = Coursetype.query.filter_by(name=courstypeName).first().id
+    filteredRecipeData = db.session.query(recipeCoursetype).filter_by(coursetype_id=currentCoursetype_id).all()
+    recipeOfCoursetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+
+    return recipeOfCoursetypeList
+
+@private_pages.route('/recipetype-filter', methods=['GET'])
+def recipetypeFilter():
+    recipetypeName = request.args.get('recipetype')
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    currentRecipetype_id = Foodtype.query.filter_by(name=recipetypeName).first().id
+    filteredRecipeData = db.session.query(recipeTypes).filter_by(recipe_foodtype_id=currentRecipetype_id).all()
+    print(filteredRecipeData, "filteredRecipeData")
+
+    recipesOfRecipetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+    print(recipesOfRecipetypeList, "recipesOfRecipetypeList")
+    return recipesOfRecipetypeList
+
+@private_pages.route('/favorite-filter', methods=['GET'])
+def favoriteFilter():
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    filteredRecipeData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
+    favoriteRecipesList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+
+    return favoriteRecipesList
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
     recipeIDList = []
     for recipeItem in  dataRowWithRecipeID:
         recipeID = recipeItem.recipe_id
         recipeIDList.append(recipeID)
-    RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList)).offset(offsetValue).limit(limitValue).all()
+    # check if recipe is allowed for this user
+    admin_ID = User.query.filter_by(role_name = 'admin').first().id
+    allowedID = [current_user.id, admin_ID]
+    RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
     return RecipesList
         
 def createPictDictWithModifiedPaths(recipeList):
@@ -241,47 +287,32 @@ def createPictDictWithModifiedPaths(recipeList):
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
 
-@private_pages.route('/coursetype-filter', methods=['GET'])
-def coursetypeFilter():
-    courstypeName = request.args.get('coursetype')
-    queryNumber = int(request.args.get('querynumber'))
-    currentCoursetype_id = Coursetype.query.filter_by(name=courstypeName).first().id
-    limitValue=5
-    offsetValue = queryNumber -1
-
-    filteredRecipeData = db.session.query(recipeCoursetype).filter_by(coursetype_id=currentCoursetype_id).all()
-    recipesOfCoursetype = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
-    # check if recipe is allowed for this user
-    admin_ID = User.query.filter_by(role_name = 'admin').first().id
-    for RecipeItem in recipesOfCoursetype:
-        if not (RecipeItem.user_id == current_user.id or RecipeItem.user_id == admin_ID):
-            recipesOfCoursetype.remove(RecipeItem)
-
+def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
+    recipesList = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
     # make sure not to run out of recipe items due to offset 
-    amountOfRecipes = len(recipesOfCoursetype)
+    amountOfRecipes = len(recipesList)
     if queryNumber > 1 and amountOfRecipes < 5:
         numberOfRecipesToAddFromStart = limitValue - amountOfRecipes
-        additionalRecipesOfCoursetype = convertDbTableDataToQueryList(filteredRecipeData, numberOfRecipesToAddFromStart, 0)
-        for item in additionalRecipesOfCoursetype:
-            recipesOfCoursetype.append(item)
+        additionalRecipesList = convertDbTableDataToQueryList(filteredRecipeData, numberOfRecipesToAddFromStart, 0)
+        for RecipeItem in additionalRecipesList:
+            recipesList.append(RecipeItem)
 
-    recipeOfCoursetypeList = []
+    jsonResponseRecipeList = []
 
-    for RecipeItem in recipesOfCoursetype:
+    for RecipeItem in recipesList:
         fullPicturePath = RecipeItem.picture
         if fullPicturePath:
             modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
         else:
             modifiedPicturePath=''
 
-        recipeOfCoursetypeDict={}
-        recipeOfCoursetypeDict['id'] = RecipeItem.id
-        recipeOfCoursetypeDict['name'] = RecipeItem.name
-        recipeOfCoursetypeDict['picture'] = modifiedPicturePath
-        recipeOfCoursetypeDict['link'] = '/single_recipe?recipeID=' + str(RecipeItem.id)
+        recipeItemDict={}
+        recipeItemDict['id'] = RecipeItem.id
+        recipeItemDict['name'] = RecipeItem.name
+        recipeItemDict['picture'] = modifiedPicturePath
+        recipeItemDict['link'] = '/single_recipe?recipeID=' + str(RecipeItem.id)
         # extra info for JS to reset session.storage, if amountOfRecipes == 0:
-        recipeOfCoursetypeDict['listlength'] = amountOfRecipes
-        recipeOfCoursetypeList.append(recipeOfCoursetypeDict)
+        recipeItemDict['listlength'] = amountOfRecipes
+        jsonResponseRecipeList.append(recipeItemDict)
     
-
-    return recipeOfCoursetypeList
+    return jsonResponseRecipeList

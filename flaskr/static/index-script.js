@@ -45,3 +45,15 @@ function onFileAddShowName(buttonClickedID, fileAddedID){
     buttonClicked.parentNode.appendChild(p)
 }
 
+// go back button
+var backBtn = document.querySelector('.back-btn')
+if (backBtn){
+    document.addEventListener('click', e =>{
+        if (backBtn == e.target){
+            go_back()
+        }
+    })
+    
+}
+function go_back()
+    {window.location.href = document.referrer};
