@@ -3,7 +3,7 @@ from flask_login import current_user
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os, math
 from werkzeug.utils import secure_filename
-from .model import Coursetype, User, Product, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
+from .model import Coursetype, User, Product, Calendars, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
 
 private_pages = Blueprint('private_pages', __name__)
@@ -32,10 +32,12 @@ def calendar():
     for item in foodtypeQuery:
         foodtypeName = item.name
         foodtypeNames.append(foodtypeName)
+    
+    myCalendars = Calendars.query.filter_by(user_id=current_user.id).all()
 
     return render_template('/pages/private/calendar.html', 
     CoursetypeNames=CoursetypeNames,
-    foodtypeNames=foodtypeNames)
+    foodtypeNames=foodtypeNames, myCalendars=myCalendars)
 
 @private_pages.route('/groc_list')
 def groclist():
@@ -327,3 +329,34 @@ def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offse
         jsonResponseRecipeList.append(recipeItemDict)
     
     return jsonResponseRecipeList
+
+@private_pages.route('/load-calendar-to-db', methods=['POST'])
+def loadCalendarTodb():
+    if request.method == "POST":
+        data = request.get_json()
+        for keys in data:
+            calendarName = keys
+            calendarData = data[keys]
+            print (keys, "keys", calendarData, "calendarData")
+            newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
+            db.session.add(newCalendar)
+            db.session.commit()
+    response = {'blas': 'bla'}
+    return response
+
+@private_pages.route('/delete-calendar-from-db', methods=['GET'])
+def deleteCalendarFromDb():
+    if request.method == "GET":
+        calendarIDtoDelete = request.args.get('calendarID')
+        Calendars.query.filter_by(id=calendarIDtoDelete).delete()
+        db.session.commit()
+    response = {'bla':'bla'}
+    return response
+
+@private_pages.route('/load-calendar-from-db', methods=['GET'])
+def loadCalendarFromDb():
+    if request.method == "GET":
+        calendarIDtoLoad = request.args.get('calendarID')
+        calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
+        print(calendarToLoad)
+    return calendarToLoad 

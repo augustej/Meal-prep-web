@@ -126,6 +126,24 @@
 
         
     </div>
+
+    <label for="calendar-name">Kalendoriaus pavadinimas</label>
+    <input type="text" name="calendar-name" id="calendar-name">
+    <button class="button save-calendar" type="button">Išsaugoti kalendorių</button>
+
+    <h3>Mano kalendoriai</h3>
+    <ul class="my-calendars-list">
+
+    {% for calendarItem in myCalendars %}
+        <li class="saved-calendar-item" name="calendarID={{calendarItem.id}}">
+            <p>{{ calendarItem.calendarName }}</p>
+            <button class='button deleteCalendarFromDb' type="button">Ištrinti kalendorių</button>
+            <button class='button loadCalendarFromDbToSession' type="button">Užkrauti kalendorių</button>
+        </li>
+    {% endfor%}
+    </ul>
+    <button class='button cleanCurrentCalendar' type="button">Išvalyti kalendorių</button>
+
 </section>
 
 {% endblock %}

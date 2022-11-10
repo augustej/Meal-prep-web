@@ -5,14 +5,69 @@ var previousdayBtn = document.querySelector('.previous-day-btn')
 var nextdayBtn = document.querySelector('.next-day-btn')
 var addItemToCalendarBtn = document.querySelectorAll('.add-item-to-calendar')
 var recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
-
+var saveCalendarBtn = document.querySelector('.save-calendar')
+var cleanCalendarBtn = document.querySelector('.cleanCurrentCalendar')
 
 // on window load get items from sessionStorage
+// sessionStorage.removeItem('plan')
 var planValue = JSON.parse(sessionStorage.getItem('plan'))
 getDataFromSessionStorage(planValue)
 
 
 document.addEventListener('click', e =>{
+    // clean calendar
+    if (e.target == cleanCalendarBtn){
+        sessionStorage.removeItem('plan')
+        location.reload()
+    }
+
+    // save calendar to db
+    if (e.target == saveCalendarBtn){
+        let calendarName = document.querySelector('#calendar-name').value
+        let jsonBody = {}
+        jsonBody[calendarName] = sessionStorage.getItem('plan')
+        fetch('/load-calendar-to-db',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+        location.reload()
+    }
+
+    // delete calendar from db
+    var alldeleteCalendarBtns = document.querySelectorAll('.deleteCalendarFromDb')
+    alldeleteCalendarBtns.forEach(deleteCalendarBtn =>{
+    if (e.target == deleteCalendarBtn){
+        let calendarID = deleteCalendarBtn.parentElement.getAttribute('name')
+
+        fetch('/delete-calendar-from-db?' + calendarID,
+        {
+            method: 'GET'
+        })
+        deleteCalendarBtn.parentElement.remove()
+    }
+   })
+
+   // load calendar from db
+   var allloadCalendarBtns = document.querySelectorAll('.loadCalendarFromDbToSession')
+   allloadCalendarBtns.forEach(LoadCalendarBtn =>{
+   if (e.target == LoadCalendarBtn){
+       let calendarID = LoadCalendarBtn.parentElement.getAttribute('name')
+       getCalendarDataFromDb(calendarID).then(data =>{
+        sessionStorage.setItem('plan', JSON.stringify(data))
+        location.reload()
+
+       })
+    //    get json response. put it into session-storage current value
+
+
+    }
+  })
+   
+
     let nextRecipeBtn = document.querySelector(".next-recipe-btn")
     // if add item to calendar button was clicked - select field to add to (add class .active-calendar-field)
     for (let item of addItemToCalendarBtn){
@@ -35,7 +90,7 @@ document.addEventListener('click', e =>{
             
         }
     }
-    // recipe-delete from calendarr is clicked
+    // recipe-delete from calendar is clicked
     var deleteRecipeInputBtn = document.querySelectorAll('.deleteRecipeInputBtn')
     deleteRecipeInputBtn.forEach(button =>{
       if (e.target == button){
@@ -384,4 +439,16 @@ function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, r
     pAndDeleteLiElement.appendChild(pElement)
     pAndDeleteLiElement.appendChild(deleteBtnElement)
     parentElementforCreat.appendChild(pAndDeleteLiElement)
+}
+
+async function getCalendarDataFromDb(
+    calendarID
+){
+    const response = await fetch(
+        '/load-calendar-from-db?' + calendarID, 
+        {
+            method: 'GET',
+        }
+    );
+    return response.json();
 }
