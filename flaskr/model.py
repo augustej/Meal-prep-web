@@ -91,3 +91,9 @@ favoriteRecipes = db.Table('favoriteRecipes',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'))
 )
+
+class Calendars(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    calendarData = db.Column(db.String(10000))
+    calendarName = db.Column(db.String(100))

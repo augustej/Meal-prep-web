@@ -171,3 +171,37 @@ def initialDbLoad():
         db.session.commit()
 
 
+@public_pages.route('/various-recipes', methods=['GET'])
+def variousRecipes():
+    if request.method == 'GET':
+        adminUserId = User.query.filter_by(role_name = 'admin').first().id
+        variousRecipesAmount = Recipe.query.filter_by(user_id=adminUserId).count()
+        pageNumber = request.args.get('page')
+        pageSize = 10
+        if not pageNumber:
+            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).limit(pageSize).all()
+        else:
+            pageNumber = int(pageNumber)
+            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).offset((pageNumber-1) * pageSize).limit(pageSize).all()
+
+        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(variousRecipesList)
+
+        if variousRecipesAmount > pageSize:
+            numberOfPages = math.ceil(variousRecipesAmount/pageSize)
+        else:
+            numberOfPages = 1
+
+    return render_template('pages/public/variousrecipes.html', 
+    myRecipes=variousRecipesList, 
+    myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
+
+def createPictDictWithModifiedPaths(recipeList):
+    myRecipesPictDict ={}
+    for singlerecipe in recipeList:
+        fullPicturePath = singlerecipe.picture
+        if fullPicturePath:
+            modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+        else:
+            modifiedPicturePath=''
+        myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
+    return myRecipesPictDict

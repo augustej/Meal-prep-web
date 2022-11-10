@@ -2,5 +2,152 @@
 {% block navcalendar %} active {% endblock %}
 
 {% block content%}
-<h1>Calendar</h1>
+
+<section class="calendar-page page-outer-container">
+    <h1 class="title-for-calendar-page wide-purple-bk page-title-text">Calendar</h1>
+    <!-- <button class="button previous-day-btn", type="button">Previous</button>
+    <button class="button next-day-btn", type="button">Next</button> -->
+    <div class="calendar-inner-container page-inner-container">
+        <div class="recipes-representation-outer-container">
+            <ul class="recipes-representation-bar multiple-recipe-cards">
+
+            </ul>
+        </div>
+
+        <div class="all-table">
+
+            <div class="courstype-btn-list calendar-column">
+                <div class="calendar-first-row-cell">
+                    <button class="previous-day-btn", type="button">&lt;</button>
+                    <button class="next-day-btn", type="button">&gt;</button>
+                </div> 
+
+                {% for coursetype in CoursetypeNames %}
+                <button class="calendar-button bold-uppercase-small calendar-cell" name="{{coursetype}}" type="button">{{coursetype}}</button>
+                {% endfor %}
+            </div>
+
+            <div class="calendar-table">
+            
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Pirmadienis</div> 
+                    <ul class="week-day-ul" name="Monday">
+                        {% for coursetype in CoursetypeNames %}
+                            <li class="calendar-cell" name="{{coursetype}}">
+                                <button class="button add-item-to-calendar" type="button">+</button>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Antradienis</div> 
+                    <ul class=" week-day-ul" name="Tuesday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Trečiadienis</div> 
+                    <ul class=" week-day-ul" name="Wednesday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Ketvirtadienis</div> 
+                    <ul class=" week-day-ul" name="Thursday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Penktadienis</div> 
+                    <ul class=" week-day-ul" name="Friday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Šeštadienis</div> 
+                    <ul class=" week-day-ul" name="Saturday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="no-wrapped calendar-column week-day">
+                    <div class="calendar-button calendar-first-row-cell">Sekmadienis</div> 
+                    <ul class=" week-day-ul" name="Sunday">
+                        {% for coursetype in CoursetypeNames %}
+                        {% if coursetype != "Garnyras" %}
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
+                        {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="recipetype-btn-list calendar-row">
+            {% for foodtype in foodtypeNames %}
+            <button class="calendar-button calendar-cell" name="{{foodtype}}" type="button">{{foodtype}}</button>
+            {% endfor %}
+        </div>
+        <button class="calendar-button favorites-btn calendar-first-row-cell"><i class="fa-solid fa-heart"></i></button> 
+
+
+
+        
+    </div>
+
+    <label for="calendar-name">Kalendoriaus pavadinimas</label>
+    <input type="text" name="calendar-name" id="calendar-name">
+    <button class="button save-calendar" type="button">Išsaugoti kalendorių</button>
+
+    <h3>Mano kalendoriai</h3>
+    <ul class="my-calendars-list">
+
+    {% for calendarItem in myCalendars %}
+        <li class="saved-calendar-item" name="calendarID={{calendarItem.id}}">
+            <p>{{ calendarItem.calendarName }}</p>
+            <button class='button deleteCalendarFromDb' type="button">Ištrinti kalendorių</button>
+            <button class='button loadCalendarFromDbToSession' type="button">Užkrauti kalendorių</button>
+        </li>
+    {% endfor%}
+    </ul>
+    <button class='button cleanCurrentCalendar' type="button">Išvalyti kalendorių</button>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+    <script src="../static/calendar.js"></script>
 {% endblock %}
