@@ -6,6 +6,12 @@ var nextdayBtn = document.querySelector('.next-day-btn')
 var addItemToCalendarBtn = document.querySelectorAll('.add-item-to-calendar')
 var recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
 
+
+// on window load get items from sessionStorage
+var planValue = JSON.parse(sessionStorage.getItem('plan'))
+getDataFromSessionStorage(planValue)
+
+
 document.addEventListener('click', e =>{
     let nextRecipeBtn = document.querySelector(".next-recipe-btn")
     // if add item to calendar button was clicked - select field to add to (add class .active-calendar-field)
@@ -27,22 +33,24 @@ document.addEventListener('click', e =>{
                 activeCalendarField.classList.add('active-calendar-field')
             }
             
-            // color parent element as active
-            // listen for click on PARENT (recipes-representation-bar) children
-            // if child was clicked = get all data from this item
-            // to PARENTFIELD appendChild (create new input field) save value
-            // if parentfield has 4 children - btn display none
         }
     }
-    // recipe-delete from input is clicked
+    // recipe-delete from calendarr is clicked
     var deleteRecipeInputBtn = document.querySelectorAll('.deleteRecipeInputBtn')
     deleteRecipeInputBtn.forEach(button =>{
       if (e.target == button){
-         addRecipeBtn = button.parentElement.parentElement.firstElementChild
+        let recipeNameItem = button.previousElementSibling.getAttribute('name')
+        let nameIteself = recipeNameItem.substring(0, recipeNameItem.indexOf('ID='))
+        let idIteself = recipeNameItem.substring(recipeNameItem.indexOf('ID=')+ 'ID='.length)        
+        addRecipeBtn = button.parentElement.parentElement.firstElementChild
+        let currentCoursetype = addRecipeBtn.parentElement.getAttribute('name')
+        let currentWeekday = addRecipeBtn.parentElement.parentElement.getAttribute('name')
         if (addRecipeBtn.classList.contains('not-displayed')){
             addRecipeBtn.classList.remove('not-displayed')
             addRecipeBtn.classList.remove('activated-add-button')
         }
+        updateSessionStorage(currentWeekday, currentCoursetype , nameIteself, idIteself, 'remove')
+
         button.parentElement.remove()
       }
     })
@@ -109,31 +117,11 @@ document.addEventListener('click', e =>{
     }
     // clicked on see-next-day-column
     if (e.target == nextdayBtn){
-        let noWrappedItems = document.querySelectorAll('.no-wrapped')
-        let firstNoWrappedItem = noWrappedItems[0]    
-        let lastNoWrappedItem = noWrappedItems[noWrappedItems.length - 1]  
-        let elementToShow = lastNoWrappedItem.nextElementSibling
-        if (elementToShow){
-            elementToShow.classList.add('no-wrapped')        
-            elementToShow.classList.remove('wrapped')        
-            let elementToHide = firstNoWrappedItem
-            elementToHide.classList.remove('no-wrapped')        
-            elementToHide.classList.add('wrapped') 
-        }
+        showAndHideWrappedElements('last')
     }
     // clicked on see-previous-day-column
     if (e.target == previousdayBtn){
-        let noWrappedItems = document.querySelectorAll('.no-wrapped')
-        let firstNoWrappedItem = noWrappedItems[0]    
-        let lastNoWrappedItem = noWrappedItems[noWrappedItems.length - 1]  
-        let elementToShow = firstNoWrappedItem.previousElementSibling
-        if (elementToShow){
-            elementToShow.classList.add('no-wrapped')        
-            elementToShow.classList.remove('wrapped')        
-            let elementToHide = lastNoWrappedItem
-            elementToHide.classList.remove('no-wrapped')        
-            elementToHide.classList.add('wrapped') 
-        }
+        showAndHideWrappedElements('first')
     }
 
 })
@@ -245,25 +233,155 @@ function detectWrap(className) {
     return
   }
 
+function addRecipeToCalendar(previouslyActivatedCalendarField, recipeName, recipeId){
+    let Coursetype = previouslyActivatedCalendarField.getAttribute('name')
+    let weekday = previouslyActivatedCalendarField.parentElement.getAttribute('name')
 
-  function addRecipeToCalendar(previouslyActivatedCalendarField, recipeName, recipeId){
-    let inputAndDeleteLiElement = document.createElement('li')
+    createDOMElementsInCalendar (previouslyActivatedCalendarField, recipeId, recipeName)
+    updateSessionStorage(weekday, Coursetype , recipeName, recipeId, 'add')
+    hideAddRecipeBtnFromCalendarIfNeeded (previouslyActivatedCalendarField)
+}
+
+function createSessionStorageTemplate(){
+    let listOfWeekDayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    let listOfCourseTypes = ['Pusryčiai', 'Pietūs', 'Vakarienė', 'Užkandžiai', 'Desertas']
+    let value = {}
+
+    for (dayName of listOfWeekDayNames){
+
+        let Coursetype = []
+
+        for (courseTypeName of listOfCourseTypes){
+            let CoursetypeDic = {}
+            CoursetypeDic[courseTypeName] = []
+            Coursetype.push(CoursetypeDic)
+        }
+
+        value[dayName] = Coursetype
+    }
+
+    return value
+}
+
+function updateSessionStorage(weekday, Coursetype , recipeName, recipeId, addOrRemove){
+
+    // sessionStorage.removeItem('plan')
+
+    // add chosen recipe to sessionStorage
+    if (!sessionStorage.getItem('plan')){
+        var planValue = createSessionStorageTemplate()
+        sessionStorage.setItem('plan', JSON.stringify(planValue))
+    }
+    else{
+        var planValue = JSON.parse(sessionStorage.getItem('plan'))
+    }
+
+    if (addOrRemove == 'add'){
+        for (item of planValue[weekday]){
+            if (Object.keys(item)[0] == Coursetype){
+                var  recipeItemDict = {}
+                var listOfAddedRecipes = Object.values(item)[0]
+                recipeItemDict['recipeName'] = recipeName
+                recipeItemDict['recipeId'] = recipeId
+                listOfAddedRecipes.push(recipeItemDict)
+                sessionStorage.setItem('plan', JSON.stringify(planValue))
+            }
+        }
+    }
+    // remove chosen recipe from sessionStorage
+    if (addOrRemove == 'remove'){
+        for (item of planValue[weekday]){
+            if (Object.keys(item)[0] == Coursetype){
+                var listOfAddedRecipes = Object.values(item)[0]
+                for (item of listOfAddedRecipes){
+                if (item['recipeId'] == recipeId){
+                    let index = listOfAddedRecipes.indexOf(item)
+                    listOfAddedRecipes.splice(index, 1)
+                    sessionStorage.setItem('plan', JSON.stringify(planValue))
+                }
+                }
+            }
+        }
+    }
+    
+}
+
+function hideAddRecipeBtnFromCalendarIfNeeded (parentElement){
+
+       // remove add-button from calendar
+       if (parentElement.children.length > 3){
+        let button = parentElement.querySelector('.activated-add-button')
+        button.classList.add('not-displayed')
+        parentElement.classList.remove('active-calendar-field')
+    }
+}
+
+function showAndHideWrappedElements(show)
+{
+    let noWrappedItems = document.querySelectorAll('.no-wrapped')
+    let firstNoWrappedItem = noWrappedItems[0]    
+    let lastNoWrappedItem = noWrappedItems[noWrappedItems.length - 1]  
+
+    if (show == 'first'){
+        var elementToShow = firstNoWrappedItem.previousElementSibling
+        var elementToHide = lastNoWrappedItem
+    }
+    else{
+        var elementToShow = lastNoWrappedItem.nextElementSibling
+        var elementToHide = firstNoWrappedItem
+    }
+    
+    if (elementToShow){
+        elementToShow.classList.add('no-wrapped')        
+        elementToShow.classList.remove('wrapped')        
+        elementToHide.classList.remove('no-wrapped')        
+        elementToHide.classList.add('wrapped') 
+    }
+}
+
+function getDataFromSessionStorage(SessionStoragedata){
+
+    var allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
+
+    for (weekdayName in SessionStoragedata){
+        allWeekdaysColumns.forEach(oneWeekdayColumn =>{
+            if (oneWeekdayColumn.getAttribute('name') == weekdayName){
+                var calendarCellsOfOneColumn = oneWeekdayColumn.querySelectorAll('.calendar-cell')
+                for (calendarCell of calendarCellsOfOneColumn){
+                    let CoursetypeofCalendarCell = calendarCell.getAttribute('name')
+                    let SessionListOfCoursetypeDictionaries = SessionStoragedata[weekdayName]
+                    for (coursetypeDict of SessionListOfCoursetypeDictionaries){
+                        let SessionStorageCoursetype = Object.keys(coursetypeDict)[0]
+                        if (SessionStorageCoursetype == CoursetypeofCalendarCell){
+                            let StorageArrayToGetDataFrom = Object.values(coursetypeDict)[0]
+                            for (recipeItem of StorageArrayToGetDataFrom){
+                                let nameOfRecipe = recipeItem['recipeName']
+                                let idOfRecipe = recipeItem['recipeId']
+                                createDOMElementsInCalendar (calendarCell, idOfRecipe, nameOfRecipe)
+                                if (StorageArrayToGetDataFrom.length > 2){
+                                    let button = calendarCell.querySelector('.add-item-to-calendar')
+                                    button.classList.add('not-displayed')
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+}
+
+function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, recipeNameforCreat){
+    let pAndDeleteLiElement = document.createElement('li')
     let deleteBtnElement = document.createElement('button')
     deleteBtnElement.setAttribute('class', 'deleteRecipeInputBtn')
     deleteBtnElement.setAttribute('type', 'button')
     deleteBtnElement.appendChild(document.createTextNode('X'))
-    let inputElement = document.createElement('input')
-    inputElement.setAttribute('class', 'recipe-added-to-calendar')
-    inputElement.setAttribute('value', recipeName)
-    inputElement.setAttribute('name', `recipeId=${recipeId}`)
-    inputAndDeleteLiElement.appendChild(inputElement)
-    inputAndDeleteLiElement.appendChild(deleteBtnElement)
-    previouslyActivatedCalendarField.appendChild(inputAndDeleteLiElement)
-
-    if (previouslyActivatedCalendarField.children.length > 3){
-        let button = previouslyActivatedCalendarField.querySelector('.activated-add-button')
-        button.classList.add('not-displayed')
-        previouslyActivatedCalendarField.classList.remove('active-calendar-field')
-    }
-  }
-
+    let pElement = document.createElement('p')
+    pElement.setAttribute('class', 'recipe-added-to-calendar')
+    pElement.setAttribute('name', `${recipeNameforCreat}ID=${recipeIdforCreat}`)
+    pElement.appendChild(document.createTextNode(recipeNameforCreat))
+    pAndDeleteLiElement.appendChild(pElement)
+    pAndDeleteLiElement.appendChild(deleteBtnElement)
+    parentElementforCreat.appendChild(pAndDeleteLiElement)
+}

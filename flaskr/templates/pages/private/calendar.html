@@ -31,13 +31,11 @@
             
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Pirmadienis</div> 
-                    <ul class="Monday week-day-ul">
+                    <ul class="week-day-ul" name="Monday">
                         {% for coursetype in CoursetypeNames %}
-                        {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype">
+                            <li class="calendar-cell" name="{{coursetype}}">
                                 <button class="button add-item-to-calendar" type="button">+</button>
                             </li>
-                        {% endif %}
                         {% endfor %}
 
                     </ul>
@@ -45,10 +43,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Antradienis</div> 
-                    <ul class="Tuesday week-day-ul">
+                    <ul class=" week-day-ul" name="Tuesday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 
@@ -57,10 +55,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Trečiadienis</div> 
-                    <ul class="Wednesday week-day-ul">
+                    <ul class=" week-day-ul" name="Wednesday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 
@@ -69,10 +67,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Ketvirtadienis</div> 
-                    <ul class="Thursday week-day-ul">
+                    <ul class=" week-day-ul" name="Thursday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 
@@ -81,10 +79,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Penktadienis</div> 
-                    <ul class="Friday week-day-ul">
+                    <ul class=" week-day-ul" name="Friday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 
@@ -93,10 +91,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Šeštadienis</div> 
-                    <ul class="Saturday week-day-ul">
+                    <ul class=" week-day-ul" name="Saturday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 
@@ -105,10 +103,10 @@
 
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-button calendar-first-row-cell">Sekmadienis</div> 
-                    <ul class="Sunday week-day-ul">
+                    <ul class=" week-day-ul" name="Sunday">
                         {% for coursetype in CoursetypeNames %}
                         {% if coursetype != "Garnyras" %}
-                            <li class="calendar-cell" name="coursetype"></li>
+                            <li class="calendar-cell" name="{{coursetype}}"></li>
                         {% endif %}
                         {% endfor %}
 

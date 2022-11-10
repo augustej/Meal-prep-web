@@ -17,8 +17,15 @@ def calendar():
     CoursetypeQuery = Coursetype.query.all()
     CoursetypeNames =[]
     for item in CoursetypeQuery:
-        coursetypeName = item.name
-        CoursetypeNames.append(coursetypeName)
+        if not item.name == "Garnyras":
+            if item.name == 'Pietūs/Vakarienė':
+                coursetypeName = 'Pietūs'
+                CoursetypeNames.append(coursetypeName)
+                coursetypeName = 'Vakarienė'
+                CoursetypeNames.append(coursetypeName)
+            else:    
+                coursetypeName = item.name
+                CoursetypeNames.append(coursetypeName)
 
     foodtypeQuery = Foodtype.query.all()
     foodtypeNames = []
@@ -226,7 +233,11 @@ def myFavoriteRecipes():
 
 @private_pages.route('/coursetype-filter', methods=['GET'])
 def coursetypeFilter():
-    courstypeName = request.args.get('coursetype')
+    coursetypeBtnText = request.args.get('coursetype')
+    if coursetypeBtnText == 'Pietūs' or coursetypeBtnText == 'Vakarienė':
+        courstypeName = 'Pietūs/Vakarienė'
+    else:
+        courstypeName = request.args.get('coursetype')
     queryNumber = int(request.args.get('querynumber'))
     limitValue=5
     offsetValue = queryNumber -1
