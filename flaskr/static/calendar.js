@@ -1,5 +1,5 @@
-var  coursetypeBtnList = document.querySelector(".courstype-btn-list").children
-var  recipetypeBtnList = document.querySelector(".recipetype-btn-list").children
+var  coursetypeBtnList = document.querySelectorAll(".courstype-btn")
+var  recipetypeBtnList = document.querySelectorAll(".recipetype-btn")
 var favoritesBtn = document.querySelector('.favorites-btn')
 var previousdayBtn = document.querySelector('.previous-day-btn')
 var nextdayBtn = document.querySelector('.next-day-btn')
@@ -7,12 +7,72 @@ var addItemToCalendarBtn = document.querySelectorAll('.add-item-to-calendar')
 var recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
 var saveCalendarBtn = document.querySelector('.save-calendar')
 var cleanCalendarBtn = document.querySelector('.cleanCurrentCalendar')
+var sideDishBtn = document.querySelector('.side-dish-button')
+var calendarNameInputField = document.querySelector('#calendar-name')
+var recipeSearchInCalendarInputField = document.querySelector('.recipe-search-input-calendar')
+
+// search in calendar
+recipeSearchInCalendarInputField.addEventListener('input', event =>{
+    let inputValue = recipeSearchInCalendarInputField.value
+    recipesRepresentationUl.innerHTML = ""
+    if (recipesRepresentationUl.nextElementSibling){
+        let buttonForMoreItems = recipesRepresentationUl.nextElementSibling
+        recipesRepresentationUl.nextElementSibling.parentElement.removeChild(buttonForMoreItems)        
+        }
+    let invisibleElement = document.querySelector('.invisible-element')
+    if (inputValue.length > 0){
+        recipesRepresentationUl.innerHTML = ""
+    // invisible element prevents from flashing screen 
+        // (doesn't allow recipe-representation-bar to colapse on each input)
+        if (!invisibleElement){
+            let p = document.createElement('p')
+            p.setAttribute('class', 'invisible-element')
+            recipesRepresentationUl.parentElement.appendChild(p)
+        }
+        recipeSearch(inputValue).then(recipesList =>{
+            for (recipeDict of recipesList){
+                let li = document.createElement('li')
+                let p = document.createElement('p')
+                li.setAttribute('class', 'mini-recipe-card')
+                p.appendChild(document.createTextNode(recipeDict['recipeName']))
+                p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
+                let img = document.createElement('img')
+                img.setAttribute('src', recipeDict['recipePath'])
+                li.appendChild(p)
+                li.appendChild(img)
+                recipesRepresentationUl.appendChild(li)
+            }
+        })
+    }
+    else{
+        if (invisibleElement){
+            invisibleElement.remove()
+        }
+    }
+    
+
+})
+
+// get list of matching recipes from db
+async function recipeSearch(inputvalue){
+    let response = await fetch('/recipe-search?input=' + inputvalue,
+    {
+        method: 'GET'
+    })
+    return response.json()
+}
 
 // on window load get items from sessionStorage
-// sessionStorage.removeItem('plan')
 var planValue = JSON.parse(sessionStorage.getItem('plan'))
 getDataFromSessionStorage(planValue)
 
+//   detects wrapped elements, on window resize
+window.addEventListener('resize', (event) => {
+    detectWrap('.week-day')
+  });
+
+// detects wrapped elements on window load
+detectWrap('.week-day')
 
 document.addEventListener('click', e =>{
     // clean calendar
@@ -26,6 +86,7 @@ document.addEventListener('click', e =>{
         let calendarName = document.querySelector('#calendar-name').value
         let jsonBody = {}
         jsonBody[calendarName] = sessionStorage.getItem('plan')
+
         fetch('/load-calendar-to-db',
         {
             method: 'POST',
@@ -59,14 +120,9 @@ document.addEventListener('click', e =>{
        getCalendarDataFromDb(calendarID).then(data =>{
         sessionStorage.setItem('plan', JSON.stringify(data))
         location.reload()
-
        })
-    //    get json response. put it into session-storage current value
-
-
     }
   })
-   
 
     let nextRecipeBtn = document.querySelector(".next-recipe-btn")
     // if add item to calendar button was clicked - select field to add to (add class .active-calendar-field)
@@ -122,7 +178,7 @@ document.addEventListener('click', e =>{
     }
 
     // check if coursetypeBtn was clicked
-    for (let item of coursetypeBtnList) {
+    coursetypeBtnList.forEach(item =>{
         if (e.target == item) {
             coursetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
@@ -130,9 +186,11 @@ document.addEventListener('click', e =>{
                 createRecipesRepresentation(data, 'coursetype')
                 })
         }
-    }
+    })
+
+
     // check if recipetypeBtn was clicked
-    for (let item of recipetypeBtnList) {
+    recipetypeBtnList.forEach(item =>{
         if (e.target == item) {
             recipetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
@@ -140,9 +198,9 @@ document.addEventListener('click', e =>{
                 createRecipesRepresentation(data, 'recipetype')
                 })
         }
-    }
+    })
     // check if favoritesBtn was clicked
-    if (e.target == favoritesBtn) {
+    if (e.target == favoritesBtn || e.target.parentElement == favoritesBtn) {
         sessionStorage.setItem("queryNumber", 1);
         queryfavoriteRecipes(1).then(data =>{
             createRecipesRepresentation(data, 'favorite')
@@ -181,13 +239,20 @@ document.addEventListener('click', e =>{
 
 })
 
-//   detects wrapped elements, on window resize
-window.addEventListener('resize', (event) => {
-    detectWrap('.week-day')
-  });
+// lock-unlock save-calendar btn
+calendarNameInputField.addEventListener('input', event =>{
+    let newCalendarName = calendarNameInputField.value
+    if (newCalendarName.length > 0){
+        saveCalendarBtn.removeAttribute('disabled')
+    }
+    else{
+        if (!saveCalendarBtn.hasAttribute('disabled')){
+            saveCalendarBtn.setAttribute('disabled', 'True')
+        }
+    }
+})
 
-// detects wrapped elements on window load
-detectWrap('.week-day')
+
 
 async function queryCoursetypeRecipes(coursetypeName, queryNumber){
     const response = await fetch(
@@ -224,6 +289,7 @@ async function queryfavoriteRecipes(queryNumber){
 async function createRecipesRepresentation(data, origin){
     let recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
     let ulParentContainer = recipesRepresentationUl.parentNode
+    // next-recipe Btn = ulSibling
     let ulSibling = recipesRepresentationUl.nextElementSibling
     if (ulSibling){
         ulParentContainer.removeChild(ulSibling)
@@ -248,7 +314,7 @@ async function createRecipesRepresentation(data, origin){
     // create "NEXT" button, only if more than 5 elements exist (bug on small screen, but otherwise - recipe repeat on page)
     if (data.length > 4){
         let nextRecipeBtn = document.createElement('button')
-        nextRecipeBtn.appendChild(document.createTextNode('KITAS'))
+        nextRecipeBtn.appendChild(document.createTextNode('>>'))
         nextRecipeBtn.setAttribute('class', 'button next-recipe-btn')
         nextRecipeBtn.setAttribute('type', 'button')
         nextRecipeBtn.setAttribute('name', `${origin}`)
@@ -432,11 +498,12 @@ function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, r
     deleteBtnElement.setAttribute('class', 'deleteRecipeInputBtn')
     deleteBtnElement.setAttribute('type', 'button')
     deleteBtnElement.appendChild(document.createTextNode('X'))
-    let pElement = document.createElement('p')
-    pElement.setAttribute('class', 'recipe-added-to-calendar')
-    pElement.setAttribute('name', `${recipeNameforCreat}ID=${recipeIdforCreat}`)
-    pElement.appendChild(document.createTextNode(recipeNameforCreat))
-    pAndDeleteLiElement.appendChild(pElement)
+    let aElement = document.createElement('a')
+    aElement.setAttribute('href', `single_recipe?recipeID=${recipeIdforCreat}`)
+    aElement.setAttribute('class', 'recipe-added-to-calendar simple-text-small')
+    aElement.setAttribute('name', `${recipeNameforCreat}ID=${recipeIdforCreat}`)
+    aElement.appendChild(document.createTextNode(recipeNameforCreat))
+    pAndDeleteLiElement.appendChild(aElement)
     pAndDeleteLiElement.appendChild(deleteBtnElement)
     parentElementforCreat.appendChild(pAndDeleteLiElement)
 }

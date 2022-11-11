@@ -21,6 +21,10 @@
     box-sizing: border-box;
 }
 
+textarea:focus, input:focus{
+    outline: none;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -905,13 +909,13 @@ aside h4{
     text-transform: capitalize;
 }
 
-.deleteSubtitleBtn, .deleteIngredientBtn {
+.deleteSubtitleBtn, .deleteIngredientBtn, .deleteRecipeInputBtn {
     border: none;
     color: var(--purple);
     background-color: transparent;
 }
 
-.deleteIngredientBtn:hover, .deleteSubtitleBtn:hover{
+.deleteIngredientBtn:hover, .deleteSubtitleBtn:hover, .deleteRecipeInputBtn:hover{
     background-color: var(--white);
     color: var(--purple)
 }
@@ -1310,6 +1314,9 @@ aside h4{
 .all-table{
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    padding-bottom: 1em;
+    margin-top: 1em;
 }
 .calendar-table{
     display: flex;
@@ -1317,19 +1324,44 @@ aside h4{
     justify-content: space-evenly;
     align-items:flex-start;
     flex-wrap: wrap;
-    /* overflow: hidden; */
     max-height: 850px;
+    box-shadow: 3px 2px 10px var(--midpurple);
+    background-color: var(--white);
+
 }
 .calendar-column{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 0.5em;
     width: 20%;
     max-width: 150px;
     min-width: 150px;
-    background-color: antiquewhite;
+}
+
+@media (max-width: 430px){
+    .calendar-column{
+        width: 80%;
+        min-width: 220px;
+    }
+}
+@media (max-width: 325px){
+    .calendar-column{
+        width: 80%;
+        min-width: 170px;
+    }
+}
+
+
+
+.first-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 150px;
+    min-width:100px;
+    width: 20%;
 }
 .calendar-row{
     display: flex;
@@ -1343,8 +1375,8 @@ aside h4{
 
 .calendar-cell{
     width: 100%;
-    height: 150px;
-    border: 1px solid black;
+    height: 120px;
+    border: 1px solid var(--black);
 }
 .calendar-first-row-cell{
     width: 100%;
@@ -1357,22 +1389,222 @@ aside h4{
     width: 100%;
 }
 
-.week-day-ul li:not(:first-child){
-    margin-top: 0.5em;
-}
-
-.wrapped{
+.wrapped, .not-displayed{
     display: none;
 }
 
 .active-calendar-field{
-    background-color: aquamarine;
+    background-color: var(--warmbrorange);
 }
 
-.activated-add-button{
-    background-color: red;
+.add-item-to-calendar {
+    width: 100%;
+    height: 33.3%;
+    font-size: 1.5em;
+    text-align: center;
+    background-color: var(--midpurple);
+    border: none;
+    color: var(--white);
 }
 
-.not-displayed{
-    display: none;
+.add-item-to-calendar.activated-add-button{
+    background-color: var(--orange);
+}
+
+.week-day-ul .calendar-cell li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0.2em;
+    margin-top: 0;
+    height: 33.3%;
+    border-bottom: 1px solid var(--grey);
+}
+
+.week-day-ul .calendar-cell li:hover{
+    background-color: var(--brgrey);
+    box-shadow: 2px 2px 5px var(--midpurple);
+}
+
+
+.deleteRecipeInputBtn{
+    height:100%;
+    margin:0;
+}
+
+.calendar-cell li a{
+    text-decoration: none;
+    align-self: center;
+    padding: 0.5em;
+    color: var(--black);
+    width: 100%;
+    
+}
+
+.filters{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8em;
+    margin-top: 0.5em;
+}
+
+.filter-item{
+    font-family: var(--text);
+    background-color:var(--warmbrorange);
+    padding: 0.15em 0.8em;
+    border-radius: 10px;
+    box-shadow: 2px 2px 3px var(--orange);
+    border: none;
+    text-transform: lowercase;
+
+}
+.filter-item:hover{
+    background-color:var(--orange);
+}
+
+.first-column .courstype-btn{
+    background-color: var(--warmbrorange);
+    border: none;
+    border-bottom: 3px solid var(--brgrey);
+    width: 100%;
+    height: 120px;
+    padding: 0.5em;
+}
+
+.first-column .courstype-btn:hover{
+    background-color:var(--orange);
+}
+
+.recipes-representation-outer-container{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--white);
+    box-shadow: 3px 2px 10px var(--midpurple);
+}
+
+.recipes-representation-bar{
+    max-width: 1000px;
+}
+.next-recipe-btn{
+    padding: 0.5em;
+    margin: 1em;
+}
+
+.save-calendar-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    gap: 2em;
+    padding: 2em;
+}
+
+.calendar-name-label-and-input{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 60%;
+    max-width: 800px;
+    flex-basis: 60%;
+}
+
+.calendar-name-label-and-input label{
+    padding: 0.5em 0.2em;
+}
+
+.calendar-name-label-and-input input{
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--purpleboxshadow);
+    border: none;
+    line-height: 1.5em;
+    padding: 0.4em 0.5em;
+    font-size: 1em;
+}
+
+@media (max-width: 700px){
+    .save-calendar-container{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .calendar-name-label-and-input, .save-calendar{
+        width: 90%;
+    }
+}
+
+.button-thin.cleanCurrentCalendar{
+    background-color: var(--hotpink);
+    flex-basis: 33%;
+}
+.button-thin.cleanCurrentCalendar:hover{
+    background-color: var(--black);
+}
+
+.my-previous-calendars-container{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2em 0;
+    text-align: center;
+}
+
+.saved-calendar-button{
+    font-family: var(--text);
+    border:none;
+    padding: 0.5em 1em;
+    box-shadow: 2px 2px 5px var(--purple);
+    border-radius: 10px;
+}
+
+.saved-calendar-button:hover{
+    cursor: pointer;
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.my-calendars-list{
+    margin: 1.5em auto;
+    background-color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.my-calendars-list li{
+    box-shadow: var(--purpleboxshadow);
+    padding: 1rem 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+}
+
+.my-calendars-list p{
+    margin-right: auto;
+}
+
+.recipe-search-input-calendar{
+    border: none;
+    background-color: var(--warmbrorange);
+}
+
+.search-filter-calendar-container.filter-item:hover{
+    background-color: var(--warmbrorange);
+}
+
+.invisible-element{
+    max-height: 120px;
+    min-height: 120px;
+    margin: 1em;
 }

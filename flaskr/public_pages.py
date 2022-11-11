@@ -4,6 +4,10 @@ from .model import User, Role, Product, Foodtype, productMeasurements, favoriteR
 import csv, math
 from . import db
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, or_
+from sqlalchemy.sql import text
+
+
 
 
 public_pages = Blueprint('public_pages', __name__)
@@ -205,3 +209,33 @@ def createPictDictWithModifiedPaths(recipeList):
             modifiedPicturePath=''
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
+
+@public_pages.route('/recipe-search', methods=['GET'])
+def searchRecipe():
+    if request.method == 'GET':
+        # problem with lithuanian letters on sql query. this escapes finding only lower or upper letters
+        recipeLower = request.args.get('input').lower()
+        recipeUpper = request.args.get('input').upper()
+
+        admin_ID = User.query.filter_by(role_name = 'admin').first().id
+        allowedID = [current_user.id, admin_ID]
+
+        listOfRecipesStartingWith = Recipe.query.filter(or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), Recipe.user_id.in_(allowedID) ).all()
+        recipesList = []
+        for recipeItem in listOfRecipesStartingWith:
+            recipeDict = {}
+            recipeDict['recipeName'] = recipeItem.name
+            recipeDict['recipeId'] = recipeItem.id
+
+            fullPicturePath = recipeItem.picture
+            if fullPicturePath:
+                modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+            else:
+                modifiedPicturePath=''
+
+            recipeDict['recipePath'] = modifiedPicturePath
+
+            recipesList.append(recipeDict)
+        response = recipesList
+            
+    return response
