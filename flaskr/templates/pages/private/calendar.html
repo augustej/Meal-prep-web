@@ -10,7 +10,6 @@
     </div>
     <div class="calendar-inner-container page-inner-container">
         
-
         <div class="filters">
             {% for foodtype in foodtypeNames %}
             <button class="filter-item simple-text-small recipetype-btn" name="{{foodtype}}" type="button">{{foodtype}}</button>
@@ -24,8 +23,6 @@
         </div>
 
         <div class="all-table">
-
-            
             <div class="first-column">
                 <div class="calendar-first-row-cell">
                     <button class="previous-day-btn", type="button">&lt;</button>
@@ -37,8 +34,7 @@
                 {% endfor %}
             </div>
 
-            <div class="calendar-table">
-            
+            <div class="table-part-of-weekdays">
                 <div class="no-wrapped calendar-column week-day">
                     <div class="calendar-first-row-cell">
                         Pirmadienis</div> 
@@ -123,11 +119,8 @@
 
                     </ul>
                 </div>
-
             </div>
         </div>
-
-        
     </div>
 
     <div class="save-calendar-container wide-purple-bk">
@@ -138,8 +131,6 @@
         <button class="button save-calendar" type="button" disabled>Išsaugoti planą</button>
         <button class='button-thin cleanCurrentCalendar' type="button">Išvalyti planą</button>
     </div>
-
-    
 
     <div class="my-previous-calendars-container">
         <h3 class="bold-uppercase-normal">Mano planai</h3>

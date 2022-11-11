@@ -243,9 +243,15 @@ ul{
     font-size: 1.1rem;
 }
 
-.button:hover, .button-thin:hover {
+.button:hover, 
+.button-thin:hover, 
+.button-thin.cleanCurrentCalendar:hover, 
+.saved-calendar-button:hover {
     background-color: var(--black);
+    cursor: pointer;
+    color: var(--white);
 }
+
 .button:disabled{
     background-color: var(--grey);
 }
@@ -1318,7 +1324,8 @@ aside h4{
     padding-bottom: 1em;
     margin-top: 1em;
 }
-.calendar-table{
+
+.table-part-of-weekdays{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -1327,32 +1334,17 @@ aside h4{
     max-height: 850px;
     box-shadow: 3px 2px 10px var(--midpurple);
     background-color: var(--white);
-
 }
+
 .calendar-column{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
     width: 20%;
     max-width: 150px;
     min-width: 150px;
 }
-
-@media (max-width: 430px){
-    .calendar-column{
-        width: 80%;
-        min-width: 220px;
-    }
-}
-@media (max-width: 325px){
-    .calendar-column{
-        width: 80%;
-        min-width: 170px;
-    }
-}
-
-
 
 .first-column{
     display: flex;
@@ -1360,17 +1352,8 @@ aside h4{
     justify-content: center;
     align-items: flex-start;
     max-width: 150px;
-    min-width:100px;
+    min-width: 100px;
     width: 20%;
-}
-.calendar-row{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 0.5em;
-    width: 80%;
-    background-color: red;
 }
 
 .calendar-cell{
@@ -1378,6 +1361,7 @@ aside h4{
     height: 120px;
     border: 1px solid var(--black);
 }
+
 .calendar-first-row-cell{
     width: 100%;
     padding: 1em 0;
@@ -1393,10 +1377,6 @@ aside h4{
     display: none;
 }
 
-.active-calendar-field{
-    background-color: var(--warmbrorange);
-}
-
 .add-item-to-calendar {
     width: 100%;
     height: 33.3%;
@@ -1407,7 +1387,14 @@ aside h4{
     color: var(--white);
 }
 
-.add-item-to-calendar.activated-add-button{
+.active-calendar-field, 
+.search-filter-calendar-container.filter-item:hover{
+    background-color: var(--warmbrorange);
+}
+
+.add-item-to-calendar.activated-add-button, 
+.filter-item:hover, 
+.first-column .courstype-btn:hover{
     background-color: var(--orange);
 }
 
@@ -1427,19 +1414,12 @@ aside h4{
     box-shadow: 2px 2px 5px var(--midpurple);
 }
 
-
-.deleteRecipeInputBtn{
-    height:100%;
-    margin:0;
-}
-
 .calendar-cell li a{
     text-decoration: none;
     align-self: center;
     padding: 0.5em;
     color: var(--black);
     width: 100%;
-    
 }
 
 .filters{
@@ -1460,10 +1440,6 @@ aside h4{
     box-shadow: 2px 2px 3px var(--orange);
     border: none;
     text-transform: lowercase;
-
-}
-.filter-item:hover{
-    background-color:var(--orange);
 }
 
 .first-column .courstype-btn{
@@ -1473,10 +1449,6 @@ aside h4{
     width: 100%;
     height: 120px;
     padding: 0.5em;
-}
-
-.first-column .courstype-btn:hover{
-    background-color:var(--orange);
 }
 
 .recipes-representation-outer-container{
@@ -1492,6 +1464,13 @@ aside h4{
 .recipes-representation-bar{
     max-width: 1000px;
 }
+
+.invisible-element{
+    max-height: 120px;
+    min-height: 120px;
+    margin: 1em;
+}
+
 .next-recipe-btn{
     padding: 0.5em;
     margin: 1em;
@@ -1503,7 +1482,6 @@ aside h4{
     justify-content: center;
     align-items: flex-end;
     flex-wrap: wrap;
-
     gap: 2em;
     padding: 2em;
 }
@@ -1513,7 +1491,6 @@ aside h4{
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 60%;
     max-width: 800px;
     flex-basis: 60%;
 }
@@ -1532,23 +1509,9 @@ aside h4{
     font-size: 1em;
 }
 
-@media (max-width: 700px){
-    .save-calendar-container{
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .calendar-name-label-and-input, .save-calendar{
-        width: 90%;
-    }
-}
-
 .button-thin.cleanCurrentCalendar{
     background-color: var(--hotpink);
     flex-basis: 33%;
-}
-.button-thin.cleanCurrentCalendar:hover{
-    background-color: var(--black);
 }
 
 .my-previous-calendars-container{
@@ -1560,16 +1523,10 @@ aside h4{
 
 .saved-calendar-button{
     font-family: var(--text);
-    border:none;
+    border: none;
     padding: 0.5em 1em;
     box-shadow: 2px 2px 5px var(--purple);
     border-radius: 10px;
-}
-
-.saved-calendar-button:hover{
-    cursor: pointer;
-    background-color: var(--black);
-    color: var(--white);
 }
 
 .my-calendars-list{
@@ -1592,6 +1549,8 @@ aside h4{
 
 .my-calendars-list p{
     margin-right: auto;
+    width: 60%;
+    text-align: left;
 }
 
 .recipe-search-input-calendar{
@@ -1599,12 +1558,35 @@ aside h4{
     background-color: var(--warmbrorange);
 }
 
-.search-filter-calendar-container.filter-item:hover{
-    background-color: var(--warmbrorange);
+@media (max-width: 700px){
+    .save-calendar-container{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .calendar-name-label-and-input, .save-calendar{
+        width: 90%;
+    }
 }
-
-.invisible-element{
-    max-height: 120px;
-    min-height: 120px;
-    margin: 1em;
+@media (max-width: 430px){
+    .calendar-column{
+        width: 80%;
+        min-width: 220px;
+    }
+    .my-calendars-list li{
+    flex-wrap: wrap    
+    }
+    .my-calendars-list p{
+        flex-basis: 100%;
+        text-align: center;
+    }
+    .my-calendars-list button{
+        flex-basis: 40%;
+    }
+}
+@media (max-width: 325px){
+    .calendar-column{
+        width: 80%;
+        min-width: 170px;
+    }
 }
