@@ -341,8 +341,7 @@ def loadCalendarTodb():
             newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
             db.session.add(newCalendar)
             db.session.commit()
-    response = {'blas': 'bla'}
-    return response
+    return redirect(url_for('private_pages.calendar'))
 
 @private_pages.route('/delete-calendar-from-db', methods=['GET'])
 def deleteCalendarFromDb():
