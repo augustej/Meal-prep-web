@@ -33,7 +33,8 @@ def calendar():
         foodtypeName = item.name
         foodtypeNames.append(foodtypeName)
     
-    myCalendars = Calendars.query.filter_by(user_id=current_user.id).all()
+    myCalendars = Calendars.query.filter(Calendars.user_id==current_user.id, 
+        Calendars.calendarName!='currentCalendar').all()
 
     return render_template('/pages/private/calendar.html', 
     CoursetypeNames=CoursetypeNames,
@@ -257,10 +258,7 @@ def recipetypeFilter():
     offsetValue = queryNumber -1
     currentRecipetype_id = Foodtype.query.filter_by(name=recipetypeName).first().id
     filteredRecipeData = db.session.query(recipeTypes).filter_by(recipe_foodtype_id=currentRecipetype_id).all()
-    print(filteredRecipeData, "filteredRecipeData")
-
     recipesOfRecipetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
-    print(recipesOfRecipetypeList, "recipesOfRecipetypeList")
     return recipesOfRecipetypeList
 
 @private_pages.route('/favorite-filter', methods=['GET'])
@@ -273,6 +271,38 @@ def favoriteFilter():
 
     return favoriteRecipesList
 
+@private_pages.route('/load-calendar-to-db', methods=['POST'])
+def loadCalendarTodb():
+    if request.method == "POST":
+        data = request.get_json()
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first()
+        for keys in data:
+            calendarName = keys
+            calendarData = data[keys]
+            if not currentCalendar:
+                newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
+                db.session.add(newCalendar)
+            else:
+                currentCalendar.calendarData = calendarData
+            db.session.commit()
+
+    return Response('', 200)
+
+@private_pages.route('/delete-calendar-from-db', methods=['GET'])
+def deleteCalendarFromDb():
+    if request.method == "GET":
+        calendarIDtoDelete = request.args.get('calendarID')
+        Calendars.query.filter_by(id=calendarIDtoDelete).delete()
+        db.session.commit()
+    response = {'bla':'bla'}
+    return response
+
+@private_pages.route('/load-calendar-from-db', methods=['GET'])
+def loadCalendarFromDb():
+    if request.method == "GET":
+        calendarIDtoLoad = request.args.get('calendarID')
+        calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
+    return calendarToLoad 
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -329,33 +359,3 @@ def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offse
         jsonResponseRecipeList.append(recipeItemDict)
     
     return jsonResponseRecipeList
-
-@private_pages.route('/load-calendar-to-db', methods=['POST'])
-def loadCalendarTodb():
-    if request.method == "POST":
-        data = request.get_json()
-        for keys in data:
-            calendarName = keys
-            calendarData = data[keys]
-            print (keys, "keys", calendarData, "calendarData")
-            newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
-            db.session.add(newCalendar)
-            db.session.commit()
-    return redirect(url_for('private_pages.calendar'))
-
-@private_pages.route('/delete-calendar-from-db', methods=['GET'])
-def deleteCalendarFromDb():
-    if request.method == "GET":
-        calendarIDtoDelete = request.args.get('calendarID')
-        Calendars.query.filter_by(id=calendarIDtoDelete).delete()
-        db.session.commit()
-    response = {'bla':'bla'}
-    return response
-
-@private_pages.route('/load-calendar-from-db', methods=['GET'])
-def loadCalendarFromDb():
-    if request.method == "GET":
-        calendarIDtoLoad = request.args.get('calendarID')
-        calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
-        print(calendarToLoad)
-    return calendarToLoad 

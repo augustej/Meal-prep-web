@@ -1,136 +1,91 @@
-var  coursetypeBtnList = document.querySelectorAll(".courstype-btn")
-var  recipetypeBtnList = document.querySelectorAll(".recipetype-btn")
 var favoritesBtn = document.querySelector('.favorites-btn')
-var previousdayBtn = document.querySelector('.previous-day-btn')
-var nextdayBtn = document.querySelector('.next-day-btn')
-var addItemToCalendarBtn = document.querySelectorAll('.add-item-to-calendar')
 var recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
 var saveCalendarBtn = document.querySelector('.save-calendar')
-var cleanCalendarBtn = document.querySelector('.cleanCurrentCalendar')
-var sideDishBtn = document.querySelector('.side-dish-button')
 var calendarNameInputField = document.querySelector('#calendar-name')
 var recipeSearchInCalendarInputField = document.querySelector('.recipe-search-input-calendar')
-
-// search in calendar
-recipeSearchInCalendarInputField.addEventListener('input', event =>{
-    let inputValue = recipeSearchInCalendarInputField.value
-    recipesRepresentationUl.innerHTML = ""
-    if (recipesRepresentationUl.nextElementSibling){
-        let buttonForMoreItems = recipesRepresentationUl.nextElementSibling
-        recipesRepresentationUl.nextElementSibling.parentElement.removeChild(buttonForMoreItems)        
-        }
-    let invisibleElement = document.querySelector('.invisible-element')
-    if (inputValue.length > 0){
-        recipesRepresentationUl.innerHTML = ""
-    // invisible element prevents from flashing screen 
-        // (doesn't allow recipe-representation-bar to colapse on each input)
-        if (!invisibleElement){
-            let p = document.createElement('p')
-            p.setAttribute('class', 'invisible-element')
-            recipesRepresentationUl.parentElement.appendChild(p)
-        }
-        recipeSearch(inputValue).then(recipesList =>{
-            for (recipeDict of recipesList){
-                let li = document.createElement('li')
-                let p = document.createElement('p')
-                li.setAttribute('class', 'mini-recipe-card')
-                p.appendChild(document.createTextNode(recipeDict['recipeName']))
-                p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
-                let img = document.createElement('img')
-                img.setAttribute('src', recipeDict['recipePath'])
-                li.appendChild(p)
-                li.appendChild(img)
-                recipesRepresentationUl.appendChild(li)
-            }
-        })
-    }
-    else{
-        if (invisibleElement){
-            invisibleElement.remove()
-        }
-    }
-    
-
-})
-
-// get list of matching recipes from db
-async function recipeSearch(inputvalue){
-    let response = await fetch('/recipe-search?input=' + inputvalue,
-    {
-        method: 'GET'
-    })
-    return response.json()
-}
+var planValue = JSON.parse(sessionStorage.getItem('plan'))
 
 // on window load get items from sessionStorage
-var planValue = JSON.parse(sessionStorage.getItem('plan'))
 getDataFromSessionStorage(planValue)
-
-//   detects wrapped elements, on window resize
-window.addEventListener('resize', (event) => {
-    detectWrap('.week-day')
-  });
 
 // detects wrapped elements on window load
 detectWrap('.week-day')
 
+//   detects wrapped elements on window resize
+window.addEventListener('resize', (event) => {
+    detectWrap('.week-day')
+});
+
+document.addEventListener('input', e =>{
+    // search for recipes in calendar
+    if (e.target == recipeSearchInCalendarInputField){
+
+        // check if there are already recipes displayed and make it empty
+        recipesRepresentationUl.innerHTML = ""
+        let buttonForMoreItems = recipesRepresentationUl.nextElementSibling
+        if (buttonForMoreItems){
+            buttonForMoreItems.parentElement.removeChild(buttonForMoreItems)        
+        }
+
+        // check if person has typed in anything in search
+        let inputValue = recipeSearchInCalendarInputField.value
+        let invisibleElement = document.querySelector('.invisible-element')
+        // invisible element prevents from flashing screen --->
+        // it (doesn't allow recipe-representation-bar to collapse completely on each input)
+
+        if (inputValue.length > 0){
+            // as long as there is input in search field - keep invisible element 
+            if (!invisibleElement){
+                let p = document.createElement('p')
+                p.setAttribute('class', 'invisible-element')
+                recipesRepresentationUl.parentElement.appendChild(p)
+            }
+
+            sendGetRequestAwaitforResponse('/recipe-search?input=', inputValue)
+            .then(recipesList =>{
+                for (let recipeDict of recipesList){
+                    let li = document.createElement('li')
+                    li.setAttribute('class', 'mini-recipe-card')
+                    let p = document.createElement('p')
+                    p.appendChild(document.createTextNode(recipeDict['recipeName']))
+                    p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
+                    let img = document.createElement('img')
+                    img.setAttribute('src', recipeDict['recipePath'])
+                    li.appendChild(p)
+                    li.appendChild(img)
+                    recipesRepresentationUl.appendChild(li)
+                }
+            })
+        }
+        else{
+            if (invisibleElement){invisibleElement.remove()}
+        }
+    }
+
+    // lock-unlock save-calendar btn
+    if (e.target == calendarNameInputField){
+        let newCalendarName = calendarNameInputField.value
+        if (newCalendarName.length > 0){
+            saveCalendarBtn.removeAttribute('disabled')
+        }
+        else{
+            if (!saveCalendarBtn.hasAttribute('disabled')){
+                saveCalendarBtn.setAttribute('disabled', 'True')
+            }
+        }
+    }
+})
+
 document.addEventListener('click', e =>{
-    // clean calendar
-    if (e.target == cleanCalendarBtn){
-        sessionStorage.removeItem('plan')
-        location.reload()
-    }
 
-    // save calendar to db
-    if (e.target == saveCalendarBtn){
-        let calendarName = document.querySelector('#calendar-name').value
-        let jsonBody = {}
-        jsonBody[calendarName] = sessionStorage.getItem('plan')
-
-        fetch('/load-calendar-to-db',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(jsonBody)
-        })
-        location.reload()
-    }
-
-    // delete calendar from db
-    var alldeleteCalendarBtns = document.querySelectorAll('.deleteCalendarFromDb')
-    alldeleteCalendarBtns.forEach(deleteCalendarBtn =>{
-    if (e.target == deleteCalendarBtn){
-        let calendarID = deleteCalendarBtn.parentElement.getAttribute('name')
-
-        fetch('/delete-calendar-from-db?' + calendarID,
-        {
-            method: 'GET'
-        })
-        deleteCalendarBtn.parentElement.remove()
-    }
-   })
-
-   // load calendar from db
-   var allloadCalendarBtns = document.querySelectorAll('.loadCalendarFromDbToSession')
-   allloadCalendarBtns.forEach(LoadCalendarBtn =>{
-   if (e.target == LoadCalendarBtn){
-       let calendarID = LoadCalendarBtn.parentElement.getAttribute('name')
-       getCalendarDataFromDb(calendarID).then(data =>{
-        sessionStorage.setItem('plan', JSON.stringify(data))
-        location.reload()
-       })
-    }
-  })
-
-    let nextRecipeBtn = document.querySelector(".next-recipe-btn")
     // if add item to calendar button was clicked - select field to add to (add class .active-calendar-field)
-    for (let item of addItemToCalendarBtn){
-        if (e.target == item){
-            let activeCalendarField = item.parentElement
-            if (item.classList.contains('activated-add-button')){
-                item.classList.remove('activated-add-button')
+    let nextRecipeBtn = document.querySelector(".next-recipe-btn")
+    let addItemToCalendarBtns = document.querySelectorAll('.add-item-to-calendar')
+    for (let addItemBtn of addItemToCalendarBtns){
+        if (e.target == addItemBtn){
+            let activeCalendarField = addItemBtn.parentElement
+            if (addItemBtn.classList.contains('activated-add-button')){
+                addItemBtn.classList.remove('activated-add-button')
                 activeCalendarField.classList.remove('active-calendar-field')
             }
             else{
@@ -140,20 +95,20 @@ document.addEventListener('click', e =>{
                     let previouslyActivatedBtn = previouslyActivatedCalendarField.querySelector('.add-item-to-calendar')
                     previouslyActivatedBtn.classList.remove('activated-add-button')
                 }
-                item.classList.add('activated-add-button')
+                addItemBtn.classList.add('activated-add-button')
                 activeCalendarField.classList.add('active-calendar-field')
-            }
-            
+            }   
         }
     }
+
     // recipe-delete from calendar is clicked
-    var deleteRecipeInputBtn = document.querySelectorAll('.deleteRecipeInputBtn')
-    deleteRecipeInputBtn.forEach(button =>{
+    let deleteRecipeInputBtns = document.querySelectorAll('.deleteRecipeInputBtn')
+    deleteRecipeInputBtns.forEach(button =>{
       if (e.target == button){
         let recipeNameItem = button.previousElementSibling.getAttribute('name')
         let nameIteself = recipeNameItem.substring(0, recipeNameItem.indexOf('ID='))
         let idIteself = recipeNameItem.substring(recipeNameItem.indexOf('ID=')+ 'ID='.length)        
-        addRecipeBtn = button.parentElement.parentElement.firstElementChild
+        let addRecipeBtn = button.parentElement.parentElement.firstElementChild
         let currentCoursetype = addRecipeBtn.parentElement.getAttribute('name')
         let currentWeekday = addRecipeBtn.parentElement.parentElement.getAttribute('name')
         if (addRecipeBtn.classList.contains('not-displayed')){
@@ -161,7 +116,6 @@ document.addEventListener('click', e =>{
             addRecipeBtn.classList.remove('activated-add-button')
         }
         updateSessionStorage(currentWeekday, currentCoursetype , nameIteself, idIteself, 'remove')
-
         button.parentElement.remove()
       }
     })
@@ -178,34 +132,37 @@ document.addEventListener('click', e =>{
     }
 
     // check if coursetypeBtn was clicked
+    let  coursetypeBtnList = document.querySelectorAll(".courstype-btn")
     coursetypeBtnList.forEach(item =>{
         if (e.target == item) {
             coursetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
-            queryCoursetypeRecipes(coursetypeName, 1).then(data =>{
+            filterQueryToDb(coursetypeName, 1, 'coursetype').then(data =>{
                 createRecipesRepresentation(data, 'coursetype')
-                })
+            })
         }
     })
 
-
     // check if recipetypeBtn was clicked
+    let recipetypeBtnList = document.querySelectorAll(".recipetype-btn")
     recipetypeBtnList.forEach(item =>{
         if (e.target == item) {
             recipetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
-            queryRecipetypeRecipes(recipetypeName, 1).then(data =>{
+            filterQueryToDb(recipetypeName, 1, 'recipetype').then(data =>{
                 createRecipesRepresentation(data, 'recipetype')
-                })
+            })
         }
     })
+
     // check if favoritesBtn was clicked
     if (e.target == favoritesBtn || e.target.parentElement == favoritesBtn) {
         sessionStorage.setItem("queryNumber", 1);
-        queryfavoriteRecipes(1).then(data =>{
+        filterQueryToDb('favorite', 1, 'favorite').then(data =>{
             createRecipesRepresentation(data, 'favorite')
-            })
+        })
     }
+
     // person wants to see more recipes from the same category 
     if (e.target == nextRecipeBtn){
         let queryNumber =  parseInt(sessionStorage.getItem("queryNumber"));
@@ -213,51 +170,96 @@ document.addEventListener('click', e =>{
         sessionStorage.setItem("queryNumber", modifiedQueryNumber)
 
         if (nextRecipeBtn.getAttribute('name') == 'coursetype'){
-            queryCoursetypeRecipes(coursetypeName, modifiedQueryNumber).then(data =>{
+            filterQueryToDb(coursetypeName, modifiedQueryNumber, 'coursetype').then(data =>{
                 createRecipesRepresentation(data, 'coursetype')
-                })
+            })
         }
         if (nextRecipeBtn.getAttribute('name') == 'recipetype'){
-            queryRecipetypeRecipes(recipetypeName, modifiedQueryNumber).then(data =>{
+            filterQueryToDb(recipetypeName, modifiedQueryNumber, 'recipetype').then(data =>{
                 createRecipesRepresentation(data, 'recipetype')
-                })
+            })
         }
         if (nextRecipeBtn.getAttribute('name') == 'favorite'){
-            queryfavoriteRecipes(modifiedQueryNumber).then(data =>{
+            filterQueryToDb('favorite', modifiedQueryNumber, 'favorite').then(data =>{
                 createRecipesRepresentation(data, 'favorite')
-                })
+            })
         }
     }
+
     // clicked on see-next-day-column
+    let nextdayBtn = document.querySelector('.next-day-btn')
     if (e.target == nextdayBtn){
         showAndHideWrappedElements('last')
     }
+
     // clicked on see-previous-day-column
+    let previousdayBtn = document.querySelector('.previous-day-btn')
     if (e.target == previousdayBtn){
         showAndHideWrappedElements('first')
     }
 
-})
-
-// lock-unlock save-calendar btn
-calendarNameInputField.addEventListener('input', event =>{
-    let newCalendarName = calendarNameInputField.value
-    if (newCalendarName.length > 0){
-        saveCalendarBtn.removeAttribute('disabled')
+    // clean calendar
+    let cleanCalendarBtn = document.querySelector('.cleanCurrentCalendar')
+    if (e.target == cleanCalendarBtn){
+        sessionStorage.removeItem('plan')
+        location.reload()
     }
-    else{
-        if (!saveCalendarBtn.hasAttribute('disabled')){
-            saveCalendarBtn.setAttribute('disabled', 'True')
+
+    // save calendar to db
+    if (e.target == saveCalendarBtn){
+        let calendarName = calendarNameInputField.value
+        let jsonBody = {}
+        jsonBody[calendarName] = sessionStorage.getItem('plan')
+        // if user tries to save just emptied calendar - create an empty template
+        if (jsonBody[calendarName] == null ){
+            planValue = createSessionStorageTemplate()
+            sessionStorage.setItem('plan', JSON.stringify(planValue))
+            jsonBody[calendarName] = sessionStorage.getItem('plan')
         }
+        loadCalendarToDb(jsonBody).then(data =>{
+            location.reload()
+        })
     }
+
+    // delete calendar from db
+    let alldeleteCalendarBtns = document.querySelectorAll('.deleteCalendarFromDb')
+    alldeleteCalendarBtns.forEach(deleteCalendarBtn =>{
+        if (e.target == deleteCalendarBtn){
+            let calendarID = deleteCalendarBtn.parentElement.getAttribute('name')
+            fetch('/delete-calendar-from-db?' + calendarID,
+            {
+                method: 'GET'
+            })
+            deleteCalendarBtn.parentElement.remove()
+        }
+    })
+
+   // load calendar from db
+   let allloadCalendarBtns = document.querySelectorAll('.loadCalendarFromDbToSession')
+   allloadCalendarBtns.forEach(LoadCalendarBtn =>{
+        if (e.target == LoadCalendarBtn){
+            let calendarID = LoadCalendarBtn.parentElement.getAttribute('name')
+            sendGetRequestAwaitforResponse('/load-calendar-from-db?', calendarID)
+            .then(data =>{
+                sessionStorage.setItem('plan', JSON.stringify(data))
+                location.reload()
+            })
+            }
+    })
 })
 
+async function filterQueryToDb(name, queryNumber, referrer){
+    let url = ""
+    if (referrer == 'coursetype'){
+        url = '/coursetype-filter?coursetype=' + name
+    }
+    else if (referrer == 'recipetype'){
+        url = '/recipetype-filter?recipetype=' + name
+    }
+    else { url = '/favorite-filter?='}
 
-
-async function queryCoursetypeRecipes(coursetypeName, queryNumber){
     const response = await fetch(
-        '/coursetype-filter?coursetype=' + coursetypeName + 
-        '&querynumber=' + queryNumber,
+        url + '&querynumber=' + queryNumber,
     {    
         method: 'GET',
     }
@@ -265,29 +267,8 @@ async function queryCoursetypeRecipes(coursetypeName, queryNumber){
     return response.json();
 }
 
-async function queryRecipetypeRecipes(recipetypeName, queryNumber){
-    const response = await fetch(
-        '/recipetype-filter?recipetype=' + recipetypeName + 
-        '&querynumber=' + queryNumber,
-    {    
-        method: 'GET',
-    }
-    );
-    return response.json();
-}
-
-async function queryfavoriteRecipes(queryNumber){
-    const response = await fetch(
-        '/favorite-filter?querynumber=' + queryNumber,
-    {    
-        method: 'GET',
-    }
-    );
-    return response.json();
-}
 
 async function createRecipesRepresentation(data, origin){
-    let recipesRepresentationUl = document.querySelector('.recipes-representation-bar')
     let ulParentContainer = recipesRepresentationUl.parentNode
     // next-recipe Btn = ulSibling
     let ulSibling = recipesRepresentationUl.nextElementSibling
@@ -297,8 +278,8 @@ async function createRecipesRepresentation(data, origin){
     recipesRepresentationUl.innerHTML = ""
     data.forEach(recipeItem =>{
         let li = document.createElement('li')
-        let p = document.createElement('p')
         li.setAttribute('class', 'mini-recipe-card')
+        let p = document.createElement('p')
         p.appendChild(document.createTextNode(recipeItem.name))
         p.setAttribute('class', `recipe-title recipe-id=${recipeItem.id} simple-text-small`)
         let img = document.createElement('img')
@@ -306,7 +287,7 @@ async function createRecipesRepresentation(data, origin){
         li.appendChild(p)
         li.appendChild(img)
         recipesRepresentationUl.appendChild(li)
-        // restart items display from the start
+        // if infromation from backend suggests that all recipes have been shown, restart items display from the start
         if (recipeItem.listlength == 0 ){
             sessionStorage.setItem("queryNumber", 1);
         }
@@ -355,11 +336,11 @@ function detectWrap(className) {
   }
 
 function addRecipeToCalendar(previouslyActivatedCalendarField, recipeName, recipeId){
-    let Coursetype = previouslyActivatedCalendarField.getAttribute('name')
+    let coursetype = previouslyActivatedCalendarField.getAttribute('name')
     let weekday = previouslyActivatedCalendarField.parentElement.getAttribute('name')
 
     createDOMElementsInCalendar (previouslyActivatedCalendarField, recipeId, recipeName)
-    updateSessionStorage(weekday, Coursetype , recipeName, recipeId, 'add')
+    updateSessionStorage(weekday, coursetype , recipeName, recipeId, 'add')
     hideAddRecipeBtnFromCalendarIfNeeded (previouslyActivatedCalendarField)
 }
 
@@ -372,7 +353,7 @@ function createSessionStorageTemplate(){
 
         let Coursetype = []
 
-        for (courseTypeName of listOfCourseTypes){
+        for (let courseTypeName of listOfCourseTypes){
             let CoursetypeDic = {}
             CoursetypeDic[courseTypeName] = []
             Coursetype.push(CoursetypeDic)
@@ -386,22 +367,30 @@ function createSessionStorageTemplate(){
 
 function updateSessionStorage(weekday, Coursetype , recipeName, recipeId, addOrRemove){
 
-    // sessionStorage.removeItem('plan')
-
     // add chosen recipe to sessionStorage
     if (!sessionStorage.getItem('plan')){
-        var planValue = createSessionStorageTemplate()
+        planValue = createSessionStorageTemplate()
         sessionStorage.setItem('plan', JSON.stringify(planValue))
     }
     else{
-        var planValue = JSON.parse(sessionStorage.getItem('plan'))
+        planValue = JSON.parse(sessionStorage.getItem('plan'))
     }
-
-    if (addOrRemove == 'add'){
-        for (item of planValue[weekday]){
-            if (Object.keys(item)[0] == Coursetype){
-                var  recipeItemDict = {}
-                var listOfAddedRecipes = Object.values(item)[0]
+    
+    for (let daymeal of planValue[weekday]){
+        // for every daymeal, check if name matches with coursetype's name 
+        if (Object.keys(daymeal)[0] == Coursetype){
+            let listOfAddedRecipes = Object.values(daymeal)[0]
+            if (addOrRemove == 'remove'){
+                for (let item of listOfAddedRecipes){
+                    if (item['recipeId'] == recipeId){
+                        let index = listOfAddedRecipes.indexOf(item)
+                        listOfAddedRecipes.splice(index, 1)
+                        sessionStorage.setItem('plan', JSON.stringify(planValue))
+                    }
+                }
+            }
+            else{
+                let  recipeItemDict = {}
                 recipeItemDict['recipeName'] = recipeName
                 recipeItemDict['recipeId'] = recipeId
                 listOfAddedRecipes.push(recipeItemDict)
@@ -409,28 +398,12 @@ function updateSessionStorage(weekday, Coursetype , recipeName, recipeId, addOrR
             }
         }
     }
-    // remove chosen recipe from sessionStorage
-    if (addOrRemove == 'remove'){
-        for (item of planValue[weekday]){
-            if (Object.keys(item)[0] == Coursetype){
-                var listOfAddedRecipes = Object.values(item)[0]
-                for (item of listOfAddedRecipes){
-                if (item['recipeId'] == recipeId){
-                    let index = listOfAddedRecipes.indexOf(item)
-                    listOfAddedRecipes.splice(index, 1)
-                    sessionStorage.setItem('plan', JSON.stringify(planValue))
-                }
-                }
-            }
-        }
-    }
-    
+
 }
 
-function hideAddRecipeBtnFromCalendarIfNeeded (parentElement){
 
-       // remove add-button from calendar
-       if (parentElement.children.length > 3){
+function hideAddRecipeBtnFromCalendarIfNeeded (parentElement){
+    if (parentElement.children.length > 3){
         let button = parentElement.querySelector('.activated-add-button')
         button.classList.add('not-displayed')
         parentElement.classList.remove('active-calendar-field')
@@ -462,12 +435,12 @@ function showAndHideWrappedElements(show)
 
 function getDataFromSessionStorage(SessionStoragedata){
 
-    var allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
+    let allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
 
     for (weekdayName in SessionStoragedata){
         allWeekdaysColumns.forEach(oneWeekdayColumn =>{
             if (oneWeekdayColumn.getAttribute('name') == weekdayName){
-                var calendarCellsOfOneColumn = oneWeekdayColumn.querySelectorAll('.calendar-cell')
+                let calendarCellsOfOneColumn = oneWeekdayColumn.querySelectorAll('.calendar-cell')
                 for (calendarCell of calendarCellsOfOneColumn){
                     let CoursetypeofCalendarCell = calendarCell.getAttribute('name')
                     let SessionListOfCoursetypeDictionaries = SessionStoragedata[weekdayName]
@@ -508,14 +481,25 @@ function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, r
     parentElementforCreat.appendChild(pAndDeleteLiElement)
 }
 
-async function getCalendarDataFromDb(
-    calendarID
-){
-    const response = await fetch(
-        '/load-calendar-from-db?' + calendarID, 
-        {
-            method: 'GET',
-        }
-    );
-    return response.json();
+
+async function sendGetRequestAwaitforResponse(url, data){
+    let response = await fetch(url + data,
+    {
+        method: 'GET'
+    })
+    return response.json()
 }
+
+
+async function loadCalendarToDb(jsonBody){
+    let response = await fetch('/load-calendar-to-db',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response
+}
+

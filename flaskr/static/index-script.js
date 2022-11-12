@@ -57,3 +57,55 @@ if (backBtn){
 }
 function go_back()
     {window.location.href = document.referrer};
+
+// save sessionStorage data about calendar, if /calendar loads, or if it the refferer
+window.addEventListener( "load", event =>{
+    if ((`${window.location.origin}/calendar` == window.location.href) || 
+        (`${window.location.origin}/calendar` == document.referrer)) {
+
+        let calendarName = 'currentCalendar'
+        let jsonBody = {}
+        jsonBody[calendarName] = sessionStorage.getItem('plan')
+        // if user tries to save just emptied calendar - create an empty template
+        if (jsonBody[calendarName] == null ){
+            console.log("nulis")
+            planValue = createSessionStorageTemplate()
+            sessionStorage.setItem('plan', JSON.stringify(planValue))
+            jsonBody[calendarName] = sessionStorage.getItem('plan')
+        }
+        loadCalendarToDb(jsonBody)
+    }
+})
+
+async function loadCalendarToDb(jsonBody){
+    let response = await fetch('/load-calendar-to-db',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response
+}
+
+function createSessionStorageTemplate(){
+    let listOfWeekDayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    let listOfCourseTypes = ['Pusryčiai', 'Pietūs', 'Vakarienė', 'Užkandžiai', 'Desertas']
+    let value = {}
+
+    for (dayName of listOfWeekDayNames){
+
+        let Coursetype = []
+
+        for (let courseTypeName of listOfCourseTypes){
+            let CoursetypeDic = {}
+            CoursetypeDic[courseTypeName] = []
+            Coursetype.push(CoursetypeDic)
+        }
+
+        value[dayName] = Coursetype
+    }
+
+    return value
+}

@@ -3,7 +3,7 @@
 
 
 {% block content%}
-<secion class="personal-home-page">
+<section class="personal-home-page">
     <p class="greeting wide-purple-bk page-title-text">Skanios dienos    <span class="highlight">,   {{ name }} !</span></p>
     <div class="center-asides-container">
         <aside class="favorite-recipes-aside">
@@ -12,69 +12,30 @@
         <section class="todays-menu-section centered-card">
             <h1 class="page-title-text">Dienos meniu</h1>
             <div class="divider"></div>
-
             <ul class="day-menu-ul card-ul">
-                <li class="day-menu-li card-li">
-                    <h2 class="bold-uppercase-normal">Pusryčiai</h2>
-                    <div class="breakfast-container multiple-recipe-cards">
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Granola</h3>
-                            <img src="../../../static/images/granola.jpg" />
-                        </div>
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Granola</h3>
-                            <img src="../../../static/images/granola.jpg" />
-                        </div>
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Granola</h3>
-                            <img src="../../../static/images/granola.jpg" />
-                        </div>
-                    </div>
-                </li>
-                <li class="day-menu-li card-li">
-                    <h2 class="bold-uppercase-normal">Pietūs</h2>
-                    <div class="lunch-container multiple-recipe-cards">
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Tacos</h3>
-                            <img src="../../../static/images/tacos.jpg" />
-                        </div>
-                    </div>
-                </li>
-                <li class="day-menu-li card-li">
-                    <h2 class="bold-uppercase-normal">Užkandžiai</h2>
-                    <div class="snack-container multiple-recipe-cards">
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Humuso sumuštinukai</h3>
-                            <img src="../../../static/images/humus-sandwich.jpg" />
-                        </div>
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Humuso sumuštinukai</h3>
-                            <img src="../../../static/images/humus-sandwich.jpg" />
-                        </div>
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Humuso sumuštinukai</h3>
-                            <img src="../../../static/images/humus-sandwich.jpg" />
-                        </div>
-                    </div>
-                </li>
-                <li class="day-menu-li card-li">
-                    <h2 class="bold-uppercase-normal">Vakarienė</h2>
-                    <div class="dinner-container multiple-recipe-cards">
-                        <!-- <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Thai salotos</h3>
-                            <img src="../../../static/images/thaidinner.jpg" />
-                        </div> -->
-                    </div>
-                </li>
-                <li class="day-menu-li card-li">
-                    <h2 class="bold-uppercase-normal">Desertas</h2>
-                    <div class="dessert-container multiple-recipe-cards">
-                        <div class="imported-recipe recipe-card-cube">
-                            <h3 class="text-unimportant-title">Thai salotos</h3>
-                            <img src="../../../static/images/thaidinner.jpg" />
-                        </div>
-                    </div>
-                </li>
+
+                {% for item in listOfDayMealDictionaries %}
+                    {% for daymeal in item %}
+                        
+                        <li class="day-menu-li card-li">
+                            <h2 class="bold-uppercase-normal">{{daymeal}}</h2>
+                            <div class="multiple-recipe-cards">
+
+                                {% for recipe in item[daymeal] %}
+                                
+                                <a class="imported-recipe recipe-card-cube" href="/single_recipe?recipeID={{recipe.recipeId}}">
+                                    <h3 class="text-unimportant-title">{{recipe.recipeName}}</h3>
+                                    <img src='{{ pictDict[ recipe.recipeId | int ] }}' />
+                                </a>
+
+                                {% endfor %}
+
+                                
+                            </div>
+                        </li>
+
+                    {% endfor %}
+                {% endfor %}
             </ul>
             <div class="divider"></div>
 

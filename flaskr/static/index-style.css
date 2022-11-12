@@ -768,14 +768,14 @@ aside h4{
     border-bottom: 1px solid var(--purple);
 }
 
-/* area for recipe OR button display */
-/* .day-menu-li div{
-    text-align: center;
-} */
 
-.imported-recipe{
-    width: 25%;
+.day-menu-ul .multiple-recipe-cards .recipe-card-cube{
+    width: 90%;
     height: 250px;
+}
+
+.day-menu-ul .multiple-recipe-cards{
+    flex-wrap: nowrap;
 }
 
 .imported-recipe.recipe-card-cube img{
@@ -795,31 +795,20 @@ aside h4{
     }
 }
 
-@media (max-width: 1030px){
+@media (max-width: 950px){
     .centered-card{
         width: 90%;
+    }
+    .day-menu-ul .multiple-recipe-cards{
+        flex-wrap: wrap;
     }
     .day-menu-li{
         flex-direction: column;
     }
-    .day-menu-li div{
+    .day-menu-li a{
         width: 90%;
     }
-
 }
-/* @media (max-width: 600px){
-
-    .recipe-card{
-        max-height: 175px;
-        max-width: 80%;
-    }
-    .recipe-card img{
-        min-width: 100%;
-    }
-    .recipe-card h3{
-        font-size: 0.8em;
-    }
-} */
 
 .week-plan-section {
     background-color: var(--purple);
