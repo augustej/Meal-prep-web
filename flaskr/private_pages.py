@@ -33,7 +33,8 @@ def calendar():
         foodtypeName = item.name
         foodtypeNames.append(foodtypeName)
     
-    myCalendars = Calendars.query.filter_by(user_id=current_user.id).all()
+    myCalendars = Calendars.query.filter(Calendars.user_id==current_user.id, 
+        Calendars.calendarName!='currentCalendar').all()
 
     return render_template('/pages/private/calendar.html', 
     CoursetypeNames=CoursetypeNames,
@@ -274,12 +275,15 @@ def favoriteFilter():
 def loadCalendarTodb():
     if request.method == "POST":
         data = request.get_json()
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first()
         for keys in data:
             calendarName = keys
             calendarData = data[keys]
-            print (keys, "keys", calendarData, "calendarData")
-            newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
-            db.session.add(newCalendar)
+            if not currentCalendar:
+                newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
+                db.session.add(newCalendar)
+            else:
+                currentCalendar.calendarData = calendarData
             db.session.commit()
 
     return Response('', 200)

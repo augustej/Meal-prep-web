@@ -1,12 +1,12 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
-from .model import User, Role, Product, Foodtype, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
-import csv, math
+from .model import User, Role, Product, Foodtype, Calendars, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
+import csv, math, json
 from . import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, or_
 from sqlalchemy.sql import text
-
+from datetime import datetime
 
 
 
@@ -17,7 +17,28 @@ def home():
     if current_user.is_authenticated:
         modified_name = name_modification_for_greeting(current_user.name)
         # initialDbLoad()
-        return render_template('pages/private/personal_home.html', name=modified_name)
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first().calendarData
+        convertedData = json.loads(currentCalendar)
+        print(convertedData)
+        todays_day = datetime.now().weekday()
+        listOfRecipeIds = []
+        for weekday in convertedData:
+            if todays_day == list(convertedData.keys()).index(weekday):
+                listOfDayMealDictionaries = convertedData[weekday]
+                for day_meal in listOfDayMealDictionaries:
+                    for keys in day_meal:
+                        for recipe in day_meal[keys]:
+                            # save ID for every recipe into a list.
+                            listOfRecipeIds.append(recipe['recipeId'])
+
+
+        recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
+        print(recipesList)
+
+        pictDict = createPictDictWithModifiedPaths(recipesList)
+
+        return render_template('pages/private/personal_home.html', name=modified_name,
+        listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict)
     else:
         return render_template('pages/public/index.html')
 
