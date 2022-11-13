@@ -62,17 +62,33 @@ def product_search_on_type():
             products_list.append(new_product)
     return products_list
 
+@private_pages.route('/delete-recipe', methods=['GET'])
+def deleteRecipe():
+    if request.method == 'GET':
+        recipeToDeleteID = request.args.get('recipeID')
+        Recipe.query.filter_by(id=recipeToDeleteID).delete()
+        db.session.commit()
+    return recipeToDeleteID
+
 @private_pages.route('/ingredient-add-to-recipe', methods=['GET', 'POST'])
 def add_ingredient():
     if request.method == "POST":
 
         data = request.get_json()
-        recipeToAddIngredientTo = Recipe.query.filter_by(name="inprogress").first()
+        for keys in data:
+            idOfRecipeToModify = int(keys)
+        recipeToAddIngredientTo = Recipe.query.filter_by(id=idOfRecipeToModify).first()
+
         if recipeToAddIngredientTo == None:
             recipeToAddIngredientTo = Recipe(name="inprogress")
             db.session.add(recipeToAddIngredientTo)
             db.session.commit()
-        for ingredientItem in data:
+        else:
+            recipeToAddIngredientTo.name = "inprogress"
+            Ingredient.query.filter_by(recipe_id=idOfRecipeToModify).delete()
+            db.session.query(recipeIngredients).filter_by(recipe_id=idOfRecipeToModify).delete()
+            db.session.commit()
+        for ingredientItem in data[keys]:
             product_id = Product.query.filter_by(name=ingredientItem['name']).first().id
             measurement_id = Measurement.query.filter_by(name=ingredientItem['measurement']).first().id
             recipe_id = recipeToAddIngredientTo.id
@@ -80,7 +96,6 @@ def add_ingredient():
             db.session.add(new_ingredient)
             db.session.commit()
         answer= {}
-        answer['ingredientId'] = new_ingredient.id
     else: 
         answer= {"name": "else"}
     return answer
@@ -93,7 +108,6 @@ def add_recipe():
     cookingtime = request.form.get('preparation-time')
     portions = request.form.get('portions')
     current_recipe = Recipe.query.filter_by(name="inprogress").first()
-
     # adding image
     if 'recipe-image' in request.files:
         file = request.files['recipe-image']
@@ -165,6 +179,21 @@ def checkIfFavorite():
             db.session.query(favoriteRecipes).filter_by(user_id = current_user.id, recipe_id=recipeID).delete()
     db.session.commit()
     return addToFavorites
+
+@private_pages.route('/create-ingredient-dictionary', methods=['GET'])
+def createIngredientDict():
+    if request.method == 'GET':
+        recipeToModifyId = request.args.get('recipeID')
+        recipeToModify = Recipe.query.filter_by(id=recipeToModifyId).first().recipeIngredients
+        ingredientDictList = []
+        i = 0
+        for ingredientItem in recipeToModify:
+            ingredientDict = {'name': ingredientItem.name, 'amount': ingredientItem.amount, 
+                'measurement':  Measurement.query.filter_by(id = ingredientItem.measurement_id).first().name, 'index': i }
+            ingredientDictList.append(ingredientDict)
+            i += 1
+
+    return ingredientDictList
 
 @private_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():

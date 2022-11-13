@@ -104,6 +104,13 @@ def render_single_recipe():
         favoriteValue=" favorited"
     else:
         favoriteValue=""
+    
+    #check if recipe created by current user
+    if recipeToVisualize.user_id == current_user.id:
+        myRecipe = 'True'
+    else:
+        myRecipe = 'False'
+
 
     return render_template('pages/public/singleRecipe.html', 
         favoriteValue=favoriteValue,
@@ -112,7 +119,8 @@ def render_single_recipe():
         picturepath=modifiedPicturePath, 
         sentencelist=sentenceList,
         calories=kcalPerPortion,
-        measurmentDict=measurmentDict
+        measurmentDict=measurmentDict,
+        myRecipe = myRecipe
         )
 
 def name_modification_for_greeting(name):
