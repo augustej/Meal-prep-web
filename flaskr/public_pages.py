@@ -8,8 +8,6 @@ from sqlalchemy import func, or_
 from sqlalchemy.sql import text
 from datetime import datetime
 
-
-
 public_pages = Blueprint('public_pages', __name__)
 
 @public_pages.route('/')
@@ -19,7 +17,6 @@ def home():
         # initialDbLoad()
         currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first().calendarData
         convertedData = json.loads(currentCalendar)
-        print(convertedData)
         todays_day = datetime.now().weekday()
         listOfRecipeIds = []
         for weekday in convertedData:
@@ -33,7 +30,6 @@ def home():
 
 
         recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
-        print(recipesList)
 
         pictDict = createPictDictWithModifiedPaths(recipesList)
 
@@ -45,6 +41,112 @@ def home():
 @public_pages.route('/search')
 def search():
     return render_template('pages/public/search.html')
+
+@public_pages.route('/recipe-search', methods=['GET'])
+def searchRecipe():
+    if request.method == 'GET':
+        # problem with lithuanian letters on sql query. this escapes finding only lower or upper letters
+        recipeLower = request.args.get('input').lower()
+        recipeUpper = request.args.get('input').upper()
+
+        admin_ID = User.query.filter_by(role_name = 'admin').first().id
+        allowedID = [current_user.id, admin_ID]
+        queryNumber = int(request.args.get('querynumber'))
+        limitValue = 5
+        offsetValue = queryNumber -1
+        listOfRecipesStartingWith = Recipe.query.filter(
+            or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), 
+            Recipe.user_id.in_(allowedID) ).offset(offsetValue).limit(limitValue).all()
+        recipesList = filteredRecipeDataConvertionToJsonList(listOfRecipesStartingWith, limitValue, offsetValue, queryNumber)
+        print(recipesList)
+        return recipesList
+
+
+@public_pages.route('/coursetype-filter', methods=['GET'])
+def coursetypeFilter():
+    coursetypeBtnText = request.args.get('coursetype')
+    if coursetypeBtnText == 'Pietūs' or coursetypeBtnText == 'Vakarienė':
+        courstypeName = 'Pietūs/Vakarienė'
+    else:
+        courstypeName = request.args.get('coursetype')
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    currentCoursetype_id = Coursetype.query.filter_by(name=courstypeName).first().id
+    filteredRecipeData = db.session.query(recipeCoursetype).filter_by(coursetype_id=currentCoursetype_id).all()
+    recipeOfCoursetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+    return recipeOfCoursetypeList
+
+@public_pages.route('/recipetype-filter', methods=['GET'])
+def recipetypeFilter():
+    recipetypeName = request.args.get('recipetype')
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    currentRecipetype_id = Foodtype.query.filter_by(name=recipetypeName).first().id
+    filteredRecipeData = db.session.query(recipeTypes).filter_by(recipe_foodtype_id=currentRecipetype_id).all()
+    recipesOfRecipetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+    return recipesOfRecipetypeList
+
+@public_pages.route('/favorite-filter', methods=['GET'])
+def favoriteFilter():
+    queryNumber = int(request.args.get('querynumber'))
+    limitValue=5
+    offsetValue = queryNumber -1
+    filteredRecipeData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
+    favoriteRecipesList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+    return favoriteRecipesList
+
+
+def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
+    recipeIDList = []
+    for recipeItem in  dataRowWithRecipeID:
+        # as well works with <Recipe> objects list
+        if hasattr(recipeItem, 'recipe_id'):
+            recipeID = recipeItem.recipe_id
+        else:
+            recipeID = recipeItem.id
+        recipeIDList.append(recipeID)
+    # check if recipe is allowed for this user
+    admin_ID = User.query.filter_by(role_name = 'admin').first().id
+    allowedID = [current_user.id, admin_ID]
+    RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
+    return RecipesList
+
+def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
+
+    recipesList = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
+    # make sure not to run out of recipe items due to offset 
+    amountOfRecipes = len(recipesList)
+    if queryNumber > 1 and amountOfRecipes < 5:
+        numberOfRecipesToAddFromStart = limitValue - amountOfRecipes
+        additionalRecipesList = convertDbTableDataToQueryList(filteredRecipeData, numberOfRecipesToAddFromStart, 0)
+        for RecipeItem in additionalRecipesList:
+            recipesList.append(RecipeItem)
+
+    jsonResponseRecipeList = []
+
+    for RecipeItem in recipesList:
+        fullPicturePath = RecipeItem.picture
+        if fullPicturePath:
+            modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+        else:
+            modifiedPicturePath=''
+
+        recipeItemDict={}
+        recipeItemDict['id'] = RecipeItem.id
+        recipeItemDict['name'] = RecipeItem.name
+        recipeItemDict['picture'] = modifiedPicturePath
+        recipeItemDict['link'] = '/single_recipe?recipeID=' + str(RecipeItem.id)
+        # extra info for JS to reset session.storage, if amountOfRecipes == 0:
+        if amountOfRecipes < 5:
+            recipeItemDict['listlength'] = 0
+        else:
+            recipeItemDict['listlength'] = amountOfRecipes
+        jsonResponseRecipeList.append(recipeItemDict)
+    
+    return jsonResponseRecipeList
+
 
 @public_pages.route('/single_recipe')
 def render_single_recipe():
@@ -122,6 +224,30 @@ def render_single_recipe():
         measurmentDict=measurmentDict,
         myRecipe = myRecipe
         )
+
+@public_pages.route('/various-recipes', methods=['GET'])
+def variousRecipes():
+    if request.method == 'GET':
+        adminUserId = User.query.filter_by(role_name = 'admin').first().id
+        variousRecipesAmount = Recipe.query.filter_by(user_id=adminUserId).count()
+        pageNumber = request.args.get('page')
+        pageSize = 10
+        if not pageNumber:
+            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).limit(pageSize).all()
+        else:
+            pageNumber = int(pageNumber)
+            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).offset((pageNumber-1) * pageSize).limit(pageSize).all()
+
+        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(variousRecipesList)
+
+        if variousRecipesAmount > pageSize:
+            numberOfPages = math.ceil(variousRecipesAmount/pageSize)
+        else:
+            numberOfPages = 1
+
+    return render_template('pages/public/variousrecipes.html', 
+    myRecipes=variousRecipesList, 
+    myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
 
 def name_modification_for_greeting(name):
     last_two_letters = name[-2:]
@@ -203,31 +329,6 @@ def initialDbLoad():
             i += 1 
         db.session.commit()
 
-
-@public_pages.route('/various-recipes', methods=['GET'])
-def variousRecipes():
-    if request.method == 'GET':
-        adminUserId = User.query.filter_by(role_name = 'admin').first().id
-        variousRecipesAmount = Recipe.query.filter_by(user_id=adminUserId).count()
-        pageNumber = request.args.get('page')
-        pageSize = 10
-        if not pageNumber:
-            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).limit(pageSize).all()
-        else:
-            pageNumber = int(pageNumber)
-            variousRecipesList = Recipe.query.filter_by(user_id=adminUserId).offset((pageNumber-1) * pageSize).limit(pageSize).all()
-
-        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(variousRecipesList)
-
-        if variousRecipesAmount > pageSize:
-            numberOfPages = math.ceil(variousRecipesAmount/pageSize)
-        else:
-            numberOfPages = 1
-
-    return render_template('pages/public/variousrecipes.html', 
-    myRecipes=variousRecipesList, 
-    myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
-
 def createPictDictWithModifiedPaths(recipeList):
     myRecipesPictDict ={}
     for singlerecipe in recipeList:
@@ -238,33 +339,3 @@ def createPictDictWithModifiedPaths(recipeList):
             modifiedPicturePath=''
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
-
-@public_pages.route('/recipe-search', methods=['GET'])
-def searchRecipe():
-    if request.method == 'GET':
-        # problem with lithuanian letters on sql query. this escapes finding only lower or upper letters
-        recipeLower = request.args.get('input').lower()
-        recipeUpper = request.args.get('input').upper()
-
-        admin_ID = User.query.filter_by(role_name = 'admin').first().id
-        allowedID = [current_user.id, admin_ID]
-
-        listOfRecipesStartingWith = Recipe.query.filter(or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), Recipe.user_id.in_(allowedID) ).all()
-        recipesList = []
-        for recipeItem in listOfRecipesStartingWith:
-            recipeDict = {}
-            recipeDict['recipeName'] = recipeItem.name
-            recipeDict['recipeId'] = recipeItem.id
-
-            fullPicturePath = recipeItem.picture
-            if fullPicturePath:
-                modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
-            else:
-                modifiedPicturePath=''
-
-            recipeDict['recipePath'] = modifiedPicturePath
-
-            recipesList.append(recipeDict)
-        response = recipesList
-            
-    return response

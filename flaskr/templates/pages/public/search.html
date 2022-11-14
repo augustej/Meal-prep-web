@@ -3,21 +3,22 @@
 
 
 {% block content%}
-<section class="block-content">
-    <h1>Paieška</h1>
-    <section class="inner-block">
-    <form class="search-form reg-form" method="POST">
-        <div class="outer">
-            <div class="inner">
-                <label for="search-input">Įveskite raktažodį:</label>
-                <input type="text" id="search-input" name="search-input" required/>
-            </div>
-        <div class="button-highlight">
-            <button class="button" type="submit">Ieškoti</button>
-        </div>
-    </form>
+<section class="search-page page-outer-container">
+    <h1 class="wide-purple-bk page-title-text">Paieška</h1>
+    <div class="page-inner-container">
+    
+    <div class="search-container">
+        <label for ="search-input" class="bold-uppercase-normal">Įveskite recepto pavadinimą</label>
+        <input type="text" id="search-input" name="search-input" required/>
+    </div>
 
-    </section>
+    <ul class="searched-recipes-ul multiple-recipe-cards">
 
+    </ul>
+</div>
 </section>
+{% endblock %}
+
+{% block js %}
+    <script src="../static/search.js"></script>
 {% endblock %}

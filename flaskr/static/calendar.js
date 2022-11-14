@@ -28,7 +28,7 @@ document.addEventListener('input', e =>{
         }
 
         // check if person has typed in anything in search
-        let inputValue = recipeSearchInCalendarInputField.value
+        inputValue = recipeSearchInCalendarInputField.value
         let invisibleElement = document.querySelector('.invisible-element')
         // invisible element prevents from flashing screen --->
         // it (doesn't allow recipe-representation-bar to collapse completely on each input)
@@ -41,21 +41,27 @@ document.addEventListener('input', e =>{
                 recipesRepresentationUl.parentElement.appendChild(p)
             }
 
-            sendGetRequestAwaitforResponse('/recipe-search?input=', inputValue)
-            .then(recipesList =>{
-                for (let recipeDict of recipesList){
-                    let li = document.createElement('li')
-                    li.setAttribute('class', 'mini-recipe-card')
-                    let p = document.createElement('p')
-                    p.appendChild(document.createTextNode(recipeDict['recipeName']))
-                    p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
-                    let img = document.createElement('img')
-                    img.setAttribute('src', recipeDict['recipePath'])
-                    li.appendChild(p)
-                    li.appendChild(img)
-                    recipesRepresentationUl.appendChild(li)
-                }
+            sessionStorage.setItem("queryNumber", 1);
+            filterQueryToDb(inputValue, 1, 'search').then(data =>{
+                createRecipesRepresentation(data, 'search')
             })
+
+
+            // sendGetRequestAwaitforResponse('/recipe-search?input=', inputValue)
+            // .then(recipesList =>{
+            //     for (let recipeDict of recipesList){
+            //         let li = document.createElement('li')
+            //         li.setAttribute('class', 'mini-recipe-card')
+            //         let p = document.createElement('p')
+            //         p.appendChild(document.createTextNode(recipeDict['recipeName']))
+            //         p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
+            //         let img = document.createElement('img')
+            //         img.setAttribute('src', recipeDict['recipePath'])
+            //         li.appendChild(p)
+            //         li.appendChild(img)
+            //         recipesRepresentationUl.appendChild(li)
+            //     }
+            // })
         }
         else{
             if (invisibleElement){invisibleElement.remove()}
@@ -184,6 +190,11 @@ document.addEventListener('click', e =>{
                 createRecipesRepresentation(data, 'favorite')
             })
         }
+        if (nextRecipeBtn.getAttribute('name') == 'search'){
+            filterQueryToDb(inputValue, modifiedQueryNumber, 'search').then(data =>{
+                createRecipesRepresentation(data, 'search')
+            })
+        }
     }
 
     // clicked on see-next-day-column
@@ -225,10 +236,10 @@ document.addEventListener('click', e =>{
     let alldeleteCalendarBtns = document.querySelectorAll('.deleteCalendarFromDb')
     alldeleteCalendarBtns.forEach(deleteCalendarBtn =>{
         if (e.target == deleteCalendarBtn){
-            let calendarID = deleteCalendarBtn.parentElement.getAttribute('name')
-            fetch('/delete-calendar-from-db?' + calendarID,
+            let calendarID = deleteCalendarBtn.parentElement.getAttribute('name').slice('calendarID='.length)
+            fetch('/delete-calendar-from-db/' + calendarID,
             {
-                method: 'GET'
+                method: 'DELETE'
             })
             deleteCalendarBtn.parentElement.remove()
         }
@@ -256,7 +267,11 @@ async function filterQueryToDb(name, queryNumber, referrer){
     else if (referrer == 'recipetype'){
         url = '/recipetype-filter?recipetype=' + name
     }
-    else { url = '/favorite-filter?='}
+    else if (referrer == 'favorite')
+        { url = '/favorite-filter?='}
+    else {
+        url = '/recipe-search?input=' + name
+    }
 
     const response = await fetch(
         url + '&querynumber=' + queryNumber,
