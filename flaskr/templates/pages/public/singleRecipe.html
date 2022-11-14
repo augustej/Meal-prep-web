@@ -112,8 +112,187 @@
 
 </section>
 
+{% if myRecipe == 'True'%}
+<button id="add-recipe-button" class="button modify-recipe-btn" name="recipeID={{recipe.id}}">Koreguoti receptą</button>
+<button class="button delete-recipe-btn" name="recipeID={{recipe.id}}">Ištrinti receptą</button>
+
+    <div id="recipe-creation-div" class="modal">
+        <span class="close" id="close-add-recipe">&times;</span>
+    
+        <form class="centered-card" id="add-recipe-form" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
+            <h1 class="page-title-text">Koreguoti receptą</h1>
+            <div class="divider"></div>
+            <ul class="card-ul">
+                <li class="new-recipe-li bottom-border">
+                    <label for="new-recipe-title"><h2 class="bold-uppercase-normal">Recepto pavadinimas</h2></label>
+                    <input type="text" id="new-recipe-title" name="new-recipe-title" required autocomplete="off" value="{{ recipe.name }}">        
+                </li>
+                <li class="new-recipe-li bottom-border">
+                    <label for="all-ingredients"><h2 class="bold-uppercase-normal">Ingredientai</h2></label>
+                    <div id="all-ingredients">    
+                        <ul class="confirmed-ingredients-ul">
+                            {% set indexOfDictItem = 0 %}
+
+                            {% for subtitle in subtitlelist %}
+                                {% if subtitle %}
+                                    <li class="confirmed-ingredients-li ingredient-subtitle">{{ subtitle }}
+                                        <button class="deleteSubtitleBtn" type="button">X</button>
+                                    </li>
+                                        {% for ingredient in recipe.recipeIngredients %}
+                                            {% if ingredient.subtitle == subtitle %}
+                                                <li class="confirmed-ingredients-li">
+                                                    <p>{{ ingredient.name}}</p> 
+                                                    <p>{{ ingredient.amount}}
+                                                    
+                                                    {% for key in measurmentDict %}
+                                                        {% if key == ingredient.measurement_id %}
+                                                            {{measurmentDict[key]}}
+                                                        {% endif%}
+                                                    {% endfor %}
+                                                    </p>
+                                                    <button class="deleteIngredientBtn" id="deleteIngredientBtn{{ indexOfDictItem }}" type="button">X</button>
+                                                    {% set indexOfDictItem = (indexOfDictItem + 1) %}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% for ingredient in recipe.recipeIngredients %}
+                            {% if not ingredient.subtitle %}
+                                <li class="confirmed-ingredients-li">
+                                    <p>{{ ingredient.name}}</p>                             
+                                    <p>{{ ingredient.amount}}
+                                    
+                                    {% for key in measurmentDict %}
+                                        {% if key == ingredient.measurement_id %}
+                                            {{measurmentDict[key]}}
+                                        {% endif%}
+                                    {% endfor %}
+                                    </p>
+                                    <button class="deleteIngredientBtn" id="deleteIngredientBtn{{ indexOfDictItem }}" type="button">X</button>
+                                    {% set indexOfDictItem = (indexOfDictItem + 1) %}
+                                </li>
+                            {% endif %}
+                            
+    
+                        {% endfor %}
+
+                        </ul>
+                        <div class="ingredient-input-and-button subtitle-add-container">
+                            <button id="add-ingredient-subtitle" type="button" class="button add-ingredient-subtitle">+</button>    
+                                <div class="ingredient-label-and-input-area subtitle">
+                                    <label for="ingredient-subtitle-input" class="ingredient-subtitle-input bold-uppercase-small">Papildomas ingredientų grupės pavadinimas</label>
+                                    <div class="ingredient-subtitle-dropdown-area">
+                                        <input id="ingredient-subtitle-input" type="text" name="ingredient-subtitle-input" autocomplete="off" placeholder="pvz: 'Torto pagrindui'"/>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="ingredient-input-and-button">
+                                <div class="add-ingredient-field">
+                                    <div class="ingredient-label-and-input-area">
+                                            <label for="product-search-input" class="text-unimportant-title">Produkto pavadinimas</label>
+                                            <div class="ingredient-input-area">
+                                                <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
+                                                <ul class="product-search"> 
+                                                </ul>
+                                            </div>
+                                    </div>
+                                    <div class="ingredient-label-and-input-area">
+                                        <label for="product-amount-input" class="text-unimportant-title">Kiekis</label>
+                                        <div class="ingredient-input-area">
+                                            <input id="product-amount-input" type="number" min="0.25" max="10000" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="ingredient-label-and-input-area">
+                                        <label for="product-measurement-input" class="text-unimportant-title">Matavimo vienetai</label>
+                                        <div class="ingredient-input-area">
+                                            <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
+                                            <ul class="product-measurement"> 
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="add_ingredient_to_recipe" type="button" disabled class="button">Pridėti</button>    
+                        </div>
+                    </div>
+                </li>
+                <li class="new-recipe-li bottom-border">
+                    <label for="recipe-preparation"><h2 class="bold-uppercase-normal">Paruošimas</h2></label>
+                    <textarea id="recipe-preparation" name="recipe-preparation" required spellcheck=”false”>{% for sentence in sentencelist %}{{ sentence }}{% endfor %}</textarea>
+                </li>
+                <li class="prep-time-file-add bottom-border">
+                    <div class="new-recipe-li half-size">
+                        <label for="preparation-time"><h2 class="bold-uppercase-normal">Paruošimo laikas</h2></label>
+                        <div class="prep-time">
+                            <input type="number" id="preparation-time" name="preparation-time" min="0" value="{{recipe.cookingtime}}">
+                            <p>min</p>
+                        </div>
+                    </div>
+                    <div class="new-recipe-li half-size">
+                        <h2 class="bold-uppercase-normal">Recepto nuotrauka</h2>
+                        <label for="recipe-image" id="recipe-image-label" class="button">
+                            Pridėti
+                            <input type="file" name="recipe-image" id="recipe-image" class="input">
+                        </label>
+                        {% if picturepath != "" %}
+                                <p class="addedFilename">{{ picturepath }}</p>
+                        {% endif %}
+                    </div>
+                </li>
+                <li class="portions-and-category bottom-border">
+                    <div class="new-recipe-li half-size">
+                        <label for="portions"><h2 class="bold-uppercase-normal">Porcijos</h2></label>
+                        <div class="portions">
+                            <input type="number" id="portions" name="portions" min="1" value="{{recipe.portions}}">
+                            <p>asm.</p>
+                        </div>
+                    </div>
+                    <div class="half-size new-recipe-li">
+                        <label for="meal-category-input"><h2 class="bold-uppercase-normal">Kategorija</h2></label>
+                            <div class="meal-category-area text-unimportant-title">
+                                {% for course in recipe.recipeCoursetype %}
+                                    <div>
+                                        <input id="breakfast" type="checkbox" name="coursetype" 
+                                        {% if course.name == 'Pusryčiai' %} checked {% endif %} value="Pusryčiai"/>
+                                        <label for="breakfast" class="meal-category-li">Pusryčiai</label>
+                                    </div>
+                                    <div>
+                                        <input id="main" type="checkbox" name="coursetype" value="Pietūs/Vakarienė
+                                        " {% if  course.name  == 'Pietūs/Vakarienė' %} checked {% endif %}/>
+                                        <label for="main" class="meal-category-li">Pietūs/Vakarienė</label>                           
+                                    </div>
+                                    <div>
+                                        <input id="snacks" type="checkbox" name="coursetype" value="Užkandžiai
+                                        " {% if  course.name  == 'Užkandžiai' %} checked {% endif %} />
+                                        <label for="snacks" class="meal-category-li">Užkandžiai</label>                             
+                                    </div>
+                                    <div>
+                                        <input id="dessert" type="checkbox" name="coursetype" value="Desertas
+                                        " {% if  course.name  == 'Desertas' %} checked {% endif %}/>
+                                        <label for="dessert" class="meal-category-li">Desertai</label>   
+                                    </div>
+                                    <div>
+                                        <input id="side" type="checkbox" name="coursetype" value="Garnyras"
+                                        {% if  course.name  == 'Garnyras' %} checked {% endif %} />
+                                        <label for="side" class="meal-category-li">Garnyras</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </li>
+                    
+                <button class="confirm-recipe button" type="button" name="recipeID={{ recipe.id }}">Išsaugoti receptą</button>
+            </ul>
+        </form>    
+    </div>
+{% endif %}
+
 {% endblock %}
 
 {% block js %}
     <script src="../static/singlerecipe.js"></script>
+    {% if myRecipe == 'True'%}
+    <script src="../static/recipes.js"></script>
+    {% endif %}
 {% endblock %}

@@ -114,7 +114,7 @@ ul{
     text-align: center;
 }
 
-.multiple-recipe-cards{
+.multiple-recipe-cards, .searched-recipes-ul{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -1578,4 +1578,25 @@ aside h4{
         width: 80%;
         min-width: 170px;
     }
+}
+
+/* search page */
+.search-container{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+    margin-bottom: 2em;
+}
+
+.search-container input{
+    width: 40%;
+    max-width: 300px;
+    line-height: 2em;
+    background-color: var(--white);
+    border: none;
+    box-shadow: var(--purpleboxshadow);
+    padding: 0.5em;
 }

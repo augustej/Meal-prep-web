@@ -5,7 +5,6 @@ import os, math
 from werkzeug.utils import secure_filename
 from .model import Coursetype, User, Product, Calendars, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
-
 private_pages = Blueprint('private_pages', __name__)
 
 @private_pages.route('/profile')
@@ -62,28 +61,49 @@ def product_search_on_type():
             products_list.append(new_product)
     return products_list
 
+@private_pages.route('/create-ingredient-dictionary', methods=['GET'])
+def createIngredientDict():
+    if request.method == 'GET':
+        recipeToModifyId = request.args.get('recipeID')
+        recipeToModify = Recipe.query.filter_by(id=recipeToModifyId).first().recipeIngredients
+        ingredientDictList = []
+        i = 0
+        for ingredientItem in recipeToModify:
+            ingredientDict = {'name': ingredientItem.name, 'amount': ingredientItem.amount, 
+                'measurement':  Measurement.query.filter_by(id = ingredientItem.measurement_id).first().name, 'index': i }
+            ingredientDictList.append(ingredientDict)
+            i += 1
+
+    return ingredientDictList
+
 @private_pages.route('/ingredient-add-to-recipe', methods=['GET', 'POST'])
 def add_ingredient():
     if request.method == "POST":
 
         data = request.get_json()
-        recipeToAddIngredientTo = Recipe.query.filter_by(name="inprogress").first()
+        for keys in data:
+            if userCanModify(Recipe, int(keys)) == True:
+                idOfRecipeToModify = int(keys)
+        recipeToAddIngredientTo = Recipe.query.filter_by(id=idOfRecipeToModify).first()
+
         if recipeToAddIngredientTo == None:
             recipeToAddIngredientTo = Recipe(name="inprogress")
             db.session.add(recipeToAddIngredientTo)
             db.session.commit()
-        for ingredientItem in data:
+        else:
+            recipeToAddIngredientTo.name = "inprogress"
+            Ingredient.query.filter_by(recipe_id=idOfRecipeToModify).delete()
+            db.session.query(recipeIngredients).filter_by(recipe_id=idOfRecipeToModify).delete()
+            db.session.commit()
+        for ingredientItem in data[keys]:
             product_id = Product.query.filter_by(name=ingredientItem['name']).first().id
             measurement_id = Measurement.query.filter_by(name=ingredientItem['measurement']).first().id
             recipe_id = recipeToAddIngredientTo.id
             new_ingredient = Ingredient(name = ingredientItem['name'], subtitle =ingredientItem['subtitle'], amount=ingredientItem['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
             db.session.add(new_ingredient)
             db.session.commit()
-        answer= {}
-        answer['ingredientId'] = new_ingredient.id
-    else: 
-        answer= {"name": "else"}
-    return answer
+            
+    return Response('', 200)
 
 @private_pages.route('/confirmed-recipe', methods=['POST'])
 def add_recipe():
@@ -93,7 +113,6 @@ def add_recipe():
     cookingtime = request.form.get('preparation-time')
     portions = request.form.get('portions')
     current_recipe = Recipe.query.filter_by(name="inprogress").first()
-
     # adding image
     if 'recipe-image' in request.files:
         file = request.files['recipe-image']
@@ -151,20 +170,6 @@ def add_recipe():
     db.session.add(current_recipe)
     db.session.commit()
     return redirect(url_for('private_pages.recipes'))
-
-@private_pages.route('/check_if_favorite', methods=['GET'])
-def checkIfFavorite():
-    if request.method == 'GET':
-        recipeID = request.args.get('recipeID')
-        addToFavorites = request.args.get('addToFavorites')
-
-        if addToFavorites == "YES":
-            statement = favoriteRecipes.insert().values(user_id = current_user.id, recipe_id=recipeID)
-            db.session.execute(statement)
-        else:
-            db.session.query(favoriteRecipes).filter_by(user_id = current_user.id, recipe_id=recipeID).delete()
-    db.session.commit()
-    return addToFavorites
 
 @private_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
@@ -234,81 +239,74 @@ def myFavoriteRecipes():
     myRecipes=myFavoriteRecipes, 
     myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
 
-@private_pages.route('/coursetype-filter', methods=['GET'])
-def coursetypeFilter():
-    coursetypeBtnText = request.args.get('coursetype')
-    if coursetypeBtnText == 'Pietūs' or coursetypeBtnText == 'Vakarienė':
-        courstypeName = 'Pietūs/Vakarienė'
-    else:
-        courstypeName = request.args.get('coursetype')
-    queryNumber = int(request.args.get('querynumber'))
-    limitValue=5
-    offsetValue = queryNumber -1
-    currentCoursetype_id = Coursetype.query.filter_by(name=courstypeName).first().id
-    filteredRecipeData = db.session.query(recipeCoursetype).filter_by(coursetype_id=currentCoursetype_id).all()
-    recipeOfCoursetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
+@private_pages.route('/check_if_favorite', methods=['POST'])
+def checkIfFavorite():
+    if request.method == 'POST':
+        data = request.get_json()
+        for keys in data:
+            recipeID = keys
+            action = data[keys]
 
-    return recipeOfCoursetypeList
+        if action == "YES":
+            statement = favoriteRecipes.insert().values(user_id = current_user.id, recipe_id=recipeID)
+            db.session.execute(statement)
+        else:
+            db.session.query(favoriteRecipes).filter_by(user_id = current_user.id, recipe_id=recipeID).delete()
+    db.session.commit()
+    return Response('', 200)
 
-@private_pages.route('/recipetype-filter', methods=['GET'])
-def recipetypeFilter():
-    recipetypeName = request.args.get('recipetype')
-    queryNumber = int(request.args.get('querynumber'))
-    limitValue=5
-    offsetValue = queryNumber -1
-    currentRecipetype_id = Foodtype.query.filter_by(name=recipetypeName).first().id
-    filteredRecipeData = db.session.query(recipeTypes).filter_by(recipe_foodtype_id=currentRecipetype_id).all()
-    recipesOfRecipetypeList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
-    return recipesOfRecipetypeList
-
-@private_pages.route('/favorite-filter', methods=['GET'])
-def favoriteFilter():
-    queryNumber = int(request.args.get('querynumber'))
-    limitValue=5
-    offsetValue = queryNumber -1
-    filteredRecipeData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
-    favoriteRecipesList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
-
-    return favoriteRecipesList
+@private_pages.route('/delete-recipe/<recipeID>', methods=['DELETE'])
+def deleteRecipe(recipeID):
+    if request.method == 'DELETE':
+        if userCanModify(Recipe, recipeID) == True:
+            Recipe.query.filter_by(id=recipeID).delete()
+            db.session.commit()
+    return Response('', 200)
 
 @private_pages.route('/load-calendar-to-db', methods=['POST'])
 def loadCalendarTodb():
     if request.method == "POST":
         data = request.get_json()
-        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first()
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first()
         for keys in data:
             calendarName = keys
             calendarData = data[keys]
-            if not currentCalendar:
+            if not currentCalendar or not calendarName == 'currentCalendar':
                 newCalendar = Calendars(user_id=current_user.id, calendarData=calendarData, calendarName=calendarName)
                 db.session.add(newCalendar)
             else:
-                currentCalendar.calendarData = calendarData
+                if userCanModify(Calendars, currentCalendar.id) == True:
+                    currentCalendar.calendarData = calendarData
             db.session.commit()
 
     return Response('', 200)
 
-@private_pages.route('/delete-calendar-from-db', methods=['GET'])
-def deleteCalendarFromDb():
-    if request.method == "GET":
-        calendarIDtoDelete = request.args.get('calendarID')
-        Calendars.query.filter_by(id=calendarIDtoDelete).delete()
-        db.session.commit()
-    response = {'bla':'bla'}
-    return response
+@private_pages.route('/delete-calendar-from-db/<id>', methods=['DELETE'])
+def deleteCalendarFromDb(id):
+    if request.method == "DELETE":
+        if userCanModify(Calendars, id) == True:
+            calendarIDtoDelete = id
+            Calendars.query.filter_by(id=calendarIDtoDelete).delete()
+            db.session.commit()
+    return Response('', 200)
+
 
 @private_pages.route('/load-calendar-from-db', methods=['GET'])
 def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')
-        calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
-    return calendarToLoad 
+        if userCanModify(Calendars, calendarIDtoLoad) == True:
+                calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
+    return Response('', 200)
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
+    # ar veikia su <recipe list>?
     recipeIDList = []
     for recipeItem in  dataRowWithRecipeID:
         recipeID = recipeItem.recipe_id
@@ -331,6 +329,7 @@ def createPictDictWithModifiedPaths(recipeList):
     return myRecipesPictDict
 
 def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
+
     recipesList = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
     # make sure not to run out of recipe items due to offset 
     amountOfRecipes = len(recipesList)
@@ -359,3 +358,11 @@ def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offse
         jsonResponseRecipeList.append(recipeItemDict)
     
     return jsonResponseRecipeList
+
+def userCanModify(model, itemid):
+    userId = model.query.filter_by(id=itemid).first().user_id
+    if userId == current_user.id:
+        return True
+    else:
+        return False
+

@@ -133,7 +133,12 @@ modal.addEventListener("click", e => {
 
     if (e.target == confirmRecipeBtn){
         analyseIngredientSubtitles()
-        addIngredientToTable(ingredientDictList).then((data) =>{
+        if (confirmRecipeBtn.getAttribute('name')){
+            IdOfRecipe = confirmRecipeBtn.getAttribute('name').slice('recipeID='.length)
+        } else{IdOfRecipe = 0}
+        console.log("pries add-ingredient")
+        addIngredientToTable(ingredientDictList, IdOfRecipe).then((data) =>{
+            console.log(data)
             addRecipeForm.submit()
         })
        
@@ -217,18 +222,20 @@ function createIngredientDictItem (){
 }
 
 
-async function addIngredientToTable(ingredientDictList){
-    fetch(
+async function addIngredientToTable(ingredientDictList, idOfRecipe){
+    let dictionaryToSend = {}
+    dictionaryToSend[idOfRecipe] = ingredientDictList
+    let response = await fetch(
         '/ingredient-add-to-recipe', 
         {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
                 },
-            body: JSON.stringify(ingredientDictList)
+            body: JSON.stringify(dictionaryToSend)
         }
     );
-    return
+    return response
 }
 
 // creating DOM items for an Ingredient
@@ -302,3 +309,41 @@ function analyseIngredientSubtitles(){
  }
 
 // END OF ADD RECIPE FUNCTIONS____________________________________________________________
+
+var deleteRecipeBtn = document.querySelector('.delete-recipe-btn')
+
+deleteRecipeBtn.addEventListener('click', event =>{
+    let recipeID =  deleteRecipeBtn.getAttribute('name')
+    fetch('/delete-recipe?' + recipeID,
+        {
+            method: 'GET'
+        })
+    window.location.replace("/my-recipes");
+
+})
+
+
+var modifyRecipeBtn = document.querySelector('.modify-recipe-btn')
+modifyRecipeBtn.addEventListener('click', event=>{
+
+   let recipeToModifyName = modifyRecipeBtn.getAttribute('name')
+   let recipeToModifyId = recipeToModifyName.slice('recipeID='.length)
+   sendGetRequestAwaitforResponse('/create-ingredient-dictionary?recipeID=', recipeToModifyId).then(
+    data =>{
+        ingredientDictList = data
+        let indexOfLastItem = ingredientDictList.length - 1
+        let index = parseInt(ingredientDictList[indexOfLastItem]['index']) + 1
+        sessionStorage.setItem("indexOfIngredient", index);
+        
+    })
+
+})
+
+
+async function sendGetRequestAwaitforResponse(url, data){
+    let response = await fetch(url + data,
+    {
+        method: 'GET'
+    })
+    return response.json()
+}
