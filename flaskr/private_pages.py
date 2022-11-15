@@ -1,9 +1,9 @@
-from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
+from flask import Blueprint, Flask, session, render_template, redirect, request, url_for, jsonify, Response
 from flask_login import current_user
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
-import os, math
+import os, math, json
 from werkzeug.utils import secure_filename
-from .model import Coursetype, User, Product, Calendars, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
+from .model import Coursetype, User, Product, Calendars, Groceries, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
 private_pages = Blueprint('private_pages', __name__)
 
@@ -41,7 +41,105 @@ def calendar():
 
 @private_pages.route('/groc_list')
 def groclist():
-    return render_template('/pages/private/groc_list.html')
+    groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
+    relatedProductsDict = {}
+    if groceriesList:
+        for productItem in groceriesList:
+            productItemID = productItem.product_id
+            productItemName = Product.query.filter_by(id=productItemID).first().name
+            relatedProductsDict[productItem.id] = productItemName
+    return render_template('/pages/private/groc_list.html', 
+    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList)
+
+@private_pages.route('/groceries-check-update', methods=['POST'])
+def updateCheckStatus():
+    if request.method == 'POST':
+        checkedItemsListData= request.get_json()
+        checkedItemsList = json.loads(checkedItemsListData)
+        for key in checkedItemsList:
+            groceriesId= key
+            groceriesToUpdate = Groceries.query.filter_by(id=groceriesId).first()
+            if checkedItemsList[groceriesId] == 'checked':
+                groceriesToUpdate.check_status = 1
+            else:
+                groceriesToUpdate.check_status = 0
+            db.session.add(groceriesToUpdate)
+        db.session.commit()
+    return Response('', 200)
+
+@private_pages.route('/create-groceries-list', methods=['POST'])
+def createGroceriesList():
+    if request.method == "POST":
+        shop_weekday = request.form.get('shopping-weekday')
+        final_weekday = request.form.get('final-weekday')
+        currentCalendarData = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first().calendarData
+        currentCalendar = json.loads(currentCalendarData)
+        indexOfShopWeekday = list(currentCalendar.keys()).index(shop_weekday)
+        indexOfFinWeekday = list(currentCalendar.keys()).index(final_weekday)
+        indexToItterate = indexOfShopWeekday
+        weekdaysList = []
+        while not indexToItterate == indexOfFinWeekday:
+            nameOfOneDay = list(currentCalendar)[indexToItterate]
+            weekdaysList.append(nameOfOneDay)
+    
+            if indexToItterate == 6:
+                indexToItterate = 0
+            else:
+                indexToItterate += 1
+        weekdaysList.append(list(currentCalendar)[indexOfFinWeekday])
+
+        weekdayDictLt = {
+            "Monday":"Pirmadienis",
+            "Tuesday":"Antradienis",
+            "Wednesday":"Trečiadienis",
+            "Thursday":"Ketvirtadienis",
+            "Friday":"Penktadienis",
+            "Saturday":"Šeštadienis",
+            "Sunday":"Sekmadienis",
+            }
+
+    return render_template('/pages/private/groc_list.html', 
+    weekdaysList=weekdaysList, currentCalendar=currentCalendar,weekdayDictLt=weekdayDictLt
+    )
+
+@private_pages.route('/final-groceries-list', methods=['POST','GET'])
+def finalGroceriesList():
+    if request.method == "POST":
+        # clear groceries list
+        if (request.form.get('delete-groceries-list')):
+            Groceries.query.filter_by(user_id=current_user.id).delete()
+            db.session.commit()
+            return redirect(url_for('private_pages.groclist'))
+
+        listOfSelectedRecipesID = request.form.getlist('recipe-checkbox')
+        groceriesDict = {}
+        for recipeID in listOfSelectedRecipesID:
+            recipeToAnalyze = Recipe.query.filter_by(id=recipeID).first()
+            chosenPortionsOfRecipe = int(request.form.get(f"recipe-portions{recipeID}"))
+            defaultPortionsOfRecipe = recipeToAnalyze.portions            
+            # turn ingredient measurment to grams
+            ingredientItems = recipeToAnalyze.recipeIngredients
+            for ingredient in ingredientItems:
+                idofproduct = ingredient.product_id
+                gramConversionKoeficient = db.session.query(productMeasurements).filter_by(
+                    product_measurement_id=ingredient.measurement_id, product_id=idofproduct).first(
+                    ).product_conversion_to_gram
+                defaultAmountInGrams = gramConversionKoeficient * ingredient.amount
+                # calculate amount based on portions needed
+                amountInGrams = round(defaultAmountInGrams * chosenPortionsOfRecipe / defaultPortionsOfRecipe)
+                if idofproduct in groceriesDict:
+                    groceriesDict[idofproduct] += amountInGrams
+                else:
+                    groceriesDict[idofproduct] = amountInGrams
+
+        # load to db
+        for keys in groceriesDict:
+            newGroceries = Groceries(user_id=current_user.id, product_id=keys, 
+                product_amount_in_grams=groceriesDict[keys], check_status=0)
+            db.session.add(newGroceries)
+        db.session.commit()
+
+        return redirect(url_for('private_pages.groclist'))
 
 
 @private_pages.route('/search_product_by_name')
@@ -296,10 +394,8 @@ def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')
         if userCanModify(Calendars, calendarIDtoLoad) == True:
-                calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
-    return Response('', 200)
-
-
+            calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
+    return calendarToLoad
 
 def allowed_file(filename):
     return '.' in filename and \

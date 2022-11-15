@@ -110,11 +110,16 @@
         <button class="back-btn button">Grįžti</button>
     </div>
 
+    {% if myRecipe == 'True'%}
+    <div class="recipe-action-button">
+        <button id="add-recipe-button" class="button-thin modify-recipe-btn" name="recipeID={{recipe.id}}">Koreguoti receptą</button>
+        <button class="button-thin delete-recipe-btn" name="recipeID={{recipe.id}}">Ištrinti receptą</button>
+    </div>
+    {% endif%}
 </section>
 
 {% if myRecipe == 'True'%}
-<button id="add-recipe-button" class="button modify-recipe-btn" name="recipeID={{recipe.id}}">Koreguoti receptą</button>
-<button class="button delete-recipe-btn" name="recipeID={{recipe.id}}">Ištrinti receptą</button>
+
 
     <div id="recipe-creation-div" class="modal">
         <span class="close" id="close-add-recipe">&times;</span>
@@ -251,33 +256,43 @@
                     <div class="half-size new-recipe-li">
                         <label for="meal-category-input"><h2 class="bold-uppercase-normal">Kategorija</h2></label>
                             <div class="meal-category-area text-unimportant-title">
-                                {% for course in recipe.recipeCoursetype %}
                                     <div>
                                         <input id="breakfast" type="checkbox" name="coursetype" 
-                                        {% if course.name == 'Pusryčiai' %} checked {% endif %} value="Pusryčiai"/>
+                                        {% for course in recipe.recipeCoursetype %}
+                                        {% if course.name == 'Pusryčiai' %} checked {% endif %} 
+                                        {% endfor %} value="Pusryčiai"/>
                                         <label for="breakfast" class="meal-category-li">Pusryčiai</label>
                                     </div>
                                     <div>
                                         <input id="main" type="checkbox" name="coursetype" value="Pietūs/Vakarienė
-                                        " {% if  course.name  == 'Pietūs/Vakarienė' %} checked {% endif %}/>
+                                        "{% for course in recipe.recipeCoursetype %}
+                                        {% if  course.name  == 'Pietūs/Vakarienė' %} checked {% endif %}
+                                        {% endfor %}/>
                                         <label for="main" class="meal-category-li">Pietūs/Vakarienė</label>                           
                                     </div>
                                     <div>
                                         <input id="snacks" type="checkbox" name="coursetype" value="Užkandžiai
-                                        " {% if  course.name  == 'Užkandžiai' %} checked {% endif %} />
+                                        " 
+                                        {% for course in recipe.recipeCoursetype %}
+                                        {% if  course.name  == 'Užkandžiai' %} checked {% endif %} 
+                                        {% endfor %} />
                                         <label for="snacks" class="meal-category-li">Užkandžiai</label>                             
                                     </div>
                                     <div>
                                         <input id="dessert" type="checkbox" name="coursetype" value="Desertas
-                                        " {% if  course.name  == 'Desertas' %} checked {% endif %}/>
+                                        " 
+                                        {% for course in recipe.recipeCoursetype %}
+                                        {% if  course.name  == 'Desertas' %} checked {% endif %}
+                                        {% endfor%} />
                                         <label for="dessert" class="meal-category-li">Desertai</label>   
                                     </div>
                                     <div>
                                         <input id="side" type="checkbox" name="coursetype" value="Garnyras"
-                                        {% if  course.name  == 'Garnyras' %} checked {% endif %} />
+                                        {% for course in recipe.recipeCoursetype %}
+                                        {% if  course.name  == 'Garnyras' %} checked {% endif %}
+                                        {% endfor %} />
                                         <label for="side" class="meal-category-li">Garnyras</label>
                                     </div>
-                                {% endfor %}
                             </div>
                     </div>
                 </li>

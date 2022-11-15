@@ -3,5 +3,148 @@
 
 
 {% block content%}
-<h1>Groc_list</h1>
+<section class="groceries-page page-outer-container">
+    <h1 class="wide-purple-bk page-title-text">Prekių sąrašas</h1>
+    <div class="page-inner-container groceries-page-inner-container">
+
+        {% if groceriesList %}
+        {% else %}
+                <form class="shopping-time-form" method="POST" action="/create-groceries-list">
+                    <h2 class="bold-uppercase-normal">Kuriam laikui norite apsipirkti?</h2>
+                    <div>
+                        <label for="shopping-weekday">Nuo</label>
+                        <select id="shopping-weekday" name="shopping-weekday">
+                            <option disabled selected value>-- Pasirinkite savaitės dieną --</option>
+                            <option value="Monday">Pirmadienio</option>
+                            <option value="Tuesday">Antradienio</option>
+                            <option value="Wednesday">Trečiadienio</option>
+                            <option value="Thursday">Ketvirtadienio</option>
+                            <option value="Friday">Penktadienio</option>
+                            <option value="Saturday">Šeštadienio</option>
+                            <option value="Sunday">Sekmadienio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="final-weekday">Iki</label>
+                        <select id="final-weekday" name="final-weekday">
+                            <option disabled selected value>-- Pasirinkite savaitės dieną --</option>
+                            <option value="Monday">Pirmadienio</option>
+                            <option value="Tuesday">Antradienio</option>
+                            <option value="Wednesday">Trečiadienio</option>
+                            <option value="Thursday">Ketvirtadienio</option>
+                            <option value="Friday">Penktadienio</option>
+                            <option value="Saturday">Šeštadienio</option>
+                            <option value="Sunday">Sekmadienio</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="button">Toliau</button>
+                </form>
+        {% endif %}
+
+        <div class="final-part-of-groceries-list-creation invisible">
+
+        <!-- setting interval of groceries list days -->
+        <h2 class="bold-uppercase-normal">
+
+            {% set listLength = (weekdaysList|length - 1) %}
+
+            {% for weekdayLt in weekdayDictLt%}
+                {% if weekdayLt == weekdaysList[0] %}
+                    {{ weekdayDictLt[weekdayLt] }} -
+                {% endif %}
+                {% if weekdayLt == weekdaysList[listLength] %}
+                    {{ weekdayDictLt[weekdayLt] }}
+                {% endif %}
+            {% endfor %}
+            
+        </h2>
+
+        <p class="simple-text-small">Pažymėkite visus norimus receptus ir nurodykite porcijų skaičių.</p>
+
+        <!-- make invisible, until previous form is submitted. 
+        Make invisible after submit -->
+        <form method="POST" action="/final-groceries-list" class="recipes-confirmation-form">
+            {% for keys in currentCalendar %}
+                {% for weekday in weekdaysList %}
+                    {% if weekday == keys %}
+                        {% for weekdayLt in weekdayDictLt%}
+                            {% if weekdayLt == weekday %}
+                                {% if weekdaysList[0] == weekday %}
+                                    <div class="title-and-portions-display">
+                                        <h3 class="bold-uppercase-small">{{ weekdayDictLt[weekdayLt] }}</h3>
+                                        <div>
+                                            <label for="default-portions-for-all" class="text-unimportant-title">Porcijos</label>
+                                            <input id="default-portions-for-all" type="number" min="1" name="default-portions-for-all" class="default-portions-for-all">
+                                    
+                                        </div>
+                                    </div>
+                                {% else %}
+                                <h3 class="bold-uppercase-small">{{ weekdayDictLt[weekdayLt] }}</h3>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <div class="one-day-recipes">
+
+                            {% for daymealItem in currentCalendar[keys] %}
+                                {% for keys in daymealItem %}
+                                    <!-- display only daymeals that have recipes and skip the empty ones -->
+                                    {% if daymealItem[keys]|length > 0 %}
+
+                                    <div class="daymeal-container">
+                                        <h4 class="daymeal-name text-unimportant-title"> {{ keys }} </h4>
+                                        <div class="recipe-items-list-container">
+                                            {% for items in daymealItem[keys] %}
+                                                        <div class="recipe-item-in-groceries">
+                                                            <input type="checkbox" name="recipe-checkbox" value="{{ items['recipeId'] }}" id="checkbox-recipeID={{ items['recipeId'] }}" checked>
+                                                            <label for="checkbox{{ items['recipeName'] }}" class="recipeName-label" >
+                                                                <h5 class="bold-uppercase-small">{{ items['recipeName'] }}</h5>
+                                                            </label>
+                                                            <label for="{{recipeName}}portions" value="" type="number" aria-hidden="Porcijos"></label>
+                                                            <input class="portions-of-recipe" name="recipe-portions{{ items['recipeId'] }}" value="1" type="number" id="{{ items['recipeName'] }}portions">    
+                                                        </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            <button type="submit" class="button">Sukurti prekių sąrašą</button>
+        </form>
+    </div>
+        <!-- shopping list display -->
+        {% if groceriesList %}
+            <ul class="all-groceries-ul-container"> 
+                {% for groceriesItem in groceriesList %}
+                    {% set x = groceriesItem.id %}
+                    
+                    <li class='groceries-item-in-list' name="groceries-itemID{{x}}">
+                        <input type="checkbox" class="groceries-checkbox" 
+                            {% if groceriesItem.check_status == 1 %} 
+                                checked 
+                            {% endif %}
+                        >
+                        <p class="bold-uppercase-small product-name-groceries">{{ relatedProductsDict[groceriesItem.id] }}</p>
+                        <p class="simple-text-small">{{ groceriesItem.product_amount_in_grams }} g</p>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        <form action="/final-groceries-list" method="POST" class="new-list">
+            <input type="text" value="yes" class="invisible" name="delete-groceries-list">
+            <button class="button create-new-groc-list-button" type="submit">Naujas sąrašas</button>
+        </form>
+        {% endif %}
+
+
+</div>
+</section>
+{% endblock %}
+
+{% block js %}
+    <script src="../static/groceries.js"></script>
 {% endblock %}
