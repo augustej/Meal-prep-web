@@ -15,7 +15,7 @@ def home():
     if current_user.is_authenticated:
         modified_name = name_modification_for_greeting(current_user.name)
         # initialDbLoad()
-        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar').first().calendarData
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first().calendarData
         convertedData = json.loads(currentCalendar)
         todays_day = datetime.now().weekday()
         listOfRecipeIds = []
@@ -170,9 +170,11 @@ def render_single_recipe():
         idofproduct = ingredient.product_id
         idofMeasurm = ingredient.measurement_id
         ingredientAmount = ingredient.amount
-        kcalKoeficient = db.session.query(productMeasurements).filter_by(
+        gramKoeficient = db.session.query(productMeasurements).filter_by(
             product_measurement_id=idofMeasurm, product_id=idofproduct).first(
             ).product_conversion_to_gram
+        kcalofproductgram = Product.query.filter_by(id=idofproduct).first().kcal
+        kcalKoeficient = kcalofproductgram * gramKoeficient
         kcalOfIngredient = kcalKoeficient * ingredientAmount
         kcalOfRecipe += kcalOfIngredient
     kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)

@@ -97,3 +97,11 @@ class Calendars(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     calendarData = db.Column(db.String(10000))
     calendarName = db.Column(db.String(100))
+
+class Groceries(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    product_amount_in_grams = db.Column(db.Integer)
+    check_status = db.Column(db.Integer)
+
