@@ -68,12 +68,20 @@ window.addEventListener( "load", event =>{
         jsonBody[calendarName] = sessionStorage.getItem('plan')
         // if user tries to save just emptied calendar - create an empty template
         if (jsonBody[calendarName] == null ){
-            console.log("nulis")
             planValue = createSessionStorageTemplate()
             sessionStorage.setItem('plan', JSON.stringify(planValue))
             jsonBody[calendarName] = sessionStorage.getItem('plan')
         }
         loadCalendarToDb(jsonBody)
+    }
+
+    if ((`${window.location.origin}/groc_list` == window.location.href) || 
+        (`${window.location.origin}/groc_list` == document.referrer)) {
+        
+        if (sessionStorage.getItem('groceriesDictForCheckboxes') != null ){
+            let checkedGroceriesDict = sessionStorage.getItem('groceriesDictForCheckboxes')
+            updateCheckStatus(checkedGroceriesDict)
+        }
     }
 })
 
@@ -88,6 +96,20 @@ async function loadCalendarToDb(jsonBody){
         })
     return response
 }
+
+async function updateCheckStatus(jsonBody){
+    let response = await fetch('/groceries-check-update',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response
+}
+
+
 
 function createSessionStorageTemplate(){
     let listOfWeekDayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']

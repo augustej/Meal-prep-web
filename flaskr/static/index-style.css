@@ -235,7 +235,7 @@ ul{
     padding: 0.5em 2.5em;
     border: none;
     font-family: (var(--text));
-    background-color: var(--brpurple);
+    background-color: var(--purple);
     color: var(--white);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1182,6 +1182,15 @@ aside h4{
 
 .preparation-display-ol{
     padding-left: 1em;
+}
+.recipe-action-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    padding-bottom: 2em;
 }
 
 @media (max-width:850px) {

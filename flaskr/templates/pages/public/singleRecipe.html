@@ -110,11 +110,16 @@
         <button class="back-btn button">Grįžti</button>
     </div>
 
+    {% if myRecipe == 'True'%}
+    <div class="recipe-action-button">
+        <button id="add-recipe-button" class="button-thin modify-recipe-btn" name="recipeID={{recipe.id}}">Koreguoti receptą</button>
+        <button class="button-thin delete-recipe-btn" name="recipeID={{recipe.id}}">Ištrinti receptą</button>
+    </div>
+    {% endif%}
 </section>
 
 {% if myRecipe == 'True'%}
-<button id="add-recipe-button" class="button modify-recipe-btn" name="recipeID={{recipe.id}}">Koreguoti receptą</button>
-<button class="button delete-recipe-btn" name="recipeID={{recipe.id}}">Ištrinti receptą</button>
+
 
     <div id="recipe-creation-div" class="modal">
         <span class="close" id="close-add-recipe">&times;</span>

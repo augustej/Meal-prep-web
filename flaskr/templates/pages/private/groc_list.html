@@ -7,7 +7,8 @@
     <h1 class="wide-purple-bk page-title-text">Prekių sąrašas</h1>
     <div class="page-inner-container groceries-page-inner-container">
 
-        {% if listAlreadyExists == 'False' %}
+        {% if groceriesList %}
+        {% else %}
                 <form class="shopping-time-form" method="POST" action="/create-groceries-list">
                     <h2 class="bold-uppercase-normal">Kuriam laikui norite apsipirkti?</h2>
                     <div>
@@ -116,14 +117,19 @@
         </form>
     </div>
         <!-- shopping list display -->
-        {% if groceriesResponse %}
+        {% if groceriesList %}
             <ul class="all-groceries-ul-container"> 
-                {% for keys in groceriesResponse %}
-                    {% set x = loop.index %}
+                {% for groceriesItem in groceriesList %}
+                    {% set x = groceriesItem.id %}
+                    
                     <li class='groceries-item-in-list' name="groceries-itemID{{x}}">
-                        <input type="checkbox" class="groceries-checkbox">
-                        <p class="bold-uppercase-small product-name-groceries">{{ keys }}</p>
-                        <p class="simple-text-small">{{ groceriesResponse[keys] }} g</p>
+                        <input type="checkbox" class="groceries-checkbox" 
+                            {% if groceriesItem.check_status == 1 %} 
+                                checked 
+                            {% endif %}
+                        >
+                        <p class="bold-uppercase-small product-name-groceries">{{ relatedProductsDict[groceriesItem.id] }}</p>
+                        <p class="simple-text-small">{{ groceriesItem.product_amount_in_grams }} g</p>
                     </li>
                 {% endfor %}
             </ul>

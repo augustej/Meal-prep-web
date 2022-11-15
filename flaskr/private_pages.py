@@ -41,16 +41,31 @@ def calendar():
 
 @private_pages.route('/groc_list')
 def groclist():
-    if (session.get('groceriesResponse')):
-        groceriesResponse = session.get('groceriesResponse')
-        session['listAlreadyExists'] = 'True'
-    else:
-        groceriesResponse = {}
-        session['listAlreadyExists'] = 'False'
-    listAlreadyExists = session.get('listAlreadyExists')
-    print(groceriesResponse)
+    groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
+    relatedProductsDict = {}
+    if groceriesList:
+        for productItem in groceriesList:
+            productItemID = productItem.product_id
+            productItemName = Product.query.filter_by(id=productItemID).first().name
+            relatedProductsDict[productItem.id] = productItemName
     return render_template('/pages/private/groc_list.html', 
-    groceriesResponse=groceriesResponse, listAlreadyExists= listAlreadyExists)
+    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList)
+
+@private_pages.route('/groceries-check-update', methods=['POST'])
+def updateCheckStatus():
+    if request.method == 'POST':
+        checkedItemsListData= request.get_json()
+        checkedItemsList = json.loads(checkedItemsListData)
+        for key in checkedItemsList:
+            groceriesId= key
+            groceriesToUpdate = Groceries.query.filter_by(id=groceriesId).first()
+            if checkedItemsList[groceriesId] == 'checked':
+                groceriesToUpdate.check_status = 1
+            else:
+                groceriesToUpdate.check_status = 0
+            db.session.add(groceriesToUpdate)
+        db.session.commit()
+    return Response('', 200)
 
 @private_pages.route('/create-groceries-list', methods=['POST'])
 def createGroceriesList():
@@ -72,7 +87,6 @@ def createGroceriesList():
             else:
                 indexToItterate += 1
         weekdaysList.append(list(currentCalendar)[indexOfFinWeekday])
-        listAlreadyExists = session.get('listAlreadyExists')
 
         weekdayDictLt = {
             "Monday":"Pirmadienis",
@@ -85,8 +99,7 @@ def createGroceriesList():
             }
 
     return render_template('/pages/private/groc_list.html', 
-    weekdaysList=weekdaysList, currentCalendar=currentCalendar, 
-    listAlreadyExists=listAlreadyExists, weekdayDictLt=weekdayDictLt
+    weekdaysList=weekdaysList, currentCalendar=currentCalendar,weekdayDictLt=weekdayDictLt
     )
 
 @private_pages.route('/final-groceries-list', methods=['POST','GET'])
@@ -96,8 +109,6 @@ def finalGroceriesList():
         if (request.form.get('delete-groceries-list')):
             Groceries.query.filter_by(user_id=current_user.id).delete()
             db.session.commit()
-            del session['groceriesResponse']
-            del session['listAlreadyExists']
             return redirect(url_for('private_pages.groclist'))
 
         listOfSelectedRecipesID = request.form.getlist('recipe-checkbox')
@@ -110,32 +121,24 @@ def finalGroceriesList():
             ingredientItems = recipeToAnalyze.recipeIngredients
             for ingredient in ingredientItems:
                 idofproduct = ingredient.product_id
-                idofMeasurm = ingredient.measurement_id
-                ingredientAmount = ingredient.amount
                 gramConversionKoeficient = db.session.query(productMeasurements).filter_by(
-                    product_measurement_id=idofMeasurm, product_id=idofproduct).first(
+                    product_measurement_id=ingredient.measurement_id, product_id=idofproduct).first(
                     ).product_conversion_to_gram
-                defaultAmountInGrams = gramConversionKoeficient * ingredientAmount
+                defaultAmountInGrams = gramConversionKoeficient * ingredient.amount
                 # calculate amount based on portions needed
                 amountInGrams = round(defaultAmountInGrams * chosenPortionsOfRecipe / defaultPortionsOfRecipe)
                 if idofproduct in groceriesDict:
                     groceriesDict[idofproduct] += amountInGrams
                 else:
                     groceriesDict[idofproduct] = amountInGrams
-        
 
-
-        # transform productIds into names
-        groceriesResponse = {}
+        # load to db
         for keys in groceriesDict:
             newGroceries = Groceries(user_id=current_user.id, product_id=keys, 
                 product_amount_in_grams=groceriesDict[keys], check_status=0)
             db.session.add(newGroceries)
-            productName = Product.query.filter_by(id=keys).first().name
-            groceriesResponse[productName] = groceriesDict[keys]
         db.session.commit()
 
-        session['groceriesResponse'] = groceriesResponse
         return redirect(url_for('private_pages.groclist'))
 
 
