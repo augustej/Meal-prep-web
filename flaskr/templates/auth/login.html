@@ -3,23 +3,21 @@
 {% block content%}
 <section class="block-content">
     <section class="inner-block">
-        <h1>Prisijungimas</h1>
+        <h1 class="bold-uppercase-normal">Prisijungimas</h1>
         <form class="login-form reg-form" method="POST">
             <div class="outer">
                 <div class="inner">
                     <label for="login-email" >El. paštas:</label>
-                    <input type="email" id="login-email" name="login-email" required placeholder="El. paštas"/>
+                    <input class="simple-text" type="email" id="login-email" name="login-email" required placeholder="El. paštas"/>
                 </div> 
                 <div class="inner">
 
                     <label for="login-password">Slaptažodis:</label>
-                    <input type="password" id="login-password" name="login-password" required placeholder="Slaptažodis"/>
+                    <input class="simple-text" type="password" id="login-password" name="login-password" required placeholder="Slaptažodis"/>
                 </div>
                 
             </div>
-            <div class="button-highlight">
-                <button class="button" type="submit">Prisijungti</button>
-            </div>        
+            <button class="button" type="submit">Prisijungti</button>
         </form>
     </section>
 

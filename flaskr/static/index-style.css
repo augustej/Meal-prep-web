@@ -6,9 +6,11 @@
     --midpurple:rgb(129, 95, 125);
     --brpurple:rgb(179, 165, 175);
     --orange: rgb(240, 185, 90);
+    --dkorange: rgb(229, 148, 9);
     --brorange:rgb(242, 230, 210);
     --warmbrorange:rgb(249, 227, 188);
     --hotpink: rgb(255, 0, 111);
+    --red: rgb(247, 139, 181);
     --white: #FFF;
     --black: #000;
     --title: 'Comforter Brush', cursive;
@@ -296,6 +298,24 @@ input[type="file"] {
 .return-to-previous-page{
     align-self: center;
     margin: 0 auto;
+}
+
+.flash-message{
+    text-align: center;
+    margin-bottom:0.2em;
+}
+.flash-message.error{
+    background-color: var(--grey);
+    padding: 1em;
+    box-shadow: 0px 2px 5px var(--textgrey);
+    color: var(--textgrey);
+}
+.flash-message.success{
+    background-color: var(--orange);
+    padding: 1em;
+    box-shadow: 0px 2px 5px var(--dkorange);
+    color: var(--white);
+    font-weight: bold;
 }
 
 /* navigation style ------------------*/
@@ -593,11 +613,12 @@ footer {
 .inner-block{
     max-width: 600px;
     padding: 0 auto;
-    margin: 0 auto;
+    margin: 2em auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: var(--purpleboxshadow);
 }
 
 
@@ -609,17 +630,12 @@ footer {
     background-color: var(--purple);
     width: 100%;
     text-align: left;
-    color: white;
-    font-size: medium;
+    color: var(--white);
     padding: 1em;
-    margin-bottom: 0;
-    font-weight: 500;
-    font-size: 1.5em;
-    text-transform: uppercase;
 }
 
 .reg-form{
-    margin: 0 auto 1em;
+    margin: 0 auto;
     font-size: large;
     display: flex;
     flex-direction: column;
@@ -659,14 +675,11 @@ footer {
     min-height: 2em;
     border: none;
     border-bottom: 1px solid var(--purple);
-    font-size: medium;
 }
 
-.button-highlight{
-    width: 100%;
-    margin-top: 1em;
-    text-align: center;
-    padding: 1.5em;
+.reg-form button{
+    margin: 2em auto;
+
 }
 
 @media (max-width: 500px){

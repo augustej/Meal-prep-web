@@ -37,8 +37,13 @@
 
     {% with messages= get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for message in messages %}
-                {{message}}
+            {% for category, message in messages %}
+                {% if category == 'error' %}
+                <p class= "flash-message {{category}} simple-text">{{message}}</p>
+                {% endif %}
+                {% if category == 'success' %}
+                <p class= "flash-message {{category}} simple-text">{{message}}</p>
+                {% endif %}
             {% endfor%}
         {% endif %}
     {% endwith%}
@@ -71,7 +76,7 @@
             <section class="contact-me form-style">
                 <h2 class="curly-title-like">Parašyk!</h2>
                 <div class="decoration-line"></div>
-                <form class="bold-uppercase-small">
+                <form class="bold-uppercase-small" action="mailto:ajanickaite@gmail.com">
                     <label for="#message-theme">Tema</label>
                     <input type="text" id="message-theme" required>
                     <label for="#message-email">El. paštas</label>
