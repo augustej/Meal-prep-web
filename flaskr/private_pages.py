@@ -67,7 +67,7 @@ def updateCheckStatus():
         db.session.commit()
     return Response('', 200)
 
-@private_pages.route('/create-groceries-list', methods=['POST'])
+@private_pages.route('/confirm-recipes-for-shopping', methods=['POST'])
 def createGroceriesList():
     if request.method == "POST":
         shop_weekday = request.form.get('shopping-weekday')
@@ -77,16 +77,16 @@ def createGroceriesList():
         indexOfShopWeekday = list(currentCalendar.keys()).index(shop_weekday)
         indexOfFinWeekday = list(currentCalendar.keys()).index(final_weekday)
         indexToItterate = indexOfShopWeekday
-        weekdaysList = []
+        weekdaysIncludedInShopping = []
         while not indexToItterate == indexOfFinWeekday:
             nameOfOneDay = list(currentCalendar)[indexToItterate]
-            weekdaysList.append(nameOfOneDay)
+            weekdaysIncludedInShopping.append(nameOfOneDay)
     
             if indexToItterate == 6:
                 indexToItterate = 0
             else:
                 indexToItterate += 1
-        weekdaysList.append(list(currentCalendar)[indexOfFinWeekday])
+        weekdaysIncludedInShopping.append(list(currentCalendar)[indexOfFinWeekday])
 
         weekdayDictLt = {
             "Monday":"Pirmadienis",
@@ -99,7 +99,7 @@ def createGroceriesList():
             }
 
     return render_template('/pages/private/groc_list.html', 
-    weekdaysList=weekdaysList, currentCalendar=currentCalendar,weekdayDictLt=weekdayDictLt
+    weekdaysIncludedInShopping=weekdaysIncludedInShopping, currentCalendar=currentCalendar,weekdayDictLt=weekdayDictLt
     )
 
 @private_pages.route('/final-groceries-list', methods=['POST','GET'])
