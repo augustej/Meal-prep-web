@@ -1,12 +1,13 @@
-from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response
+from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response, make_response
 from flask_login import current_user
 from .model import User, Role, Product, Foodtype, Calendars, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
 import csv, math, json
-from . import db
+from . import db, mail
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, or_
 from sqlalchemy.sql import text
 from datetime import datetime
+from flask_mail import Message, Mail
 
 public_pages = Blueprint('public_pages', __name__)
 
@@ -341,3 +342,17 @@ def createPictDictWithModifiedPaths(recipeList):
             modifiedPicturePath=''
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
+
+@public_pages.route('/send-email', methods=['POST'])
+def sendEmail():
+    if request.method == 'POST':
+        msg = Message()
+        msg.body = request.form.get('message-text')
+        senderEmail = request.form.get('message-email')
+        subject = request.form.get('message-subject')
+        msg.recipients = ["savaites.meniu.planas@gmail.com"]
+        msg.sender = (senderEmail, "savaites.meniu.planas@gmail.com")
+        msg.subject = subject
+        mail.send(msg)
+        
+    return redirect(url_for('public_pages.home'))
