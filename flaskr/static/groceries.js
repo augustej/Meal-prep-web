@@ -3,10 +3,10 @@ var newGroceriesList = document.querySelector('.create-new-groc-list-button')
 
 window.addEventListener('load', event =>{
     var shoppingTimeForm = document.querySelector('.shopping-time-form')
-    var recipesConfirmationForm = document.querySelector('.final-part-of-groceries-list-creation')
+    var recipesConfirmationForm = document.querySelector('.recipes-confirmation-container')
 
     // hide first form and show second one, after first one is submited
-    if (window.location.href == `${window.location.origin}/create-groceries-list`){
+    if (window.location.href == `${window.location.origin}/confirm-recipes-for-shopping`){
         recipesConfirmationForm.classList.remove('invisible')
         shoppingTimeForm.classList.add('invisible')
         var portionsInputField = document.querySelector('#default-portions-for-all')

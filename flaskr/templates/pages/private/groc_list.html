@@ -9,7 +9,7 @@
 
         {% if groceriesList %}
         {% else %}
-                <form class="shopping-time-form" method="POST" action="/create-groceries-list">
+                <form class="shopping-time-form" method="POST" action="/confirm-recipes-for-shopping">
                     <h2 class="bold-uppercase-normal">Kuriam laikui norite apsipirkti?</h2>
                     <div>
                         <label for="shopping-weekday">Nuo</label>
@@ -41,18 +41,18 @@
                 </form>
         {% endif %}
 
-        <div class="final-part-of-groceries-list-creation invisible">
+        <div class="recipes-confirmation-container invisible">
 
         <!-- setting interval of groceries list days -->
         <h2 class="bold-uppercase-normal">
 
-            {% set listLength = (weekdaysList|length - 1) %}
+            {% set listLength = (weekdaysIncludedInShopping|length - 1) %}
 
             {% for weekdayLt in weekdayDictLt%}
-                {% if weekdayLt == weekdaysList[0] %}
+                {% if weekdayLt == weekdaysIncludedInShopping[0] %}
                     {{ weekdayDictLt[weekdayLt] }} -
                 {% endif %}
-                {% if weekdayLt == weekdaysList[listLength] %}
+                {% if weekdayLt == weekdaysIncludedInShopping[listLength] %}
                     {{ weekdayDictLt[weekdayLt] }}
                 {% endif %}
             {% endfor %}
@@ -61,21 +61,22 @@
 
         <p class="simple-text-small">Pažymėkite visus norimus receptus ir nurodykite porcijų skaičių.</p>
 
-        <!-- make invisible, until previous form is submitted. 
-        Make invisible after submit -->
+        <!-- displaying recipes for selected shopping interval -->
         <form method="POST" action="/final-groceries-list" class="recipes-confirmation-form">
-            {% for keys in currentCalendar %}
-                {% for weekday in weekdaysList %}
-                    {% if weekday == keys %}
+            {% for calendarWeekday in currentCalendar %}
+                {% for includedWeekday in weekdaysIncludedInShopping %}
+                    {% if includedWeekday == calendarWeekday %}
+
                         {% for weekdayLt in weekdayDictLt%}
-                            {% if weekdayLt == weekday %}
-                                {% if weekdaysList[0] == weekday %}
-                                    <div class="title-and-portions-display">
+                            {% if weekdayLt == includedWeekday %}
+
+                            {% if weekdaysIncludedInShopping[0] == includedWeekday %}
+                                    <!-- different format for first included weekday , to add Portions display area -->
+                                    <div class="first-weekday-and-portions-display">
                                         <h3 class="bold-uppercase-small">{{ weekdayDictLt[weekdayLt] }}</h3>
                                         <div>
-                                            <label for="default-portions-for-all" class="text-unimportant-title">Porcijos</label>
+                                            <label class="default-portions-for-all-label" for="default-portions-for-all" class="text-unimportant-title">Porcijos</label>
                                             <input id="default-portions-for-all" type="number" min="1" name="default-portions-for-all" class="default-portions-for-all">
-                                    
                                         </div>
                                     </div>
                                 {% else %}
@@ -83,24 +84,24 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
-                        <div class="one-day-recipes">
 
-                            {% for daymealItem in currentCalendar[keys] %}
-                                {% for keys in daymealItem %}
+                        <div class="one-day-recipes">
+                            {% for daymealDict in currentCalendar[calendarWeekday] %}
+                                {% for daymeal in daymealDict %}
                                     <!-- display only daymeals that have recipes and skip the empty ones -->
-                                    {% if daymealItem[keys]|length > 0 %}
+                                    {% if daymealDict[daymeal]|length > 0 %}
 
                                     <div class="daymeal-container">
-                                        <h4 class="daymeal-name text-unimportant-title"> {{ keys }} </h4>
+                                        <h4 class="daymeal-name text-unimportant-title"> {{ daymeal }} </h4>
                                         <div class="recipe-items-list-container">
-                                            {% for items in daymealItem[keys] %}
+                                            {% for recipeDict in daymealDict[daymeal] %}
                                                         <div class="recipe-item-in-groceries">
-                                                            <input type="checkbox" name="recipe-checkbox" value="{{ items['recipeId'] }}" id="checkbox-recipeID={{ items['recipeId'] }}" checked>
-                                                            <label for="checkbox{{ items['recipeName'] }}" class="recipeName-label" >
-                                                                <h5 class="bold-uppercase-small">{{ items['recipeName'] }}</h5>
+                                                            <input type="checkbox" name="recipe-checkbox" value="{{ recipeDict['recipeId'] }}" id="checkbox-recipeID={{ recipeDict['recipeId'] }}" checked>
+                                                            <label for="checkbox{{ recipeDict['recipeName'] }}" class="recipeName-label" >
+                                                                <h5 class="bold-uppercase-small">{{ recipeDict['recipeName'] }}</h5>
                                                             </label>
                                                             <label for="{{recipeName}}portions" value="" type="number" aria-hidden="Porcijos"></label>
-                                                            <input class="portions-of-recipe" name="recipe-portions{{ items['recipeId'] }}" value="1" type="number" id="{{ items['recipeName'] }}portions">    
+                                                            <input class="portions-of-recipe" name="recipe-portions{{ recipeDict['recipeId'] }}" value="1" type="number" id="{{ recipeDict['recipeName'] }}portions">    
                                                         </div>
                                             {% endfor %}
                                         </div>
