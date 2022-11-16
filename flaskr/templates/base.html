@@ -76,14 +76,14 @@
             <section class="contact-me form-style">
                 <h2 class="curly-title-like">Parašyk!</h2>
                 <div class="decoration-line"></div>
-                <form class="bold-uppercase-small" action="mailto:ajanickaite@gmail.com">
-                    <label for="#message-theme">Tema</label>
-                    <input type="text" id="message-theme" required>
-                    <label for="#message-email">El. paštas</label>
-                    <input type="email" id="message-email" required>
+                <form class="bold-uppercase-small" action="/send-email" method="POST">
+                    <label for="#message-theme" >Tema</label>
+                    <input type="text" id="message-theme" name="message-subject" required>
+                    <label for="#message-email" >El. paštas</label>
+                    <input type="email" id="message-email" name="message-email" required>
                     <label for="#message-text">Žinutė</label>
-                    <textarea id="message-text" required></textarea>
-                    <button class="button">Siųsti</button>
+                    <textarea id="message-text" name="message-text" required></textarea>
+                    <button class="button" type="submit">Siųsti</button>
                 </form>
             </section>
         </div>
