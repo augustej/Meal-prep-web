@@ -8,6 +8,7 @@ from sqlalchemy import func, or_
 from sqlalchemy.sql import text
 from datetime import datetime
 from flask_mail import Message, Mail
+from  sqlalchemy.sql.expression import func, select
 
 public_pages = Blueprint('public_pages', __name__)
 
@@ -29,13 +30,24 @@ def home():
                             # save ID for every recipe into a list.
                             listOfRecipeIds.append(recipe['recipeId'])
 
-
         recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
-
         pictDict = createPictDictWithModifiedPaths(recipesList)
 
+        # my favorites aside
+        myFavoriteRecipesData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).order_by(func.random()).limit(7).all()
+        myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData, 7, 0)
+        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(myFavoriteRecipes)
+
+        # various recipes aside
+        admin_ID = User.query.filter_by(role_name = 'admin').first().id
+        variousRecipesData =  Recipe.query.filter_by(user_id=admin_ID).order_by(func.random()).limit(7).all()
+        variousRecipes = convertDbTableDataToQueryList(variousRecipesData, 7, 0)
+        variousRecipesPictDict = createPictDictWithModifiedPaths(variousRecipes)
+
         return render_template('pages/private/personal_home.html', name=modified_name,
-        listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict)
+        listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict, 
+        myFavoriteRecipes=myFavoriteRecipes, myFavoriteRecipesPictDict=myFavoriteRecipesPictDict,
+        variousRecipesPictDict=variousRecipesPictDict, variousRecipes=variousRecipes)
     else:
         return render_template('pages/public/index.html')
 
