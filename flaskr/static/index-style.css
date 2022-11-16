@@ -716,9 +716,10 @@ footer {
 }
 
 aside{
+    max-height: min-content;
     max-width: 300px;
     margin: 0 auto;
-    width:18%;
+    width:15%;
     padding: 1em;
     border: 1px solid var(--grey);
 }
@@ -727,10 +728,26 @@ aside h4{
     border-bottom: 1px solid var(--purple);
 }
 
+.recipes-representation-aside{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.recipes-representation-aside .mini-recipe-card {
+    margin: 0.5em;
+}
+.recipes-representation-aside a{
+    color: var(--black);
+    text-decoration: none;
+}
+
 .centered-card{
     max-width: 700px;
     width: 60%;
-    margin: 2em auto;
+    margin: auto;
+    margin-top: min(2em);
+    margin-bottom: min(2em);
     padding: 0 0 2em;
     box-shadow: 1px 1px 10px var(--textgrey);
     background-color: var(--brgrey);
@@ -799,12 +816,13 @@ aside h4{
     margin-top: 2em;
 }
 
-@media(max-width: 1625px){
+@media(max-width: 1425px){
     aside{
         display: none;
     }
     .centered-card{
         width:90%;
+        margin: 2em auto;
     }
 }
 

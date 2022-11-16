@@ -8,6 +8,14 @@
     <div class="center-asides-container">
         <aside class="favorite-recipes-aside">
             <h4 class="bold-uppercase-small">Mėgstami receptai</h4>
+                <ul class="recipes-representation-aside">
+                    {% for favoriteRecipe in myFavoriteRecipes %}
+                    <a class="mini-recipe-card" href="/single_recipe?recipeID={{favoriteRecipe.id}}">
+                        <p class="simple-text-small">{{ favoriteRecipe.name }}</p>
+                        <img src="{{ myFavoriteRecipesPictDict[ favoriteRecipe.id | int ] }}">
+                    </a>
+                    {% endfor %}
+                </ul>
         </aside>
         <section class="todays-menu-section centered-card">
             <h1 class="page-title-text">Dienos meniu</h1>
@@ -45,7 +53,15 @@
         </section>
 
         <aside class="tommorows-menu-aside">
-            <h4 class="bold-uppercase-small">Rytojaus meniu</h4>
+            <h4 class="bold-uppercase-small">Įvairūs receptai</h4>
+            <ul class="recipes-representation-aside">
+                {% for variousRecipe in variousRecipes %}
+                    <a class="mini-recipe-card" href="/single_recipe?recipeID={{variousRecipe.id}}">
+                        <p class="simple-text-small">{{ variousRecipe.name }}</p>
+                        <img src="{{ variousRecipesPictDict[ variousRecipe.id | int ] }}">
+                    </a>
+                {% endfor %}
+            </ul>
         </aside>
     </div>
     <div class="week-plan-section wide-purple-bk">
