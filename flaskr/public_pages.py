@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response, make_response
-from flask_login import current_user
+from flask_login import current_user, login_required
 from .model import User, Role, Product, Foodtype, Calendars, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
 import csv, math, json
 from . import db, mail
@@ -41,7 +41,12 @@ def home():
 
 @public_pages.route('/search')
 def search():
-    return render_template('pages/public/search.html')
+    if current_user.is_authenticated:
+        loggedIn = 'True'
+    else:
+        loggedIn = 'False'
+
+    return render_template('pages/public/search.html', loggedIn=loggedIn)
 
 @public_pages.route('/recipe-search', methods=['GET'])
 def searchRecipe():
@@ -51,19 +56,26 @@ def searchRecipe():
         recipeUpper = request.args.get('input').upper()
 
         admin_ID = User.query.filter_by(role_name = 'admin').first().id
-        allowedID = [current_user.id, admin_ID]
         queryNumber = int(request.args.get('querynumber'))
         limitValue = 5
         offsetValue = queryNumber -1
-        listOfRecipesStartingWith = Recipe.query.filter(
-            or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), 
-            Recipe.user_id.in_(allowedID) ).offset(offsetValue).limit(limitValue).all()
+
+        if current_user.is_authenticated:
+            allowedID = [current_user.id, admin_ID]
+            listOfRecipesStartingWith = Recipe.query.filter(
+                or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), 
+                Recipe.user_id.in_(allowedID) ).offset(offsetValue).limit(limitValue).all()
+        else:
+            listOfRecipesStartingWith = Recipe.query.filter(
+                or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), 
+                Recipe.user_id==admin_ID ).offset(offsetValue).limit(limitValue).all()
+
         recipesList = filteredRecipeDataConvertionToJsonList(listOfRecipesStartingWith, limitValue, offsetValue, queryNumber)
-        print(recipesList)
         return recipesList
 
 
 @public_pages.route('/coursetype-filter', methods=['GET'])
+@login_required
 def coursetypeFilter():
     coursetypeBtnText = request.args.get('coursetype')
     if coursetypeBtnText == 'Pietūs' or coursetypeBtnText == 'Vakarienė':
@@ -79,6 +91,7 @@ def coursetypeFilter():
     return recipeOfCoursetypeList
 
 @public_pages.route('/recipetype-filter', methods=['GET'])
+@login_required
 def recipetypeFilter():
     recipetypeName = request.args.get('recipetype')
     queryNumber = int(request.args.get('querynumber'))
@@ -90,6 +103,7 @@ def recipetypeFilter():
     return recipesOfRecipetypeList
 
 @public_pages.route('/favorite-filter', methods=['GET'])
+@login_required
 def favoriteFilter():
     queryNumber = int(request.args.get('querynumber'))
     limitValue=5
@@ -110,8 +124,11 @@ def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
         recipeIDList.append(recipeID)
     # check if recipe is allowed for this user
     admin_ID = User.query.filter_by(role_name = 'admin').first().id
-    allowedID = [current_user.id, admin_ID]
-    RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
+    if current_user.is_authenticated:
+        allowedID = [current_user.id, admin_ID]
+        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
+    else:
+        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id==admin_ID).offset(offsetValue).limit(limitValue).all()
     return RecipesList
 
 def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
@@ -154,9 +171,15 @@ def render_single_recipe():
     IDofRecipe = request.args.get('recipeID')
     recipeToVisualize = Recipe.query.filter_by(id=IDofRecipe).first()
     adminUserId = User.query.filter_by(role_name = 'admin').first().id
-    # protect recipes created by other users:
-    if not (recipeToVisualize.user_id == current_user.id or recipeToVisualize.user_id == adminUserId):
-        return redirect(url_for('private_pages.recipes'))
+    if current_user.is_authenticated:
+        loggedIn = "True"
+        # protect recipes created by other users:
+        if not (recipeToVisualize.user_id == current_user.id or recipeToVisualize.user_id == adminUserId):
+            return redirect(url_for('private_pages.recipes'))
+    else:
+        loggedIn = "False"
+        if not (recipeToVisualize.user_id == adminUserId):
+            return redirect(url_for('private_pages.recipes'))
 
     fullPicturePath = recipeToVisualize.picture
     modifiedPicturePath=""
@@ -203,18 +226,18 @@ def render_single_recipe():
     for item in allMeasurements:
         measurmentDict[item.id] = item.name
 
-    #check if recipe is favorited
-    ifFavorited=db.session.query(favoriteRecipes).filter_by(recipe_id=recipeToVisualize.id, user_id=current_user.id).first()
-    if ifFavorited:
-        favoriteValue=" favorited"
-    else:
-        favoriteValue=""
+    favoriteValue=""
+    if current_user.is_authenticated:
+        #check if recipe is favorited
+        ifFavorited=db.session.query(favoriteRecipes).filter_by(recipe_id=recipeToVisualize.id, user_id=current_user.id).first()
+        if ifFavorited:
+            favoriteValue=" favorited"
     
-    #check if recipe created by current user
-    if recipeToVisualize.user_id == current_user.id:
-        myRecipe = 'True'
-    else:
-        myRecipe = 'False'
+    myRecipe = 'False'
+    if current_user.is_authenticated:
+        #check if recipe created by current user
+        if recipeToVisualize.user_id == current_user.id:
+            myRecipe = 'True'
 
 
     return render_template('pages/public/singleRecipe.html', 
@@ -225,12 +248,18 @@ def render_single_recipe():
         sentencelist=sentenceList,
         calories=kcalPerPortion,
         measurmentDict=measurmentDict,
-        myRecipe = myRecipe
+        myRecipe = myRecipe,
+        loggedIn=loggedIn
         )
 
 @public_pages.route('/various-recipes', methods=['GET'])
 def variousRecipes():
     if request.method == 'GET':
+        if current_user.is_authenticated:
+            loggedIn = 'True'
+        else:
+            loggedIn = 'False'
+
         adminUserId = User.query.filter_by(role_name = 'admin').first().id
         variousRecipesAmount = Recipe.query.filter_by(user_id=adminUserId).count()
         pageNumber = request.args.get('page')
@@ -249,8 +278,22 @@ def variousRecipes():
             numberOfPages = 1
 
     return render_template('pages/public/variousrecipes.html', 
-    myRecipes=variousRecipesList, 
+    myRecipes=variousRecipesList, loggedIn=loggedIn,
     myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
+
+@public_pages.route('/send-email', methods=['POST'])
+def sendEmail():
+    if request.method == 'POST':
+        msg = Message()
+        msg.body = request.form.get('message-text')
+        senderEmail = request.form.get('message-email')
+        subject = request.form.get('message-subject')
+        msg.recipients = ["savaites.meniu.planas@gmail.com"]
+        msg.sender = (senderEmail, "savaites.meniu.planas@gmail.com")
+        msg.subject = subject
+        mail.send(msg)
+        
+    return redirect(url_for('public_pages.home'))
 
 def name_modification_for_greeting(name):
     last_two_letters = name[-2:]
@@ -343,16 +386,3 @@ def createPictDictWithModifiedPaths(recipeList):
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
 
-@public_pages.route('/send-email', methods=['POST'])
-def sendEmail():
-    if request.method == 'POST':
-        msg = Message()
-        msg.body = request.form.get('message-text')
-        senderEmail = request.form.get('message-email')
-        subject = request.form.get('message-subject')
-        msg.recipients = ["savaites.meniu.planas@gmail.com"]
-        msg.sender = (senderEmail, "savaites.meniu.planas@gmail.com")
-        msg.subject = subject
-        mail.send(msg)
-        
-    return redirect(url_for('public_pages.home'))

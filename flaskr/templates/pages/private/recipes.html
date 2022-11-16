@@ -6,7 +6,8 @@
 <section class="recipes-page page-outer-container">
     <h1 class="title-for-recipes-page wide-purple-bk page-title-text">Receptai</h1>
     <div class="recipes-inner-container page-inner-container">
-        
+    
+    {% if loggedIn == "True" %}
         <h2 class="bold-uppercase-normal">Mano receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
             {% for recipe in myRecipes %}
@@ -50,6 +51,8 @@
         </div>
 
         <div class="divider"></div>
+    {% endif %}
+
         <h2 class="bold-uppercase-normal">Įvairūs receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
             {% for recipe in adminRecipes %}
@@ -73,148 +76,16 @@
 
 {% endblock %}
 
+{% block register %}
 
+{% if loggedIn == "False" %}
+            <li><a href="register">Registruotis</a></li>
+            <li><a href="login">Prisijungti</a></li>
+{% else %}
+    <li><a href="logout">Atsijungti</a></li>
+{% endif %}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 
-
-
-
-
-
-
-<div id="recipe-creation-div" class="modal">
-    <span class="close" id="close-add-recipe">&times;</span>
-
-    <form class="centered-card" id="add-recipe-form" method="POST" action="confirmed-recipe" enctype="multipart/form-data">
-        <h1 class="page-title-text">Naujas receptas</h1>
-        <div class="divider"></div>
-        <ul class="card-ul">
-            <li class="new-recipe-li bottom-border">
-                <label for="new-recipe-title"><h2 class="bold-uppercase-normal">Recepto pavadinimas</h2></label>
-                <input type="text" id="new-recipe-title" name="new-recipe-title" required autocomplete="off">        
-            </li>
-            <li class="new-recipe-li bottom-border">
-                <label for="all-ingredients"><h2 class="bold-uppercase-normal">Ingredientai</h2></label>
-                <div id="all-ingredients">    
-                    <ul class="confirmed-ingredients-ul"></ul>
-                    <div class="ingredient-input-and-button subtitle-add-container">
-                        <button id="add-ingredient-subtitle" type="button" class="button add-ingredient-subtitle">+</button>    
-                            <div class="ingredient-label-and-input-area subtitle">
-                                <label for="ingredient-subtitle-input" class="ingredient-subtitle-input bold-uppercase-small">Papildomas ingredientų grupės pavadinimas</label>
-                                <div class="ingredient-subtitle-dropdown-area">
-                                    <input id="ingredient-subtitle-input" type="text" name="ingredient-subtitle-input" autocomplete="off" placeholder="pvz: 'Torto pagrindui'"/>
-                                </div>
-                            </div>
-                    </div>
-                    <div class="ingredient-input-and-button">
-                            <div class="add-ingredient-field">
-                                <div class="ingredient-label-and-input-area">
-                                        <label for="product-search-input" class="text-unimportant-title">Produkto pavadinimas</label>
-                                        <div class="ingredient-input-area">
-                                            <input id="product-search-input" type="text" name="product-search-input" autocomplete="off"/>
-                                            <ul class="product-search"> 
-                                            </ul>
-                                        </div>
-                                </div>
-                                <div class="ingredient-label-and-input-area">
-                                    <label for="product-amount-input" class="text-unimportant-title">Kiekis</label>
-                                    <div class="ingredient-input-area">
-                                        <input id="product-amount-input" type="number" min="0.25" max="10000" step="0.25" name="product-amount-input" autocomplete="off" readonly/>
-                                    </div>
-                                </div>
-                                <div class="ingredient-label-and-input-area">
-                                    <label for="product-measurement-input" class="text-unimportant-title">Matavimo vienetai</label>
-                                    <div class="ingredient-input-area">
-                                        <input id="product-measurement-input" type="text" name="product-measurement-input" autocomplete="off" readonly/>
-                                        <ul class="product-measurement"> 
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <button id="add_ingredient_to_recipe" type="button" disabled class="button">Pridėti</button>    
-                    </div>
-                </div>
-            </li>
-            <li class="new-recipe-li bottom-border">
-                <label for="recipe-preparation"><h2 class="bold-uppercase-normal">Paruošimas</h2></label>
-                <textarea id="recipe-preparation" name="recipe-preparation" required spellcheck=”false”></textarea>
-            </li>
-            <li class="prep-time-file-add bottom-border">
-                <div class="new-recipe-li half-size">
-                    <label for="preparation-time"><h2 class="bold-uppercase-normal">Paruošimo laikas</h2></label>
-                    <div class="prep-time">
-                        <input type="number" id="preparation-time" name="preparation-time" min="0">
-                        <p>min</p>
-                    </div>
-                </div>
-                <div class="new-recipe-li half-size">
-                    <h2 class="bold-uppercase-normal">Recepto nuotrauka</h2>
-                    <label for="recipe-image" id="recipe-image-label" class="button">
-                        Pridėti
-                        <input type="file" name="recipe-image" id="recipe-image" class="input">
-                    </label>
-                </div>
-            </li>
-            <li class="portions-and-category bottom-border">
-                <div class="new-recipe-li half-size">
-                    <label for="portions"><h2 class="bold-uppercase-normal">Porcijos</h2></label>
-                    <div class="portions">
-                        <input type="number" id="portions" name="portions" min="1">
-                        <p>asm.</p>
-                    </div>
-                </div>
-                <div class="half-size new-recipe-li">
-                    <label for="meal-category-input"><h2 class="bold-uppercase-normal">Kategorija</h2></label>
-                        <div class="meal-category-area text-unimportant-title">
-                            <div>
-                                <input id="breakfast" type="checkbox" name="coursetype" value="Pusryčiai"/>
-                                <label for="breakfast" class="meal-category-li">Pusryčiai</label>
-                            </div>
-                            <div>
-                                <input id="main" type="checkbox" name="coursetype" value="Pietūs/Vakarienė
-                                "/>
-                                <label for="main" class="meal-category-li">Pietūs/Vakarienė</label>                           
-                            </div>
-                            <div>
-                                <input id="snacks" type="checkbox" name="coursetype" value="Užkandžiai
-                                "/>
-                                <label for="snacks" class="meal-category-li">Užkandžiai</label>                             
-                            </div>
-                            <div>
-                                <input id="dessert" type="checkbox" name="coursetype" value="Desertas
-                                "/>
-                                <label for="dessert" class="meal-category-li">Desertai</label>   
-                            </div>
-                            <div>
-                                <input id="side" type="checkbox" name="coursetype" value="Garnyras"/>
-                                <label for="side" class="meal-category-li">Garnyras</label>
-                            </div>
-                        </div>
-                </div>
-            </li>
-                
-            <button class="confirm-recipe button" type="button">Išsaugoti receptą</button>
-        </ul>
-    </form>    
-</div>-->
-
-
+{% endblock %}
 
 {% block js %}
     <script src="../static/recipes.js"></script>
