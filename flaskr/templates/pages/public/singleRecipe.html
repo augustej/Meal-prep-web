@@ -10,7 +10,9 @@
 
         <div class="text-and-picture-display">
             <div class="heart-and-image">
+                {% if loggedIn == 'True' %}
                 <i class="fa-solid fa-heart favorite-heart{{ favoriteValue }}" id="heartID{{recipe.id}}"></i>
+                {% endif %}
                 <div class="image-side-display">
                     {% if picturepath != "" %}
                         <img src={{ picturepath }}/>
@@ -301,6 +303,17 @@
             </ul>
         </form>    
     </div>
+{% endif %}
+
+{% endblock %}
+
+{% block register %}
+
+{% if loggedIn == "False" %}
+            <li><a href="register">Registruotis</a></li>
+            <li><a href="login">Prisijungti</a></li>
+{% else %}
+    <li><a href="logout">Atsijungti</a></li>
 {% endif %}
 
 {% endblock %}

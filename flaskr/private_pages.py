@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, session, render_template, redirect, request, url_for, jsonify, Response
-from flask_login import current_user
+from flask_login import current_user, login_required
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os, math, json
 from werkzeug.utils import secure_filename
@@ -12,6 +12,7 @@ def profile():
     return render_template('/pages/private/profile.html')
 
 @private_pages.route('/calendar')
+@login_required
 def calendar():
     CoursetypeQuery = Coursetype.query.all()
     CoursetypeNames =[]
@@ -40,6 +41,7 @@ def calendar():
     foodtypeNames=foodtypeNames, myCalendars=myCalendars)
 
 @private_pages.route('/groc_list')
+@login_required
 def groclist():
     groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
     relatedProductsDict = {}
@@ -52,6 +54,7 @@ def groclist():
     relatedProductsDict=relatedProductsDict, groceriesList= groceriesList)
 
 @private_pages.route('/groceries-check-update', methods=['POST'])
+@login_required
 def updateCheckStatus():
     if request.method == 'POST':
         checkedItemsListData= request.get_json()
@@ -68,6 +71,7 @@ def updateCheckStatus():
     return Response('', 200)
 
 @private_pages.route('/confirm-recipes-for-shopping', methods=['POST'])
+@login_required
 def createGroceriesList():
     if request.method == "POST":
         shop_weekday = request.form.get('shopping-weekday')
@@ -103,6 +107,7 @@ def createGroceriesList():
     )
 
 @private_pages.route('/final-groceries-list', methods=['POST','GET'])
+@login_required
 def finalGroceriesList():
     if request.method == "POST":
         # clear groceries list
@@ -204,6 +209,7 @@ def add_ingredient():
     return Response('', 200)
 
 @private_pages.route('/confirmed-recipe', methods=['POST'])
+@login_required
 def add_recipe():
     name = request.form.get('new-recipe-title')
     instruction = request.form.get('recipe-preparation')
@@ -272,25 +278,33 @@ def add_recipe():
 @private_pages.route('/recipes', methods=['GET', 'POST'])
 def recipes():
     if request.method == 'GET':
-        myRecipes = Recipe.query.filter_by(user_id=current_user.id).order_by(-Recipe.id).limit(5).all()
         admin_ID = User.query.filter_by(role_name = 'admin').first().id
         adminRecipes = Recipe.query.filter_by(user_id=admin_ID).order_by(-Recipe.id).limit(5).all()
-        myfavoriteRecipesdata = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
-        myfavoriteRecipes = convertDbTableDataToQueryList(myfavoriteRecipesdata, 5, 0)
 
-        # combining myrecipes and my favorite recipes into one list, to create one picture dictionary for template
-        inMyRecipes = set(myRecipes)
-        inMyFavorites = set(myfavoriteRecipes)
-        inMyRecipesNotFavorites = inMyRecipes - inMyFavorites
-        fullListofRecipesForPicturesDict = list(inMyRecipesNotFavorites) + myfavoriteRecipes
-        myRecipesPictDict = createPictDictWithModifiedPaths(fullListofRecipesForPicturesDict)
-        
+        if current_user.is_authenticated:
+            loggedIn = 'True'
+            myRecipes = Recipe.query.filter_by(user_id=current_user.id).order_by(-Recipe.id).limit(5).all()
+            myfavoriteRecipesdata = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
+            myfavoriteRecipes = convertDbTableDataToQueryList(myfavoriteRecipesdata, 5, 0)
+            # combining myrecipes and my favorite recipes into one list, to create one picture dictionary for template
+            inMyRecipes = set(myRecipes)
+            inMyFavorites = set(myfavoriteRecipes)
+            inMyRecipesNotFavorites = inMyRecipes - inMyFavorites
+            fullListofRecipesForPicturesDict = list(inMyRecipesNotFavorites) + myfavoriteRecipes
+            myRecipesPictDict = createPictDictWithModifiedPaths(fullListofRecipesForPicturesDict)
+        else:
+            loggedIn = 'False'
+            myRecipes = None
+            myfavoriteRecipes = None
+            myRecipesPictDict = None
         adminRecipesPictDict = createPictDictWithModifiedPaths(adminRecipes)
         
-    return render_template('pages/private/recipes.html', adminRecipes=adminRecipes, myRecipes=myRecipes, myfavoriteRecipes=myfavoriteRecipes, 
-        myRecipesPictDict=myRecipesPictDict, adminRecipesPictDict=adminRecipesPictDict)
+    return render_template('pages/private/recipes.html', adminRecipes=adminRecipes, myRecipes=myRecipes, 
+        myfavoriteRecipes=myfavoriteRecipes, myRecipesPictDict=myRecipesPictDict, loggedIn=loggedIn,
+        adminRecipesPictDict=adminRecipesPictDict)
 
 @private_pages.route('/my-recipes', methods=['GET'])
+@login_required
 def myRecipes():
     if request.method == 'GET':
         myRecipesAmount = Recipe.query.filter_by(user_id = current_user.id).count()
@@ -314,6 +328,7 @@ def myRecipes():
     myRecipesPictDict=myRecipesPictDict, numberOfPages=numberOfPages)
 
 @private_pages.route('/my-favorites', methods=['GET'])
+@login_required
 def myFavoriteRecipes():
     if request.method == 'GET':
         myFavoriteRecipesAmount = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).count()
@@ -338,6 +353,7 @@ def myFavoriteRecipes():
     myRecipesPictDict=myFavoriteRecipesPictDict, numberOfPages=numberOfPages)
 
 @private_pages.route('/check_if_favorite', methods=['POST'])
+@login_required
 def checkIfFavorite():
     if request.method == 'POST':
         data = request.get_json()
@@ -354,6 +370,7 @@ def checkIfFavorite():
     return Response('', 200)
 
 @private_pages.route('/delete-recipe/<recipeID>', methods=['DELETE'])
+@login_required
 def deleteRecipe(recipeID):
     if request.method == 'DELETE':
         if userCanModify(Recipe, recipeID) == True:
@@ -362,6 +379,7 @@ def deleteRecipe(recipeID):
     return Response('', 200)
 
 @private_pages.route('/load-calendar-to-db', methods=['POST'])
+@login_required
 def loadCalendarTodb():
     if request.method == "POST":
         data = request.get_json()
@@ -380,6 +398,7 @@ def loadCalendarTodb():
     return Response('', 200)
 
 @private_pages.route('/delete-calendar-from-db/<id>', methods=['DELETE'])
+@login_required
 def deleteCalendarFromDb(id):
     if request.method == "DELETE":
         if userCanModify(Calendars, id) == True:
@@ -390,6 +409,7 @@ def deleteCalendarFromDb(id):
 
 
 @private_pages.route('/load-calendar-from-db', methods=['GET'])
+@login_required
 def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')

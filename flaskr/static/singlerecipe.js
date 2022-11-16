@@ -29,18 +29,20 @@ document.addEventListener('click', event =>{
             sessionStorage.setItem("indexOfIngredient", index);
         })
     }
-    // add recipe to favorites
-    if (event.target == heartBtn){
-        let prefixlength = 'heartID'.length
-        let heartID = heartBtn.id
-        let extractedRecipeID=heartID.substring(prefixlength)
-        if (heartBtn.classList.contains('favorited')){
-            heartBtn.classList.remove('favorited')
-            favoritesTableAddOrRemove(extractedRecipeID, 'NO')
-        }
-        else{
-            heartBtn.classList.add('favorited')
-            favoritesTableAddOrRemove(extractedRecipeID, 'YES')
+    if (heartBtn){
+        // add recipe to favorites
+        if (event.target == heartBtn){
+            let prefixlength = 'heartID'.length
+            let heartID = heartBtn.id
+            let extractedRecipeID=heartID.substring(prefixlength)
+            if (heartBtn.classList.contains('favorited')){
+                heartBtn.classList.remove('favorited')
+                favoritesTableAddOrRemove(extractedRecipeID, 'NO')
+            }
+            else{
+                heartBtn.classList.add('favorited')
+                favoritesTableAddOrRemove(extractedRecipeID, 'YES')
+            }
         }
     }
 })
