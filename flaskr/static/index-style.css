@@ -304,13 +304,13 @@ input[type="file"] {
     text-align: center;
     margin-bottom:0.2em;
 }
-.flash-message.error{
+.flash-message.Error{
     background-color: var(--grey);
     padding: 1em;
     box-shadow: 0px 2px 5px var(--textgrey);
     color: var(--textgrey);
 }
-.flash-message.success{
+.flash-message.Success{
     background-color: var(--orange);
     padding: 1em;
     box-shadow: 0px 2px 5px var(--dkorange);
@@ -612,7 +612,7 @@ footer {
 
 .inner-block{
     max-width: 600px;
-    padding: 0 auto;
+    min-width: 400px;
     margin: 2em auto;
     display: flex;
     flex-direction: column;
@@ -642,6 +642,7 @@ footer {
     justify-content: center;
     align-items: center;
     background-color: var(--white);
+    width: 100%;
 }
 
 .reg-form .outer{
@@ -678,8 +679,25 @@ footer {
 }
 
 .reg-form button{
-    margin: 2em auto;
+    margin: 2em auto 1em;
+}
 
+.forgotten-pass{
+    text-decoration: none;
+    color:var(--textgrey);
+    padding-bottom: 1em;
+    margin-top: 0;
+}
+.forgotten-pass:hover{
+    color:var(--black);
+    text-decoration: underline;
+}
+
+@media (max-width:800px){
+    .inner-block{
+        max-width: 95%;
+        margin: 0 auto;
+    }
 }
 
 @media (max-width: 500px){
@@ -687,12 +705,8 @@ footer {
         flex-direction: column;
         flex-basis: 90%;
     }
-
-}
-@media (max-width:800px){
     .inner-block{
-        max-width: 95%;
-        margin: 0 auto;
+        min-width: 95%;
     }
 }
 /* END LOGIN PAGE STYLE--------- */

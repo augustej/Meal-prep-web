@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="block-content">
+    <section class="inner-block">
+        <h1 class="bold-uppercase-normal">Slaptažodžio atkūrimas</h1>
+        <form class="pass-reset reg-form" method="POST" action="/password-reset">
+            <div class="outer">
+                <div class="inner">
+                    <label for="login-email" >El. paštas:</label>
+                    <input class="simple-text" type="email" id="reset-pass-email" name="reset-pass-email" required placeholder="El. paštas"/>
+                </div> 
+                
+            </div>
+            <button class="button" type="submit">Siųsti</button>
+        </form>
+    </section>
+
+</section>
+{% endblock %}
+
+{% block register %}
+            <li><a href="register">Registruotis</a></li>
+            <li><a href="login">Prisijungti</a></li>
+{% endblock %}

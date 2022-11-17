@@ -9,41 +9,44 @@
         <aside class="favorite-recipes-aside">
             <h4 class="bold-uppercase-small">Mėgstami receptai</h4>
                 <ul class="recipes-representation-aside">
-                    {% for favoriteRecipe in myFavoriteRecipes %}
-                    <a class="mini-recipe-card" href="/single_recipe?recipeID={{favoriteRecipe.id}}">
-                        <p class="simple-text-small">{{ favoriteRecipe.name }}</p>
-                        <img src="{{ myFavoriteRecipesPictDict[ favoriteRecipe.id | int ] }}">
-                    </a>
-                    {% endfor %}
+                    {% if myFavoriteRecipes %}
+                        {% for favoriteRecipe in myFavoriteRecipes %}
+                        <a class="mini-recipe-card" href="/single_recipe?recipeID={{favoriteRecipe.id}}">
+                            <p class="simple-text-small">{{ favoriteRecipe.name }}</p>
+                            <img src="{{ myFavoriteRecipesPictDict[ favoriteRecipe.id | int ] }}">
+                        </a>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
         </aside>
         <section class="todays-menu-section centered-card">
             <h1 class="page-title-text">Dienos meniu</h1>
             <div class="divider"></div>
             <ul class="day-menu-ul card-ul">
+                {% if listOfDayMealDictionaries %}
+                    {% for item in listOfDayMealDictionaries %}
+                        {% for daymeal in item %}
+                            
+                            <li class="day-menu-li card-li">
+                                <h2 class="bold-uppercase-normal">{{daymeal}}</h2>
+                                <div class="multiple-recipe-cards">
 
-                {% for item in listOfDayMealDictionaries %}
-                    {% for daymeal in item %}
-                        
-                        <li class="day-menu-li card-li">
-                            <h2 class="bold-uppercase-normal">{{daymeal}}</h2>
-                            <div class="multiple-recipe-cards">
+                                    {% for recipe in item[daymeal] %}
+                                    
+                                    <a class="imported-recipe recipe-card-cube" href="/single_recipe?recipeID={{recipe.recipeId}}">
+                                        <h3 class="text-unimportant-title">{{recipe.recipeName}}</h3>
+                                        <img src='{{ pictDict[ recipe.recipeId | int ] }}' />
+                                    </a>
 
-                                {% for recipe in item[daymeal] %}
-                                
-                                <a class="imported-recipe recipe-card-cube" href="/single_recipe?recipeID={{recipe.recipeId}}">
-                                    <h3 class="text-unimportant-title">{{recipe.recipeName}}</h3>
-                                    <img src='{{ pictDict[ recipe.recipeId | int ] }}' />
-                                </a>
+                                    {% endfor %}
 
-                                {% endfor %}
+                                    
+                                </div>
+                            </li>
 
-                                
-                            </div>
-                        </li>
-
-                    {% endfor %}
-                {% endfor %}
+                        {% endfor %}
+                    {% endfor %}                
+                {% endif %}
             </ul>
             <div class="divider"></div>
 
@@ -55,12 +58,14 @@
         <aside class="tommorows-menu-aside">
             <h4 class="bold-uppercase-small">Įvairūs receptai</h4>
             <ul class="recipes-representation-aside">
-                {% for variousRecipe in variousRecipes %}
-                    <a class="mini-recipe-card" href="/single_recipe?recipeID={{variousRecipe.id}}">
-                        <p class="simple-text-small">{{ variousRecipe.name }}</p>
-                        <img src="{{ variousRecipesPictDict[ variousRecipe.id | int ] }}">
-                    </a>
-                {% endfor %}
+                {% if variousRecipes %}
+                    {% for variousRecipe in variousRecipes %}
+                        <a class="mini-recipe-card" href="/single_recipe?recipeID={{variousRecipe.id}}">
+                            <p class="simple-text-small">{{ variousRecipe.name }}</p>
+                            <img src="{{ variousRecipesPictDict[ variousRecipe.id | int ] }}">
+                        </a>
+                    {% endfor %}
+                {% endif %}
             </ul>
         </aside>
     </div>

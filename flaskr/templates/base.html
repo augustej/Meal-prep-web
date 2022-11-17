@@ -38,10 +38,10 @@
     {% with messages= get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                {% if category == 'error' %}
+                {% if category == 'Error' %}
                 <p class= "flash-message {{category}} simple-text">{{message}}</p>
                 {% endif %}
-                {% if category == 'success' %}
+                {% if category == 'Success' %}
                 <p class= "flash-message {{category}} simple-text">{{message}}</p>
                 {% endif %}
             {% endfor%}
