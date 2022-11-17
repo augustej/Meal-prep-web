@@ -9,6 +9,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))  
     role_name = db.Column(db.String(100), db.ForeignKey('role.name'))
     chef_id = db.Column(db.Integer)
+    tokenTime = db.Column(db.String(1000))
+    expTime = db.Column(db.DateTime)
 
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

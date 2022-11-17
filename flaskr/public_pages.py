@@ -17,32 +17,46 @@ def home():
     if current_user.is_authenticated:
         modified_name = name_modification_for_greeting(current_user.name)
         # initialDbLoad()
-        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first().calendarData
-        convertedData = json.loads(currentCalendar)
         todays_day = datetime.now().weekday()
-        listOfRecipeIds = []
-        for weekday in convertedData:
-            if todays_day == list(convertedData.keys()).index(weekday):
-                listOfDayMealDictionaries = convertedData[weekday]
-                for day_meal in listOfDayMealDictionaries:
-                    for keys in day_meal:
-                        for recipe in day_meal[keys]:
-                            # save ID for every recipe into a list.
-                            listOfRecipeIds.append(recipe['recipeId'])
 
-        recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
-        pictDict = createPictDictWithModifiedPaths(recipesList)
+        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first()
+        if currentCalendar:
+            convertedData = json.loads(currentCalendar.calendarData)
+            listOfRecipeIds = []
+            for weekday in convertedData:
+                if todays_day == list(convertedData.keys()).index(weekday):
+                    listOfDayMealDictionaries = convertedData[weekday]
+                    for day_meal in listOfDayMealDictionaries:
+                        for keys in day_meal:
+                            for recipe in day_meal[keys]:
+                                # save ID for every recipe into a list.
+                                listOfRecipeIds.append(recipe['recipeId'])
+
+            recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
+            pictDict = createPictDictWithModifiedPaths(recipesList)
+        else:
+            pictDict = None
+            listOfDayMealDictionaries = None
 
         # my favorites aside
         myFavoriteRecipesData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).order_by(func.random()).limit(7).all()
-        myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData, 7, 0)
-        myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(myFavoriteRecipes)
+        if myFavoriteRecipesData:
+            myFavoriteRecipes = convertDbTableDataToQueryList(myFavoriteRecipesData, 7, 0)
+            myFavoriteRecipesPictDict = createPictDictWithModifiedPaths(myFavoriteRecipes)
+
+        else:
+            myFavoriteRecipesPictDict=None
+            myFavoriteRecipes=None
 
         # various recipes aside
         admin_ID = User.query.filter_by(role_name = 'admin').first().id
         variousRecipesData =  Recipe.query.filter_by(user_id=admin_ID).order_by(func.random()).limit(7).all()
-        variousRecipes = convertDbTableDataToQueryList(variousRecipesData, 7, 0)
-        variousRecipesPictDict = createPictDictWithModifiedPaths(variousRecipes)
+        if variousRecipesData:
+            variousRecipes = convertDbTableDataToQueryList(variousRecipesData, 7, 0)
+            variousRecipesPictDict = createPictDictWithModifiedPaths(variousRecipes)
+        else:
+            variousRecipes=None
+            variousRecipesPictDict=None
 
         return render_template('pages/private/personal_home.html', name=modified_name,
         listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict, 

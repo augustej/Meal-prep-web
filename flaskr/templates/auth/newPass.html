@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="block-content">
+    <section class="inner-block">
+        <h1 class="bold-uppercase-normal">Slaptažodžio atkūrimas</h1>
+        <form class="new-password-form reg-form" method="POST" action="/new-password">
+            <div class="outer">
+                <div class="inner">
+                    <label for="new-password" >Naujas slaptažodis:</label>
+                    <input class="simple-text" type="password" name="new-password" required placeholder="Slaptažodis"/>
+                </div> 
+                <div class="inner">
+                    <label for="new-password-confirm" >Pakartokite slaptažodį:</label>
+                    <input class="simple-text" type="password" name="new-password-confirm" required placeholder="Slaptažodis"/>
+                </div>
+                <input type="text" name="user" value="{{user.id}}" class="invisible"/>
+
+                
+            </div>
+            <button class="button" type="submit">Patvirtinti</button>
+        </form>
+    </section>
+
+</section>
+{% endblock %}
+
+{% block register %}
+            <li><a href="register">Registruotis</a></li>
+            <li><a href="login">Prisijungti</a></li>
+{% endblock %}
