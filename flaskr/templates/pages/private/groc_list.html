@@ -8,6 +8,8 @@
     <div class="page-inner-container groceries-page-inner-container">
 
         {% if groceriesList %}
+        {% elif role_name == 'family_member' %}
+            <h2 class="bold-uppercase-normal">Prekių sąrašas dar nesudarytas.</h2>
         {% else %}
                 <form class="shopping-time-form" method="POST" action="/confirm-recipes-for-shopping">
                     <h2 class="bold-uppercase-normal">Kuriam laikui norite apsipirkti?</h2>
@@ -135,10 +137,10 @@
                 {% endfor %}
             </ul>
 
-        <form action="/final-groceries-list" method="POST" class="new-list">
-            <input type="text" value="yes" class="invisible" name="delete-groceries-list">
-            <button class="button create-new-groc-list-button" type="submit">Naujas sąrašas</button>
-        </form>
+            <form action="/final-groceries-list" method="POST" class="new-list">
+                <input type="text" value="yes" class="invisible" name="delete-groceries-list">
+                <button class="button create-new-groc-list-button" type="submit">Naujas sąrašas</button>
+            </form>
         {% endif %}
 
 
@@ -148,6 +150,7 @@
 
 {% block register %}
     <li><a href="logout">Atsijungti</a></li>
+    <li><a href="profile">Profilis</a></li>
 {% endblock %}
 
 {% block js %}

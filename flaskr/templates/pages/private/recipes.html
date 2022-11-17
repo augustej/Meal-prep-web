@@ -8,6 +8,8 @@
     <div class="recipes-inner-container page-inner-container">
     
     {% if loggedIn == "True" %}
+    {% if user.role_name == 'chef' or user.role_name == 'admin'  %}
+
         <h2 class="bold-uppercase-normal">Mano receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
             {% for recipe in myRecipes %}
@@ -52,6 +54,7 @@
 
         <div class="divider"></div>
     {% endif %}
+    {% endif %}
 
         <h2 class="bold-uppercase-normal">Įvairūs receptai</h2>
         <div class="recipes-page-multiple-cards multiple-recipe-cards">
@@ -82,7 +85,8 @@
             <li><a href="register">Registruotis</a></li>
             <li><a href="login">Prisijungti</a></li>
 {% else %}
-    <li><a href="logout">Atsijungti</a></li>
+<li><a href="logout">Atsijungti</a></li>
+<li><a href="profile">Profilis</a></li>
 {% endif %}
 
 {% endblock %}

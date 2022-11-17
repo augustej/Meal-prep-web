@@ -4,6 +4,7 @@ var saveCalendarBtn = document.querySelector('.save-calendar')
 var calendarNameInputField = document.querySelector('#calendar-name')
 var recipeSearchInCalendarInputField = document.querySelector('.recipe-search-input-calendar')
 var planValue = JSON.parse(sessionStorage.getItem('plan'))
+var familyCalendar = document.querySelector('.familyCalendar')
 
 // on window load get items from sessionStorage
 getDataFromSessionStorage(planValue)
@@ -16,7 +17,21 @@ window.addEventListener('resize', (event) => {
     detectWrap('.week-day')
 });
 
+// on load, check if this is family member
+if  (familyCalendar){
+    if (familyCalendar.classList.contains('not-loaded')){
+        familyCalendar.classList.remove('not-loaded')
+        let calendarID = parseInt(familyCalendar.value)
+        sendGetRequestAwaitforResponse('/load-calendar-from-db?calendarID=', calendarID)
+            .then(data =>{
+                sessionStorage.setItem('plan', JSON.stringify(data))
+                getDataFromSessionStorage(planValue)
+            })
+    }
+}
+
 document.addEventListener('input', e =>{
+
     // search for recipes in calendar
     if (e.target == recipeSearchInCalendarInputField){
 

@@ -15,11 +15,14 @@ public_pages = Blueprint('public_pages', __name__)
 @public_pages.route('/')
 def home():
     if current_user.is_authenticated:
+        user = User.query.filter_by(id=current_user.id).first()
         modified_name = name_modification_for_greeting(current_user.name)
         # initialDbLoad()
         todays_day = datetime.now().weekday()
-
-        currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first()
+        if user.role_name == 'family_member':
+            currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.chef_id).first()
+        else:
+            currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.id).first()
         if currentCalendar:
             convertedData = json.loads(currentCalendar.calendarData)
             listOfRecipeIds = []
@@ -61,7 +64,8 @@ def home():
         return render_template('pages/private/personal_home.html', name=modified_name,
         listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict, 
         myFavoriteRecipes=myFavoriteRecipes, myFavoriteRecipesPictDict=myFavoriteRecipesPictDict,
-        variousRecipesPictDict=variousRecipesPictDict, variousRecipes=variousRecipes)
+        variousRecipesPictDict=variousRecipesPictDict, variousRecipes=variousRecipes, 
+        role_name=user.role_name)
     else:
         return render_template('pages/public/index.html')
 
@@ -87,7 +91,7 @@ def searchRecipe():
         offsetValue = queryNumber -1
 
         if current_user.is_authenticated:
-            allowedID = [current_user.id, admin_ID]
+            allowedID = [current_user.id, admin_ID, current_user.chef_id]
             listOfRecipesStartingWith = Recipe.query.filter(
                 or_(Recipe.name.ilike(f"%{recipeLower}%"), Recipe.name.ilike(f"%{recipeUpper}%")), 
                 Recipe.user_id.in_(allowedID) ).offset(offsetValue).limit(limitValue).all()
@@ -151,7 +155,7 @@ def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
     # check if recipe is allowed for this user
     admin_ID = User.query.filter_by(role_name = 'admin').first().id
     if current_user.is_authenticated:
-        allowedID = [current_user.id, admin_ID]
+        allowedID = [current_user.id, admin_ID, current_user.chef_id]
         RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
     else:
         RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id==admin_ID).offset(offsetValue).limit(limitValue).all()
@@ -199,11 +203,15 @@ def render_single_recipe():
     adminUserId = User.query.filter_by(role_name = 'admin').first().id
     if current_user.is_authenticated:
         loggedIn = "True"
+        user = User.query.filter_by(id=current_user.id).first()
         # protect recipes created by other users:
-        if not (recipeToVisualize.user_id == current_user.id or recipeToVisualize.user_id == adminUserId):
+        if not (recipeToVisualize.user_id == current_user.id or 
+                recipeToVisualize.user_id == adminUserId or
+                recipeToVisualize.user_id == current_user.chef_id):
             return redirect(url_for('private_pages.recipes'))
     else:
         loggedIn = "False"
+        user = None
         if not (recipeToVisualize.user_id == adminUserId):
             return redirect(url_for('private_pages.recipes'))
 
@@ -253,7 +261,7 @@ def render_single_recipe():
         measurmentDict[item.id] = item.name
 
     favoriteValue=""
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and not current_user.role_name == 'family_member':
         #check if recipe is favorited
         ifFavorited=db.session.query(favoriteRecipes).filter_by(recipe_id=recipeToVisualize.id, user_id=current_user.id).first()
         if ifFavorited:
@@ -275,7 +283,8 @@ def render_single_recipe():
         calories=kcalPerPortion,
         measurmentDict=measurmentDict,
         myRecipe = myRecipe,
-        loggedIn=loggedIn
+        loggedIn=loggedIn,
+        user=user
         )
 
 @public_pages.route('/various-recipes', methods=['GET'])

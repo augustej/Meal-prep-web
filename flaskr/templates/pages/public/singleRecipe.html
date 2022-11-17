@@ -11,7 +11,9 @@
         <div class="text-and-picture-display">
             <div class="heart-and-image">
                 {% if loggedIn == 'True' %}
+                {% if user.role_name == 'chef' or user.role_name == 'admin'  %}
                 <i class="fa-solid fa-heart favorite-heart{{ favoriteValue }}" id="heartID{{recipe.id}}"></i>
+                {% endif %}
                 {% endif %}
                 <div class="image-side-display">
                     {% if picturepath != "" %}
@@ -314,6 +316,7 @@
             <li><a href="login">Prisijungti</a></li>
 {% else %}
     <li><a href="logout">Atsijungti</a></li>
+    <li><a href="profile">Profilis</a></li>
 {% endif %}
 
 {% endblock %}

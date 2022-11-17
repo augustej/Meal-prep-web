@@ -1,12 +1,58 @@
 {% extends "base.html" %}
 
 {% block content%}
-<section class="block-content">
-    <h1>Profilis</h1>
-    <section class="inner-block">
-        
-        <p>Tekstas</p>
+<section class="profile-page page-outer-container">
+    <h1 class="wide-purple-bk page-title-text">Profilis</h1>
+    <div class="page-inner-container profile-inner-container">
+        {% if user.role_name == 'chef' or user.role_name == 'admin'  %}
+            <h2 class="curly-title-like">planuojantis narys</h2>
+            <p class="simple-text">Jei norite, galite pakviesti prisijungti kartu valgančius asmenis. </p>
+            <h3 class="bold-uppercase-normal"> Jūsų pakvietimu pasinaudoję nariai galės:</h3>
+            <ul>
+                <li>Matyti dienos meniu ir savaitės planą.</li>
+                <li>Matyti ir koreguoti prekių sąrašą.</li>
+                <li>Matyti Jūsų sukurtus receptus.</li>
+            </ul>
+            <h3 class="bold-uppercase-normal">Pakviesti nariai negalės:</h3>
+            <ul>
+                <li>Pridėti savo receptų.</li>
+                <li>Matyti ar koreguoti Jūsų mėgstamų receptų.</li>
+                <li>Koreguoti savaitės plano.</li>
+            </ul>
+            <form class="add-family-container" method="POST" action="/send-invitation-email">
+                <label for ="family-member-email" class="bold-uppercase-normal"><h3 class="bold-uppercase-normal">Įveskite valgytojo el.paštą</h3></label>
+                <input type="email" id="family-member-email" name="family-member-email" required/>
+                <input type="number" name="user" value="{{user.id}}" class="invisible"/>
+                <button class="button" type="submit">Pakviesti</button>
+            </form>
+        {% else %}
+            <h2 class="curly-title-like">Valgantis narys</h2>
+            <h3 class="bold-uppercase-normal"> Jūsų galite:</h3>
+            <ul>
+                <li>Matyti dienos meniu ir savaitės planą.</li>
+                <li>Matyti ir koreguoti prekių sąrašą.</li>
+                <li>Matyti Jus pakvietusio asmens sukurtus receptus.</li>
+            </ul>
+            <h3 class="bold-uppercase-normal">Jūs negalite:</h3>
+            <ul>
+                <li>Pridėti savo receptų.</li>
+                <li>Matyti ar koreguoti Jus pakvietusio asmens mėgstamų receptų.</li>
+                <li>Koreguoti savaitės plano.</li>
+            </ul>
+            <div class="spacer"></div>
+        {% endif %}
 
-    </section>
+</div>
+</section>
+{% endblock %}
 
-</section>{% endblock %}
+{% block register %}
+    <li><a href="logout">Atsijungti</a></li>
+    <li><a href="profile">Profilis</a></li>
+{% endblock %}
+
+
+
+{% block js %}
+    <script src=""></script>
+{% endblock %}

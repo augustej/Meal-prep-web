@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pakvietimas prisijungti prie Savaitės Meniu </title>
+
+</head>
+<body>
+    <h1 style="
+        font-family: 'Bitter', serif;
+        color: black;
+        text-transform: uppercase;
+        font-weight:700;
+        font-size: 0.8rem;
+        padding: 0.2em 0;"
+    >Pakvietimas prisijungti prie Savaitės Meniu</h1>
+    <p style="
+        font-size: 0.8rem;
+        padding: 0.2em 0; 
+        color:black; 
+        font-family: 'Bitter', serif;"
+    >Laba diena, </p>
+    <p style="
+        font-size: 0.8rem;
+        padding: 0; 
+        color:black; 
+        font-family: 'Bitter', serif;"
+    >{{ chef. name }} ({{ chef.email }}) pasidalino savo Savaitės Meniu su Jumis. Norėdami prisijungti paspauskite ant    
+        <a href="{{ link }}" style="
+            font-size: 0.8rem;
+            padding: 0; 
+            color:black; 
+            font-family: 'Bitter', serif;">nuorodos</a>.</p>
+    <p style="
+        font-size: 0.8rem;
+        padding: 0; 
+        color:black; 
+        font-family: 'Bitter', serif;"
+    > Ši nuoroda nukreips Jus į Savaitės Meniu puslapį, kur galėsite sukurti su {{ chef.email }} susijusią paskyrą.</p>
+    <p style="
+        font-size: 0.8rem;
+        padding: 0.2em 0; 
+        color:black; 
+        font-family: 'Bitter', serif;"
+    >Gražios ir skanios dienos Jums linki, </p>
+    <h3 style="
+        font-size: 2.5rem;
+        font-family: 'Comforter Brush', cursive;
+        text-transform: capitalize;
+        font-weight: 100;
+        color:var(--purple);
+        letter-spacing: 0.05em;
+        padding: 0;"
+    >Savaitės Meniu</h3>
+</body>
+</html>

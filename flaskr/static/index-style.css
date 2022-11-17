@@ -1833,3 +1833,38 @@ p.product-name-groceries{
     }
 
 }
+
+/* profile page */
+
+.profile-inner-container{
+    max-width: 600px;
+}
+
+.profile-page h2{
+    text-align: center;
+}
+
+.profile-page h3{
+margin-top: 1.5em;
+}
+
+.profile-page li{
+    list-style:inside;
+}
+
+.add-family-container input{
+    background-color: var(--white);
+    border: none;
+    box-shadow: var(--purpleboxshadow);
+    padding: 0.5em;
+    margin-right: 1em;
+}
+   
+.add-family-container button{
+    margin-bottom: 1.5em;
+}
+
+.spacer{
+    height: 2em;
+    width: 100%;
+}
