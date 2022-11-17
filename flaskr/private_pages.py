@@ -9,7 +9,8 @@ private_pages = Blueprint('private_pages', __name__)
 
 @private_pages.route('/profile')
 def profile():
-    return render_template('/pages/private/profile.html')
+    user= User.query.filter_by(id=current_user.id).first()
+    return render_template('/pages/private/profile.html', user=user)
 
 @private_pages.route('/calendar')
 @login_required
@@ -33,17 +34,27 @@ def calendar():
         foodtypeName = item.name
         foodtypeNames.append(foodtypeName)
     
+    user = User.query.filter_by(id=current_user.id).first()
+
     myCalendars = Calendars.query.filter(Calendars.user_id==current_user.id, 
         Calendars.calendarName!='currentCalendar').all()
-
+    if user.role_name == 'family_member':
+        familyCalendar = Calendars.query.filter(Calendars.user_id==current_user.chef_id, 
+        Calendars.calendarName=='currentCalendar').first()
+    else:
+        familyCalendar = None
     return render_template('/pages/private/calendar.html', 
-    CoursetypeNames=CoursetypeNames,
-    foodtypeNames=foodtypeNames, myCalendars=myCalendars)
+    CoursetypeNames=CoursetypeNames, role_name=user.role_name,
+    foodtypeNames=foodtypeNames, myCalendars=myCalendars, familyCalendar=familyCalendar)
 
 @private_pages.route('/groc_list')
 @login_required
 def groclist():
-    groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
+    user = User.query.filter_by(id=current_user.id).first()
+    if user.role_name == 'family_member':
+        groceriesList = Groceries.query.filter_by(user_id=current_user.chef_id).all()
+    else:
+        groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
     relatedProductsDict = {}
     if groceriesList:
         for productItem in groceriesList:
@@ -51,7 +62,7 @@ def groclist():
             productItemName = Product.query.filter_by(id=productItemID).first().name
             relatedProductsDict[productItem.id] = productItemName
     return render_template('/pages/private/groc_list.html', 
-    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList)
+    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList, role_name=user.role_name)
 
 @private_pages.route('/groceries-check-update', methods=['POST'])
 @login_required
@@ -61,13 +72,14 @@ def updateCheckStatus():
         checkedItemsList = json.loads(checkedItemsListData)
         for key in checkedItemsList:
             groceriesId= key
-            groceriesToUpdate = Groceries.query.filter_by(id=groceriesId).first()
-            if checkedItemsList[groceriesId] == 'checked':
-                groceriesToUpdate.check_status = 1
-            else:
-                groceriesToUpdate.check_status = 0
-            db.session.add(groceriesToUpdate)
-        db.session.commit()
+            if availableForFamily(Groceries, groceriesId):
+                groceriesToUpdate = Groceries.query.filter_by(id=groceriesId).first()
+                if checkedItemsList[groceriesId] == 'checked':
+                    groceriesToUpdate.check_status = 1
+                else:
+                    groceriesToUpdate.check_status = 0
+                db.session.add(groceriesToUpdate)
+            db.session.commit()
     return Response('', 200)
 
 @private_pages.route('/confirm-recipes-for-shopping', methods=['POST'])
@@ -184,9 +196,10 @@ def add_ingredient():
     if request.method == "POST":
 
         data = request.get_json()
+
         for keys in data:
-            if userCanModify(Recipe, int(keys)) == True:
-                idOfRecipeToModify = int(keys)
+            idOfRecipeToModify = int(keys)
+
         recipeToAddIngredientTo = Recipe.query.filter_by(id=idOfRecipeToModify).first()
 
         if recipeToAddIngredientTo == None:
@@ -283,6 +296,7 @@ def recipes():
 
         if current_user.is_authenticated:
             loggedIn = 'True'
+            user = User.query.filter_by(id=current_user.id).first()
             myRecipes = Recipe.query.filter_by(user_id=current_user.id).order_by(-Recipe.id).limit(5).all()
             myfavoriteRecipesdata = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
             myfavoriteRecipes = convertDbTableDataToQueryList(myfavoriteRecipesdata, 5, 0)
@@ -297,11 +311,12 @@ def recipes():
             myRecipes = None
             myfavoriteRecipes = None
             myRecipesPictDict = None
+            user = None
         adminRecipesPictDict = createPictDictWithModifiedPaths(adminRecipes)
         
     return render_template('pages/private/recipes.html', adminRecipes=adminRecipes, myRecipes=myRecipes, 
         myfavoriteRecipes=myfavoriteRecipes, myRecipesPictDict=myRecipesPictDict, loggedIn=loggedIn,
-        adminRecipesPictDict=adminRecipesPictDict)
+        adminRecipesPictDict=adminRecipesPictDict, user=user)
 
 @private_pages.route('/my-recipes', methods=['GET'])
 @login_required
@@ -413,9 +428,13 @@ def deleteCalendarFromDb(id):
 def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')
-        if userCanModify(Calendars, calendarIDtoLoad) == True:
+        if availableForFamily(Calendars, calendarIDtoLoad) == True:
             calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
     return calendarToLoad
+
+# @private_pages.route('/load-calendar-for-family-member', methods=['POST'])
+# def familyMemberCalendar():
+#     return 
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -482,3 +501,9 @@ def userCanModify(model, itemid):
     else:
         return False
 
+def availableForFamily(model, itemid):
+    userId = model.query.filter_by(id=itemid).first().user_id
+    if userId == current_user.id or userId == current_user.chef_id:
+        return True
+    else:
+        return False

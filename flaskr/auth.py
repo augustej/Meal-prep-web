@@ -40,12 +40,33 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'GET':
+        chefID = request.args.get('user')
+        # simple user access
+        if not chefID:
+            return render_template('auth/signup.html', role_name='chef')
+
+        # if person is accessing via chef's link
+        chef = User.query.filter_by(id=int(chefID)).first()
+        if not chef:
+            return Response("User to connect your account to was not found.", 404)
+        token = request.args.get('token')
+        if check_password_hash(token, (chef.email + chef.name)):
+            print(int(chefID), "int(chefID) 55eilute auth")
+            return render_template('auth/signup.html', role_name='family_member', chef_id=int(chefID))
+        else:
+            return Response("Connection not allowed", 404)
+
     if request.method == 'POST':
         email = request.form.get('signup-email')
         name = request.form.get('signup-name')
         password1 = request.form.get('signup-password1')
         password2 = request.form.get('signup-password2')
         user = User.query.filter_by(email=email).first()
+        role_name = request.form.get('role_name')
+        chef_id= request.form.get('chef_id')
+        if not chef_id:
+            chef_id=0
 
         if user:          
             flash('El. pašto adresas užimtas.', category="Error")
@@ -59,12 +80,13 @@ def signup():
             flash('Slaptažodio ilgis turi būti bent 7 simboliai.', category="Error")
         else:
             flash('Registracija sėkminga', category="Success")
-            new_user = User(email=email, name=name, password=generate_password_hash(password1))    
+            new_user = User(email=email, name=name, password=generate_password_hash(password1), 
+            role_name=role_name, chef_id=chef_id)    
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('auth.login'))
     
-    return render_template('auth/signup.html')
+        return render_template('auth/signup.html', role_name=role_name, chef_id=chef_id)
 
 @auth.route('/forgotten-pass', methods=['GET'])
 def forgottenPass():
@@ -155,3 +177,22 @@ def name_modification_for_greeting(name):
     else:
         modified_name = name
     return modified_name
+
+@auth.route('/send-invitation-email', methods=['POST'])
+def sendInvitation():
+    if request.method == 'POST':
+        familyMemberEmail = request.form.get('family-member-email')
+        chefID = request.form.get('user') 
+        print(chefID, "CHEF ID")
+        chef = User.query.filter_by(id=chefID).first()
+        token = generate_password_hash(chef.email + chef.name)
+        print(chef.email, "chef.email")
+        print(chef.name, "chef.name")
+        link = request.url_root + 'register?user=' + str(chefID) + '&token=' + token
+        msg = Message()
+        msg.subject = "Pakvietimas prisijungti prie Savaitės Meniu"
+        msg.recipients = [familyMemberEmail]
+        msg.sender = ("savaites.meniu.planas@gmail.com")
+        msg.html = render_template('/auth/invite_email.html', link=link, chef=chef)
+        mail.send(msg)
+    return redirect(url_for('private_pages.profile'))

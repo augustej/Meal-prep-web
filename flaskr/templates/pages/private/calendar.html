@@ -9,7 +9,11 @@
         <ul class="recipes-representation-bar multiple-recipe-cards"></ul>
     </div>
     <div class="calendar-inner-container page-inner-container">
-        
+
+        {% if familyCalendar %}
+            <input class="invisible familyCalendar not-loaded" name="calendarID" value="{{ familyCalendar.id }}">
+        {% endif %}
+
         <div class="filters">
             {% for foodtype in foodtypeNames %}
             <button class="filter-item simple-text-small recipetype-btn" name="{{foodtype}}" type="button">{{foodtype}}</button>
@@ -41,7 +45,8 @@
                     <ul class="week-day-ul" name="Monday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -53,7 +58,8 @@
                     <ul class=" week-day-ul" name="Tuesday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -65,7 +71,8 @@
                     <ul class=" week-day-ul" name="Wednesday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">                                
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -77,7 +84,8 @@
                     <ul class=" week-day-ul" name="Thursday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -89,7 +97,8 @@
                     <ul class=" week-day-ul" name="Friday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -101,7 +110,8 @@
                     <ul class=" week-day-ul" name="Saturday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -113,7 +123,8 @@
                     <ul class=" week-day-ul" name="Sunday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button">+</button>
+                                <button class="add-item-to-calendar" type="button"
+                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
                             </li>
                         {% endfor %}
 
@@ -123,28 +134,32 @@
         </div>
     </div>
 
-    <div class="save-calendar-container wide-purple-bk">
-        <div class="calendar-name-label-and-input">
-            <label for="calendar-name" class="text-unimportant-title">Savaitės plano pavadinimas</label>
-            <input type="text" name="calendar-name" id="calendar-name">
+    {% if role_name == 'chef' or role_name == 'admin' %}
+
+        <div class="save-calendar-container wide-purple-bk">
+            <div class="calendar-name-label-and-input">
+                <label for="calendar-name" class="text-unimportant-title">Savaitės plano pavadinimas</label>
+                <input type="text" name="calendar-name" id="calendar-name">
+            </div>
+            <button class="button save-calendar" type="button" disabled>Išsaugoti planą</button>
+            <button class='button-thin cleanCurrentCalendar' type="button">Išvalyti planą</button>
         </div>
-        <button class="button save-calendar" type="button" disabled>Išsaugoti planą</button>
-        <button class='button-thin cleanCurrentCalendar' type="button">Išvalyti planą</button>
-    </div>
 
-    <div class="my-previous-calendars-container">
-        <h3 class="bold-uppercase-normal">Mano planai</h3>
-        <ul class="my-calendars-list">
+        <div class="my-previous-calendars-container">
+            <h3 class="bold-uppercase-normal">Mano planai</h3>
+            <ul class="my-calendars-list">
 
-        {% for calendarItem in myCalendars %}
-            <li class="saved-calendar-item" name="calendarID={{calendarItem.id}}">
-                <p class="text-unimportant-title">{{ calendarItem.calendarName }}</p>
-                <button class='saved-calendar-button deleteCalendarFromDb' type="button">Ištrinti planą</button>
-                <button class='saved-calendar-button loadCalendarFromDbToSession' type="button">Užkrauti į šią savaitę</button>
-            </li>
-        {% endfor%}
-        </ul>
-    </div>
+            {% for calendarItem in myCalendars %}
+                <li class="saved-calendar-item" name="calendarID={{calendarItem.id}}">
+                    <p class="text-unimportant-title">{{ calendarItem.calendarName }}</p>
+                    <button class='saved-calendar-button deleteCalendarFromDb' type="button">Ištrinti planą</button>
+                    <button class='saved-calendar-button loadCalendarFromDbToSession' type="button">Užkrauti į šią savaitę</button>
+                </li>
+            {% endfor%}
+            </ul>
+        </div>
+
+    {% endif %}
 
 </section>
 
@@ -152,6 +167,7 @@
 
 {% block register %}
     <li><a href="logout">Atsijungti</a></li>
+    <li><a href="profile">Profilis</a></li>
 {% endblock %}
 
 {% block js %}
