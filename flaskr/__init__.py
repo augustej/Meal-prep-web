@@ -23,7 +23,6 @@ def create_app():
     app.config['MAIL_USERNAME'] = 'savaites.meniu.planas@gmail.com'
     app.config['MAIL_PASSWORD'] = 'mcwdzlttcfluwusm'
     mail.init_app(app)
-    
     db.init_app(app)
 
     from .public_pages import public_pages

@@ -3,6 +3,8 @@ from flask_login import current_user, login_required
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os, math, json
 from werkzeug.utils import secure_filename
+from PIL import Image
+from datetime import datetime
 from .model import Coursetype, User, Product, Calendars, Groceries, Foodtype, favoriteRecipes, productMeasurements, Measurement, recipeIngredients, productFoodtypes, Ingredient,recipeCoursetype, Recipe, recipeTypes
 
 private_pages = Blueprint('private_pages', __name__)
@@ -258,7 +260,14 @@ def add_recipe():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filePath=os.path.join(UPLOAD_FOLDER, filename)
+                fileAlreadyExists = os.path.isfile(filePath)
+                if fileAlreadyExists:
+                    filename = str(datetime.now().date()) + filename
+                    filePath=os.path.join(UPLOAD_FOLDER, filename)
                 file.save(filePath)
+                img = Image.open(filePath)
+                img.thumbnail((1000,1000))
+                img.save(filePath)
                 current_recipe.picture = filePath    
 
     current_recipe.name = name
