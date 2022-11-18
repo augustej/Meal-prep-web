@@ -37,7 +37,11 @@ else{
 // highlight todays column
 let allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
 let weekdayArray = Array.from(allWeekdaysColumns)
-let todaysWeekdayIndex = date.getDay()
+let getDayIndex = date.getDay()
+let todaysWeekdayIndex = 6
+if (getDayIndex != 0){
+    todaysWeekdayIndex = getDayIndex - 1
+}
 let UlToModiify = weekdayArray[todaysWeekdayIndex]
 UlToModiify.parentElement.classList.add('todays-day-in-calendar')
 UlToModiify.previousElementSibling.classList.add('todays-day-in-calendar-title')
