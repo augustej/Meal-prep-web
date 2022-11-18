@@ -15,7 +15,6 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
-        vartotojas = User.query.all()
         return render_template('auth/login.html')
     else:
         typed_email = request.form.get('login-email')
@@ -52,7 +51,6 @@ def signup():
             return Response("User to connect your account to was not found.", 404)
         token = request.args.get('token')
         if check_password_hash(token, (chef.email + chef.name)):
-            print(int(chefID), "int(chefID) 55eilute auth")
             return render_template('auth/signup.html', role_name='family_member', chef_id=int(chefID))
         else:
             return Response("Connection not allowed", 404)
@@ -145,12 +143,10 @@ def newPassword():
         user = User.query.filter_by(id=userID).first()
         if password1 != password2:
             flash('Slaptažodžiai nesutampa', category="Error")
-            print("slap nesutampta")
             return render_template('auth/newPass.html', user=user)
 
         elif len(password1) < 7:
             flash('Slaptažodio ilgis turi būti bent 7 simboliai.', category="Error")
-            print("slap per trumpi")
             return render_template('auth/newPass.html', user=user)
 
         else:
@@ -183,11 +179,8 @@ def sendInvitation():
     if request.method == 'POST':
         familyMemberEmail = request.form.get('family-member-email')
         chefID = request.form.get('user') 
-        print(chefID, "CHEF ID")
         chef = User.query.filter_by(id=chefID).first()
         token = generate_password_hash(chef.email + chef.name)
-        print(chef.email, "chef.email")
-        print(chef.name, "chef.name")
         link = request.url_root + 'register?user=' + str(chefID) + '&token=' + token
         msg = Message()
         msg.subject = "Pakvietimas prisijungti prie Savaitės Meniu"

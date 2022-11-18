@@ -29,7 +29,6 @@ document.addEventListener('click', e=>{
             let queryNumber =  parseInt(sessionStorage.getItem("queryNumber"));
             let modifiedQueryNumber = queryNumber + 1
             sessionStorage.setItem("queryNumber", modifiedQueryNumber)
-            console.log(modifiedQueryNumber, "modifiedQueryNumber")
             filterQueryToDb(inputValue, modifiedQueryNumber, 'search').then(data =>{
                 createRecipesRepresentation(data, 'search')
             })

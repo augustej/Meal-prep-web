@@ -137,9 +137,7 @@ modal.addEventListener("click", e => {
         if (confirmRecipeBtn.getAttribute('name')){
             IdOfRecipe = confirmRecipeBtn.getAttribute('name').slice('recipeID='.length)
         } else{IdOfRecipe = 0}
-        console.log("pries add-ingredient")
         addIngredientToTable(ingredientDictList, IdOfRecipe).then((data) =>{
-            console.log(data)
             addRecipeForm.submit()
         })
        

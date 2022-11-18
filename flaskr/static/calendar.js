@@ -39,11 +39,8 @@ let allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
 let weekdayArray = Array.from(allWeekdaysColumns)
 let todaysWeekdayIndex = date.getDay()
 let UlToModiify = weekdayArray[todaysWeekdayIndex]
-console.log(UlToModiify)
 UlToModiify.parentElement.classList.add('todays-day-in-calendar')
 UlToModiify.previousElementSibling.classList.add('todays-day-in-calendar-title')
-
-
 
 document.addEventListener('input', e =>{
 
@@ -454,10 +451,13 @@ function showAndHideWrappedElements(show)
 function getDataFromSessionStorage(SessionStoragedata){
 
     let allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
+    var dailyRecipesDict = {}
 
     for (weekdayName in SessionStoragedata){
         allWeekdaysColumns.forEach(oneWeekdayColumn =>{
             if (oneWeekdayColumn.getAttribute('name') == weekdayName){
+                var daysRecipesList = []
+
                 let calendarCellsOfOneColumn = oneWeekdayColumn.querySelectorAll('.calendar-cell')
                 for (calendarCell of calendarCellsOfOneColumn){
                     let CoursetypeofCalendarCell = calendarCell.getAttribute('name')
@@ -469,6 +469,7 @@ function getDataFromSessionStorage(SessionStoragedata){
                             for (recipeItem of StorageArrayToGetDataFrom){
                                 let nameOfRecipe = recipeItem['recipeName']
                                 let idOfRecipe = recipeItem['recipeId']
+                                daysRecipesList.push(idOfRecipe)
                                 createDOMElementsInCalendar (calendarCell, idOfRecipe, nameOfRecipe)
                                 if (StorageArrayToGetDataFrom.length > 2){
                                     let button = calendarCell.querySelector('.add-item-to-calendar')
@@ -478,9 +479,18 @@ function getDataFromSessionStorage(SessionStoragedata){
                         }
                     }
                 }
+                dailyRecipesDict[weekdayName] = daysRecipesList
             }
         })
     }
+    getDailyCalories(dailyRecipesDict).then(data =>{
+        for (weekday of Object.keys(data)){
+            let dayToAddCalories = document.querySelector(`.${weekday}-calories`)
+            let pEl = document.createElement('p')
+            pEl.appendChild(document.createTextNode(data[weekday]))
+            dayToAddCalories.appendChild(pEl)
+        }
+    })
 }
 
 function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, recipeNameforCreat){
@@ -523,3 +533,14 @@ async function loadCalendarToDb(jsonBody){
     return response
 }
 
+async function getDailyCalories(jsonBody){
+    let response = await fetch('/get-daily-calories',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response.json()
+}

@@ -43,6 +43,7 @@ def calendar():
         Calendars.calendarName=='currentCalendar').first()
     else:
         familyCalendar = None
+
     return render_template('/pages/private/calendar.html', 
     CoursetypeNames=CoursetypeNames, role_name=user.role_name,
     foodtypeNames=foodtypeNames, myCalendars=myCalendars, familyCalendar=familyCalendar)
@@ -452,13 +453,26 @@ def loadCalendarFromDb():
             calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
     return calendarToLoad
 
+@private_pages.route('/get-daily-calories', methods=['POST'])
+@login_required
+def getDailyCalories():
+    if request.method == 'POST':
+        data = request.get_json()
+        responseDict = {}
+        for key in data:
+            caloriesSum = 0
+            for recipeId in data[key]:
+                singleRecipeCalories = calculateCalories(recipeId)
+                caloriesSum += singleRecipeCalories
+            responseDict[key] = caloriesSum
+        return responseDict
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
-    # ar veikia su <recipe list>?
     recipeIDList = []
     for recipeItem in  dataRowWithRecipeID:
         recipeID = recipeItem.recipe_id
@@ -524,3 +538,23 @@ def availableForFamily(model, itemid):
         return True
     else:
         return False
+
+def calculateCalories(recipeID):
+    recipeToVisualize = Recipe.query.filter_by(id=recipeID).first()
+    # calculate calories of a recipe
+    ingredientItems = recipeToVisualize.recipeIngredients
+    portionsOfRecipe =recipeToVisualize.portions
+    kcalOfRecipe = 0
+    for ingredient in ingredientItems:
+        idofproduct = ingredient.product_id
+        idofMeasurm = ingredient.measurement_id
+        ingredientAmount = ingredient.amount
+        gramKoeficient = db.session.query(productMeasurements).filter_by(
+            product_measurement_id=idofMeasurm, product_id=idofproduct).first(
+            ).product_conversion_to_gram
+        kcalofproductgram = Product.query.filter_by(id=idofproduct).first().kcal
+        kcalKoeficient = kcalofproductgram * gramKoeficient
+        kcalOfIngredient = kcalKoeficient * ingredientAmount
+        kcalOfRecipe += kcalOfIngredient
+    kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)
+    return kcalPerPortion
