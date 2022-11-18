@@ -12,7 +12,6 @@ window.addEventListener('load', event =>{
         var portionsInputField = document.querySelector('#default-portions-for-all')
         portionsInputField.addEventListener('input', e=>{
             let inputDefaultValue = portionsInputField.value
-            console.log(inputDefaultValue)
             let allInputsForPortions = document.querySelectorAll('.portions-of-recipe')
             allInputsForPortions.forEach(portionField =>{
                 portionField.setAttribute('value', inputDefaultValue)

@@ -220,22 +220,7 @@ def render_single_recipe():
     if fullPicturePath:
         modifiedPicturePath = '..' + fullPicturePath.split("flaskr")[1]
 
-    # calculate calories of a recipe
-    ingredientItems = recipeToVisualize.recipeIngredients
-    portionsOfRecipe =recipeToVisualize.portions
-    kcalOfRecipe = 0
-    for ingredient in ingredientItems:
-        idofproduct = ingredient.product_id
-        idofMeasurm = ingredient.measurement_id
-        ingredientAmount = ingredient.amount
-        gramKoeficient = db.session.query(productMeasurements).filter_by(
-            product_measurement_id=idofMeasurm, product_id=idofproduct).first(
-            ).product_conversion_to_gram
-        kcalofproductgram = Product.query.filter_by(id=idofproduct).first().kcal
-        kcalKoeficient = kcalofproductgram * gramKoeficient
-        kcalOfIngredient = kcalKoeficient * ingredientAmount
-        kcalOfRecipe += kcalOfIngredient
-    kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)
+    kcalPerPortion = calculateCalories(IDofRecipe)
 
     # modify recipe instructions to get each row
     sentenceList = []
@@ -421,3 +406,22 @@ def createPictDictWithModifiedPaths(recipeList):
         myRecipesPictDict[singlerecipe.id]=modifiedPicturePath
     return myRecipesPictDict
 
+def calculateCalories(recipeID):
+    recipeToVisualize = Recipe.query.filter_by(id=recipeID).first()
+    # calculate calories of a recipe
+    ingredientItems = recipeToVisualize.recipeIngredients
+    portionsOfRecipe =recipeToVisualize.portions
+    kcalOfRecipe = 0
+    for ingredient in ingredientItems:
+        idofproduct = ingredient.product_id
+        idofMeasurm = ingredient.measurement_id
+        ingredientAmount = ingredient.amount
+        gramKoeficient = db.session.query(productMeasurements).filter_by(
+            product_measurement_id=idofMeasurm, product_id=idofproduct).first(
+            ).product_conversion_to_gram
+        kcalofproductgram = Product.query.filter_by(id=idofproduct).first().kcal
+        kcalKoeficient = kcalofproductgram * gramKoeficient
+        kcalOfIngredient = kcalKoeficient * ingredientAmount
+        kcalOfRecipe += kcalOfIngredient
+    kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)
+    return kcalPerPortion

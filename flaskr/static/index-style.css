@@ -1399,7 +1399,7 @@ aside h4{
 .first-column{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     max-width: 150px;
     min-width: 100px;
@@ -1611,6 +1611,11 @@ aside h4{
     color:white;
 }
 
+.calories-cell{
+    padding: 1em;
+    border-right: 1px solid var(--grey);
+}
+
 @media (max-width: 700px){
     .save-calendar-container{
         flex-direction: column;
@@ -1718,6 +1723,10 @@ aside h4{
     align-items: stretch;
 }
 
+.groceries-information-text{
+    padding: 1em;
+}
+
 .recipes-confirmation-form button{
     max-width: 400px;
     margin: 1em auto;
@@ -1780,6 +1789,9 @@ aside h4{
 
 .default-portions-for-all{
     margin-right:2em;
+    font-weight: 600;    
+    background-color: var(--brgrey);
+    box-shadow:1px 0px 2px var(--textgrey);
 }
 
 .groceries-item-in-list{
