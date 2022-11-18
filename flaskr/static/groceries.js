@@ -28,65 +28,98 @@ window.addEventListener('load', event =>{
     if (window.location.href == `${window.location.origin}/groc_list`){
         var groceriesDictForCheckboxes = {}
         let allGroceriesItems = document.querySelectorAll('.groceries-item-in-list')
+        
+        // update sessionStorage from db FIRST
+        getChecklistFromDb().then( data =>{
+            if (Object.keys(data).length != 0){
+                sessionStorage.setItem('groceriesDictForCheckboxes', JSON.stringify(data))
+            }
 
-        if (allGroceriesItems.length > 1){
-            allGroceriesItems.forEach(grocItem =>{
-                let groceriesItemname = grocItem.getAttribute('name')
-                let groceriesItemID = groceriesItemname.slice('groceries-itemID'.length)
-                if (sessionStorage.getItem('groceriesDictForCheckboxes')){
-                    groceriesDictForCheckboxes = JSON.parse(sessionStorage.getItem('groceriesDictForCheckboxes'))
-                    if (groceriesDictForCheckboxes[groceriesItemID] == 'checked')
-                    {
-                        if (!grocItem.classList.contains('line-through')){
-                            grocItem.classList.add('line-through')
+            if (allGroceriesItems.length > 0){
+                allGroceriesItems.forEach(grocItem =>{
+                    let groceriesItemname = grocItem.getAttribute('name')
+                    let groceriesItemID = groceriesItemname.slice('groceries-itemID'.length)
+                    if (sessionStorage.getItem('groceriesDictForCheckboxes')){
+                        groceriesDictForCheckboxes = JSON.parse(sessionStorage.getItem('groceriesDictForCheckboxes'))
+                        if (groceriesDictForCheckboxes[groceriesItemID] == 'checked')
+                        {
+                            if (!grocItem.classList.contains('line-through')){
+                                grocItem.classList.add('line-through')
+                                let checkbox = grocItem.querySelector('.groceries-checkbox')
+                                checkbox.setAttribute('checked', 'True')
+                            }
                         }
                     }
-                }
-                // create sessionStorage
-                else{
-                    groceriesDictForCheckboxes[groceriesItemID] = "unchecked"
-                }
-            })
+                    // create sessionStorage
+                    else{
+                        groceriesDictForCheckboxes[groceriesItemID] = "unchecked"
+                    }
+                })
+            }
             sessionStorage.setItem('groceriesDictForCheckboxes', JSON.stringify(groceriesDictForCheckboxes))
-        }
+        })
+            
     }
-
+    
 })
 
 document.addEventListener('click', e=>{
-    // listen for clicks on checkboxes 
+    // listen for clicks on groceries checkboxes 
     allCheckboxes.forEach(checkbox =>{
         if (e.target == checkbox){
             let liElementOfProduct = checkbox.parentElement
             let IDofItem = liElementOfProduct.getAttribute('name').slice('groceries-itemID'.length)
             let groceriesDictForCheckboxes = JSON.parse(sessionStorage.getItem('groceriesDictForCheckboxes'))
-            // create click-unclick functionality
-            if (groceriesDictForCheckboxes[IDofItem] == 'checked'){
-                groceriesDictForCheckboxes[IDofItem] = 'unchecked'
-                liElementOfProduct.classList.remove('line-through')
+
+            // if session storage checked-uncheck is already created
+            if (groceriesDictForCheckboxes != null){
+                if (groceriesDictForCheckboxes[IDofItem] == 'checked'){
+                    // if person clicked on already checked element - uncheck it
+                    groceriesDictForCheckboxes[IDofItem] = 'unchecked'
+                    liElementOfProduct.classList.remove('line-through')
+                }
+                else{
+                    // if person clicked on NOT checked element - check it
+                    groceriesDictForCheckboxes[IDofItem] = 'checked'
+                    liElementOfProduct.classList.add('line-through')
+                }
             }
+            // if session storage checked-uncheck is NOT created
             else{
-                groceriesDictForCheckboxes[IDofItem] = 'checked'
-                liElementOfProduct.classList.add('line-through')
+                groceriesDictForCheckboxes = {}
             }
+            // update session Storage in any case
             sessionStorage.setItem('groceriesDictForCheckboxes', JSON.stringify(groceriesDictForCheckboxes))
-            
+            updateCheckStatus(JSON.stringify(groceriesDictForCheckboxes))
         }
     })
-    // listen for cerate new list button
+    // listen for create new list button
     if (e.target == newGroceriesList){
         sessionStorage.removeItem('groceriesDictForCheckboxes')
     }
 })
 
-// async function loadChecklistToDb(jsonBody){
-//     let response = await fetch('/load-checklist-to-db',
-//         {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//                 },
-//             body: JSON.stringify(jsonBody)
-//         })
-//     return response
-// }
+async function getChecklistFromDb(){
+    let jsonBody = {}
+    let response = await fetch('/get-checklist-from-db',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response.json()
+}
+
+async function updateCheckStatus(jsonBody){
+    let response = await fetch('/groceries-check-update',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify(jsonBody)
+        })
+    return response
+}

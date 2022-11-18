@@ -75,14 +75,6 @@ window.addEventListener( "load", event =>{
         loadCalendarToDb(jsonBody)
     }
 
-    if ((`${window.location.origin}/groc_list` == window.location.href) || 
-        (`${window.location.origin}/groc_list` == document.referrer)) {
-        
-        if (sessionStorage.getItem('groceriesDictForCheckboxes') != null ){
-            let checkedGroceriesDict = sessionStorage.getItem('groceriesDictForCheckboxes')
-            updateCheckStatus(checkedGroceriesDict)
-        }
-    }
 })
 
 async function loadCalendarToDb(jsonBody){
@@ -96,19 +88,6 @@ async function loadCalendarToDb(jsonBody){
         })
     return response
 }
-
-async function updateCheckStatus(jsonBody){
-    let response = await fetch('/groceries-check-update',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(jsonBody)
-        })
-    return response
-}
-
 
 
 function createSessionStorageTemplate(){

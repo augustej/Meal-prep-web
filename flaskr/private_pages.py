@@ -82,6 +82,26 @@ def updateCheckStatus():
             db.session.commit()
     return Response('', 200)
 
+
+@private_pages.route('/get-checklist-from-db', methods=['POST'])
+@login_required
+def getChecklistFromDb():
+    if request.method == 'POST':
+        user = User.query.filter_by(id=current_user.id).first()
+        responseDict = {}
+        if user.role_name == 'family_member':
+            groceriesList = Groceries.query.filter_by(user_id=current_user.chef_id).all()
+        else:
+            groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
+        for Item in groceriesList:
+            groceriesID = Item.id
+            if Item.check_status == 0:
+                groceriesStatus = 'unchecked'
+            else:
+                groceriesStatus = 'checked'
+            responseDict[groceriesID] = groceriesStatus
+        return responseDict
+
 @private_pages.route('/confirm-recipes-for-shopping', methods=['POST'])
 @login_required
 def createGroceriesList():
@@ -432,9 +452,6 @@ def loadCalendarFromDb():
             calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
     return calendarToLoad
 
-# @private_pages.route('/load-calendar-for-family-member', methods=['POST'])
-# def familyMemberCalendar():
-#     return 
 
 def allowed_file(filename):
     return '.' in filename and \
