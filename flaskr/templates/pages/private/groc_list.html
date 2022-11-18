@@ -126,21 +126,19 @@
                     {% set x = groceriesItem.id %}
                     
                     <li class='groceries-item-in-list' name="groceries-itemID{{x}}">
-                        <input type="checkbox" class="groceries-checkbox" 
-                            {% if groceriesItem.check_status == 1 %} 
-                                checked 
-                            {% endif %}
-                        >
+                        <input type="checkbox" class="groceries-checkbox">
                         <p class="bold-uppercase-small product-name-groceries">{{ relatedProductsDict[groceriesItem.id] }}</p>
                         <p class="simple-text-small">{{ groceriesItem.product_amount_in_grams }} g</p>
                     </li>
                 {% endfor %}
             </ul>
 
-            <form action="/final-groceries-list" method="POST" class="new-list">
-                <input type="text" value="yes" class="invisible" name="delete-groceries-list">
-                <button class="button create-new-groc-list-button" type="submit">Naujas sąrašas</button>
-            </form>
+            {% if role_name == 'chef' or role_name == 'admin' %}
+                <form action="/final-groceries-list" method="POST" class="new-list">
+                    <input type="text" value="yes" class="invisible" name="delete-groceries-list">
+                    <button class="button create-new-groc-list-button" type="submit">Naujas sąrašas</button>
+                </form>
+            {% endif %}
         {% endif %}
 
 

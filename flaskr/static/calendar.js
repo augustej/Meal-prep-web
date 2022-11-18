@@ -60,23 +60,6 @@ document.addEventListener('input', e =>{
             filterQueryToDb(inputValue, 1, 'search').then(data =>{
                 createRecipesRepresentation(data, 'search')
             })
-
-
-            // sendGetRequestAwaitforResponse('/recipe-search?input=', inputValue)
-            // .then(recipesList =>{
-            //     for (let recipeDict of recipesList){
-            //         let li = document.createElement('li')
-            //         li.setAttribute('class', 'mini-recipe-card')
-            //         let p = document.createElement('p')
-            //         p.appendChild(document.createTextNode(recipeDict['recipeName']))
-            //         p.setAttribute('class', `recipe-title recipe-id=${recipeDict['recipeId']} simple-text-small`)
-            //         let img = document.createElement('img')
-            //         img.setAttribute('src', recipeDict['recipePath'])
-            //         li.appendChild(p)
-            //         li.appendChild(img)
-            //         recipesRepresentationUl.appendChild(li)
-            //     }
-            // })
         }
         else{
             if (invisibleElement){invisibleElement.remove()}
