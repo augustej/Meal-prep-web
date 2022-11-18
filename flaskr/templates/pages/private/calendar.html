@@ -45,8 +45,11 @@
                     <ul class="week-day-ul" name="Monday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 
@@ -58,8 +61,11 @@
                     <ul class=" week-day-ul" name="Tuesday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 
@@ -70,9 +76,12 @@
                     <div class="calendar-first-row-cell">Trečiadienis</div> 
                     <ul class=" week-day-ul" name="Wednesday">
                         {% for coursetype in CoursetypeNames %}
-                            <li class="calendar-cell" name="{{coursetype}}">                                
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                            <li class="calendar-cell" name="{{coursetype}}">
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 
@@ -84,8 +93,11 @@
                     <ul class=" week-day-ul" name="Thursday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 
@@ -97,8 +109,11 @@
                     <ul class=" week-day-ul" name="Friday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}    
                             </li>
                         {% endfor %}
 
@@ -110,8 +125,11 @@
                     <ul class=" week-day-ul" name="Saturday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 
@@ -123,8 +141,11 @@
                     <ul class=" week-day-ul" name="Sunday">
                         {% for coursetype in CoursetypeNames %}
                             <li class="calendar-cell" name="{{coursetype}}">
-                                <button class="add-item-to-calendar" type="button"
-                                {% if role_name == 'family_member' %} disabled {% endif %}>+</button>
+                                {% if role_name == 'family_member' %}
+                                    <button class="add-item-to-calendar" type="button" disabled></button>
+                                {% else %}
+                                    <button class="add-item-to-calendar" type="button">+</button>
+                                {% endif %}
                             </li>
                         {% endfor %}
 

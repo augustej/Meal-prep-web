@@ -4,7 +4,7 @@ var searchInputField = document.querySelector('#search-input')
 
 searchInputField.addEventListener('input', e=>{
     // check if there are already recipes displayed and make it empty
-    searchedRecipesParentUL.innerHTML = ""
+    // searchedRecipesParentUL.innerHTML = ""
     let buttonForMoreItems = searchedRecipesParentUL.nextElementSibling
     if (buttonForMoreItems){
         buttonForMoreItems.parentElement.removeChild(buttonForMoreItems)        

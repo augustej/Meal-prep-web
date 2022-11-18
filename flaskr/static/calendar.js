@@ -6,16 +6,16 @@ var recipeSearchInCalendarInputField = document.querySelector('.recipe-search-in
 var planValue = JSON.parse(sessionStorage.getItem('plan'))
 var familyCalendar = document.querySelector('.familyCalendar')
 
-// on window load get items from sessionStorage
-getDataFromSessionStorage(planValue)
-
 // detects wrapped elements on window load
-detectWrap('.week-day')
+window.addEventListener('load', (event) => {
+    detectWrap('.week-day')
+});
 
 //   detects wrapped elements on window resize
 window.addEventListener('resize', (event) => {
     detectWrap('.week-day')
 });
+
 
 // on load, check if this is family member
 if  (familyCalendar){
@@ -29,40 +29,42 @@ if  (familyCalendar){
             })
     }
 }
+// on window load get items from sessionStorage
+else{
+    getDataFromSessionStorage(planValue)
+}
+
+// highlight todays column
+let allWeekdaysColumns = document.querySelectorAll('.week-day-ul')
+let weekdayArray = Array.from(allWeekdaysColumns)
+let todaysWeekdayIndex = date.getDay()
+let UlToModiify = weekdayArray[todaysWeekdayIndex]
+console.log(UlToModiify)
+UlToModiify.parentElement.classList.add('todays-day-in-calendar')
+UlToModiify.previousElementSibling.classList.add('todays-day-in-calendar-title')
+
+
 
 document.addEventListener('input', e =>{
 
     // search for recipes in calendar
     if (e.target == recipeSearchInCalendarInputField){
-
-        // check if there are already recipes displayed and make it empty
-        recipesRepresentationUl.innerHTML = ""
         let buttonForMoreItems = recipesRepresentationUl.nextElementSibling
-        if (buttonForMoreItems){
-            buttonForMoreItems.parentElement.removeChild(buttonForMoreItems)        
-        }
 
         // check if person has typed in anything in search
         inputValue = recipeSearchInCalendarInputField.value
-        let invisibleElement = document.querySelector('.invisible-element')
-        // invisible element prevents from flashing screen --->
-        // it (doesn't allow recipe-representation-bar to collapse completely on each input)
-
+        
         if (inputValue.length > 0){
-            // as long as there is input in search field - keep invisible element 
-            if (!invisibleElement){
-                let p = document.createElement('p')
-                p.setAttribute('class', 'invisible-element')
-                recipesRepresentationUl.parentElement.appendChild(p)
-            }
-
             sessionStorage.setItem("queryNumber", 1);
             filterQueryToDb(inputValue, 1, 'search').then(data =>{
                 createRecipesRepresentation(data, 'search')
             })
         }
         else{
-            if (invisibleElement){invisibleElement.remove()}
+            recipesRepresentationUl.innerHTML = ""
+            if (buttonForMoreItems){
+                buttonForMoreItems.parentElement.removeChild(buttonForMoreItems)        
+            }
         }
     }
 
@@ -139,6 +141,7 @@ document.addEventListener('click', e =>{
     let  coursetypeBtnList = document.querySelectorAll(".courstype-btn")
     coursetypeBtnList.forEach(item =>{
         if (e.target == item) {
+            recipeSearchInCalendarInputField.value=""
             coursetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
             filterQueryToDb(coursetypeName, 1, 'coursetype').then(data =>{
@@ -151,6 +154,7 @@ document.addEventListener('click', e =>{
     let recipetypeBtnList = document.querySelectorAll(".recipetype-btn")
     recipetypeBtnList.forEach(item =>{
         if (e.target == item) {
+            recipeSearchInCalendarInputField.value=""
             recipetypeName = item.getAttribute('name')
             sessionStorage.setItem("queryNumber", 1);
             filterQueryToDb(recipetypeName, 1, 'recipetype').then(data =>{
@@ -161,6 +165,7 @@ document.addEventListener('click', e =>{
 
     // check if favoritesBtn was clicked
     if (e.target == favoritesBtn || e.target.parentElement == favoritesBtn) {
+        recipeSearchInCalendarInputField.value=""
         sessionStorage.setItem("queryNumber", 1);
         filterQueryToDb('favorite', 1, 'favorite').then(data =>{
             createRecipesRepresentation(data, 'favorite')
@@ -490,7 +495,9 @@ function createDOMElementsInCalendar (parentElementforCreat, recipeIdforCreat, r
     aElement.setAttribute('name', `${recipeNameforCreat}ID=${recipeIdforCreat}`)
     aElement.appendChild(document.createTextNode(recipeNameforCreat))
     pAndDeleteLiElement.appendChild(aElement)
-    pAndDeleteLiElement.appendChild(deleteBtnElement)
+    if (!familyCalendar){
+        pAndDeleteLiElement.appendChild(deleteBtnElement)
+    }
     parentElementforCreat.appendChild(pAndDeleteLiElement)
 }
 

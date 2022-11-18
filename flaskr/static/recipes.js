@@ -4,10 +4,11 @@
 var modal = document.querySelector("#recipe-creation-div");
 var addRecipeBtn = document.querySelector("#add-recipe-button");
 var closeAddRecipeBtn = document.querySelector("#close-add-recipe");
-
+if (addRecipeBtn){
     addRecipeBtn.onclick = function() {
         modal.style.display = "block";
     }
+}
 if (closeAddRecipeBtn){
     closeAddRecipeBtn.onclick = function() {
         modal.style.display = "none";
