@@ -17,7 +17,6 @@ def home():
     if current_user.is_authenticated:
         user = User.query.filter_by(id=current_user.id).first()
         modified_name = name_modification_for_greeting(current_user.name)
-        # initialDbLoad()
         todays_day = datetime.now().weekday()
         if user.role_name == 'family_member':
             currentCalendar = Calendars.query.filter_by(calendarName='currentCalendar', user_id=current_user.chef_id).first()
@@ -38,6 +37,8 @@ def home():
             recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
             pictDict = createPictDictWithModifiedPaths(recipesList)
         else:
+            if len(Measurement.query.all()) == 0:
+                initialDbLoad()
             pictDict = None
             listOfDayMealDictionaries = None
 
