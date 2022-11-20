@@ -1,7 +1,7 @@
-from flask import Blueprint, Flask, render_template, redirect, request, url_for, jsonify, Response, make_response
+from flask import Blueprint, Flask, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 from .model import User, Role, Product, Foodtype, Calendars, productMeasurements, favoriteRecipes, Coursetype, recipeCoursetype, Measurement, recipeIngredients, productFoodtypes, Ingredient, Recipe, recipeTypes
-import csv, math, json
+import csv, math, json, os
 from . import db, mail
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, or_
@@ -37,8 +37,6 @@ def home():
             recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
             pictDict = createPictDictWithModifiedPaths(recipesList)
         else:
-            if len(Measurement.query.all()) == 0:
-                initialDbLoad()
             pictDict = None
             listOfDayMealDictionaries = None
 
@@ -61,12 +59,14 @@ def home():
         else:
             variousRecipes=None
             variousRecipesPictDict=None
+        
+        testas = os.getenv("TEST")
 
         return render_template('pages/private/personal_home.html', name=modified_name,
         listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict, 
         myFavoriteRecipes=myFavoriteRecipes, myFavoriteRecipesPictDict=myFavoriteRecipesPictDict,
         variousRecipesPictDict=variousRecipesPictDict, variousRecipes=variousRecipes, 
-        role_name=user.role_name)
+        role_name=user.role_name, testas=testas)
     else:
         return render_template('pages/public/index.html')
 
@@ -142,60 +142,6 @@ def favoriteFilter():
     filteredRecipeData = db.session.query(favoriteRecipes).filter_by(user_id=current_user.id).all()
     favoriteRecipesList = filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber)
     return favoriteRecipesList
-
-
-def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
-    recipeIDList = []
-    for recipeItem in  dataRowWithRecipeID:
-        # as well works with <Recipe> objects list
-        if hasattr(recipeItem, 'recipe_id'):
-            recipeID = recipeItem.recipe_id
-        else:
-            recipeID = recipeItem.id
-        recipeIDList.append(recipeID)
-    # check if recipe is allowed for this user
-    admin_ID = User.query.filter_by(role_name = 'admin').first().id
-    if current_user.is_authenticated:
-        allowedID = [current_user.id, admin_ID, current_user.chef_id]
-        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
-    else:
-        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id==admin_ID).offset(offsetValue).limit(limitValue).all()
-    return RecipesList
-
-def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
-
-    recipesList = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
-    # make sure not to run out of recipe items due to offset 
-    amountOfRecipes = len(recipesList)
-    if queryNumber > 1 and amountOfRecipes < 5:
-        numberOfRecipesToAddFromStart = limitValue - amountOfRecipes
-        additionalRecipesList = convertDbTableDataToQueryList(filteredRecipeData, numberOfRecipesToAddFromStart, 0)
-        for RecipeItem in additionalRecipesList:
-            recipesList.append(RecipeItem)
-
-    jsonResponseRecipeList = []
-
-    for RecipeItem in recipesList:
-        fullPicturePath = RecipeItem.picture
-        if fullPicturePath:
-            modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
-        else:
-            modifiedPicturePath=''
-
-        recipeItemDict={}
-        recipeItemDict['id'] = RecipeItem.id
-        recipeItemDict['name'] = RecipeItem.name
-        recipeItemDict['picture'] = modifiedPicturePath
-        recipeItemDict['link'] = '/single_recipe?recipeID=' + str(RecipeItem.id)
-        # extra info for JS to reset session.storage, if amountOfRecipes == 0:
-        if amountOfRecipes < 5:
-            recipeItemDict['listlength'] = 0
-        else:
-            recipeItemDict['listlength'] = amountOfRecipes
-        jsonResponseRecipeList.append(recipeItemDict)
-    
-    return jsonResponseRecipeList
-
 
 @public_pages.route('/single_recipe')
 def render_single_recipe():
@@ -309,8 +255,8 @@ def sendEmail():
         msg.body = request.form.get('message-text')
         senderEmail = request.form.get('message-email')
         subject = request.form.get('message-subject')
-        msg.recipients = ["savaites.meniu.planas@gmail.com"]
-        msg.sender = (senderEmail, "savaites.meniu.planas@gmail.com")
+        msg.recipients = [os.getenv("MAIL_USERNAME")]
+        msg.sender = (senderEmail, os.getenv("MAIL_USERNAME"))
         msg.subject = subject
         mail.send(msg)
         
@@ -331,70 +277,6 @@ def name_modification_for_greeting(name):
         modified_name = name
     return modified_name
 
-def initialDbLoad():
-
-    admin_user = User.query.filter_by(email = 'ajanickaite@gmail.com').first()
-    admin_role = Role(name='admin')
-    chef_role = Role(name='chef')
-    family_member_role=Role(name='family_member')
-    db.session.add(admin_role)
-    db.session.add(chef_role)
-    db.session.add(family_member_role)
-    admin_user.role_name = 'admin'
-    db.session.commit()
-
-    with open('/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/type.csv') as typefile:
-        csv_type_reader = csv.reader(typefile, delimiter=",")
-        for row in csv_type_reader:
-            new_type = Foodtype(name=row[0])
-            db.session.add(new_type)
-        db.session.commit()
-
-    with open('/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/Measurement.csv') as measurementfile:
-        csv_measur_reader = csv.reader(measurementfile, delimiter=",")
-        for row in csv_measur_reader:
-            new_measurement = Measurement(name=row[0])
-            db.session.add(new_measurement)
-        db.session.commit()
-
-    with open('/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/CourseType.csv') as coursetypefile:
-        csv_course_reader = csv.reader(coursetypefile, delimiter=",")
-        for row in csv_course_reader:
-            new_course = Coursetype(name=row[0])
-            db.session.add(new_course)
-        db.session.commit()
-
-    with open('/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/products.csv') as productfile:
-        csv_reader = csv.reader(productfile, delimiter=",")
-        i = 1
-        for row in csv_reader:
-            current_product_id = i
-            new_product = Product(name=row[0], description=row[1], shoparea=row[2], kcal=row[6])
-            # loading types table of a product
-            new_product_array_of_types = row[3].split(";")
-            all_types_possible = Foodtype.query.all()
-            for single_type in all_types_possible:
-                for product_type in new_product_array_of_types:
-                    if (single_type.name == product_type):
-                        insertStatment1 = productFoodtypes.insert().values(product_foodtype_id=single_type.id, product_id=current_product_id)
-                        db.session.execute(insertStatment1)
-                        db.session.commit()                        
-
-            # loading measurents table of a product
-            new_product_array_of_measurements = row[4].split(";")
-            new_product_array_of_conversion_to_grams = row[5].split(";")
-            all_measurements_possible = Measurement.query.all()
-            for single_measurement in all_measurements_possible:
-                for product_measurement in new_product_array_of_measurements:
-                    if (single_measurement.name == product_measurement):
-                        index = new_product_array_of_measurements.index(product_measurement)
-                        conversionToGramValue = new_product_array_of_conversion_to_grams[index]
-                        insertStatment2 = productMeasurements.insert().values(product_measurement_id=single_measurement.id, product_id=current_product_id, product_conversion_to_gram=conversionToGramValue)
-                        db.session.execute(insertStatment2)
-                        db.session.commit()
-            db.session.add(new_product)
-            i += 1 
-        db.session.commit()
 
 def createPictDictWithModifiedPaths(recipeList):
     myRecipesPictDict ={}
@@ -426,3 +308,55 @@ def calculateCalories(recipeID):
         kcalOfRecipe += kcalOfIngredient
     kcalPerPortion = round(kcalOfRecipe/portionsOfRecipe)
     return kcalPerPortion
+
+def convertDbTableDataToQueryList(dataRowWithRecipeID, limitValue, offsetValue):
+    recipeIDList = []
+    for recipeItem in  dataRowWithRecipeID:
+        # as well works with <Recipe> objects list
+        if hasattr(recipeItem, 'recipe_id'):
+            recipeID = recipeItem.recipe_id
+        else:
+            recipeID = recipeItem.id
+        recipeIDList.append(recipeID)
+    # check if recipe is allowed for this user
+    admin_ID = User.query.filter_by(role_name = 'admin').first().id
+    if current_user.is_authenticated:
+        allowedID = [current_user.id, admin_ID, current_user.chef_id]
+        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id.in_(allowedID)).offset(offsetValue).limit(limitValue).all()
+    else:
+        RecipesList = Recipe.query.filter(Recipe.id.in_(recipeIDList), Recipe.user_id==admin_ID).offset(offsetValue).limit(limitValue).all()
+    return RecipesList
+
+def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offsetValue, queryNumber):
+
+    recipesList = convertDbTableDataToQueryList(filteredRecipeData, limitValue, offsetValue)
+    # make sure not to run out of recipe items due to offset 
+    amountOfRecipes = len(recipesList)
+    if queryNumber > 1 and amountOfRecipes < 5:
+        numberOfRecipesToAddFromStart = limitValue - amountOfRecipes
+        additionalRecipesList = convertDbTableDataToQueryList(filteredRecipeData, numberOfRecipesToAddFromStart, 0)
+        for RecipeItem in additionalRecipesList:
+            recipesList.append(RecipeItem)
+
+    jsonResponseRecipeList = []
+
+    for RecipeItem in recipesList:
+        fullPicturePath = RecipeItem.picture
+        if fullPicturePath:
+            modifiedPicturePath =  '..' + fullPicturePath.split("flaskr")[1]
+        else:
+            modifiedPicturePath=''
+
+        recipeItemDict={}
+        recipeItemDict['id'] = RecipeItem.id
+        recipeItemDict['name'] = RecipeItem.name
+        recipeItemDict['picture'] = modifiedPicturePath
+        recipeItemDict['link'] = '/single_recipe?recipeID=' + str(RecipeItem.id)
+        # extra info for JS to reset session.storage, if amountOfRecipes == 0:
+        if amountOfRecipes < 5:
+            recipeItemDict['listlength'] = 0
+        else:
+            recipeItemDict['listlength'] = amountOfRecipes
+        jsonResponseRecipeList.append(recipeItemDict)
+    
+    return jsonResponseRecipeList

@@ -4,24 +4,24 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from sqlalchemy import inspect, create_engine
 from flask_mail import Mail
+import os
 
 db = SQLAlchemy()
 DATABASE_NAME = "database.db"
-UPLOAD_FOLDER = '/Users/auguste/Desktop/git/Meal-prep-web/flaskr/static/uploads'
+UPLOAD_FOLDER = 'flaskr/static/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 mail = Mail()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'Su>{PeRSECRETmYWeb?site180some'
+    app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DATABASE_NAME}'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    # app.config['EMAIL_PORT'] = 7777
-    app.config['MAIL_SERVER']='smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USE_SSL'] = True
-    app.config['MAIL_USERNAME'] = 'savaites.meniu.planas@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'mcwdzlttcfluwusm'
+    app.config['MAIL_SERVER']=os.getenv("MAIL_SERVER")
+    app.config['MAIL_PORT'] = os.getenv("MAIL_PORT")
+    app.config['MAIL_USE_SSL'] = os.getenv("MAIL_USE_SSL")
+    app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+    app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
     mail.init_app(app)
     db.init_app(app)
 

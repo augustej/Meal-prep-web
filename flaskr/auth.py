@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flask_mail import Message
 from datetime import datetime, timedelta
+import os
 
 
 
@@ -124,7 +125,7 @@ def recoverPassword():
             msg = Message()
             msg.subject = "Savaitės meniu slaptažodžio atkūrimas"
             msg.recipients = [email]
-            msg.sender = ("savaites.meniu.planas@gmail.com")
+            msg.sender = (os.getenv("MAIL_USERNAME"))
             msg.html = render_template('/auth/reset_email.html',
                                         greeting=greeting, link=link)
             mail.send(msg)
@@ -185,7 +186,7 @@ def sendInvitation():
         msg = Message()
         msg.subject = "Pakvietimas prisijungti prie Savaitės Meniu"
         msg.recipients = [familyMemberEmail]
-        msg.sender = ("savaites.meniu.planas@gmail.com")
+        msg.sender = (os.getenv("MAIL_USERNAME"))
         msg.html = render_template('/auth/invite_email.html', link=link, chef=chef)
         mail.send(msg)
     return redirect(url_for('private_pages.profile'))
