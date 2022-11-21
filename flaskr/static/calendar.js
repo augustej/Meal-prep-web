@@ -302,7 +302,12 @@ async function createRecipesRepresentation(data, origin){
         p.appendChild(document.createTextNode(recipeItem.name))
         p.setAttribute('class', `recipe-title recipe-id=${recipeItem.id} simple-text-small`)
         let img = document.createElement('img')
-        img.setAttribute('src', recipeItem.picture)
+        if (recipeItem.picture){
+            img.setAttribute('src', recipeItem.picture)
+        }
+        else{
+            img.setAttribute('src', "../static/images/intro1s.jpg" )
+        }
         li.appendChild(p)
         li.appendChild(img)
         recipesRepresentationUl.appendChild(li)

@@ -37,8 +37,6 @@ def home():
             recipesList = Recipe.query.filter(Recipe.id.in_(listOfRecipeIds)).all()
             pictDict = createPictDictWithModifiedPaths(recipesList)
         else:
-            if (len(Measurement.query.all()) == 0):
-                initialDbLoad()
             pictDict = None
             listOfDayMealDictionaries = None
 
@@ -62,14 +60,14 @@ def home():
             variousRecipes=None
             variousRecipesPictDict=None
         
-        testas = os.getenv("TEST")
-
         return render_template('pages/private/personal_home.html', name=modified_name,
         listOfDayMealDictionaries = listOfDayMealDictionaries, pictDict=pictDict, 
         myFavoriteRecipes=myFavoriteRecipes, myFavoriteRecipesPictDict=myFavoriteRecipesPictDict,
         variousRecipesPictDict=variousRecipesPictDict, variousRecipes=variousRecipes, 
-        role_name=user.role_name, testas=testas)
+        role_name=user.role_name)
     else:
+        if (len(Measurement.query.all()) == 0):
+                initialDbLoad()
         return render_template('pages/public/index.html')
 
 @public_pages.route('/search')
@@ -364,36 +362,29 @@ def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offse
     return jsonResponseRecipeList
 
 def initialDbLoad():
-    admin_role = Role(name='admin')
-    chef_role = Role(name='chef')
-    family_member_role=Role(name='family_member')
-    db.session.add(admin_role)
-    db.session.add(chef_role)
-    db.session.add(family_member_role)
-    db.session.commit()
 
-    with open('flaskr/static/type.csv') as typefile:
+    with open('static/type.csv') as typefile:
         csv_type_reader = csv.reader(typefile, delimiter=",")
         for row in csv_type_reader:
             new_type = Foodtype(name=row[0])
             db.session.add(new_type)
         db.session.commit()
 
-    with open('flaskr/static/Measurement.csv') as measurementfile:
+    with open('static/Measurement.csv') as measurementfile:
         csv_measur_reader = csv.reader(measurementfile, delimiter=",")
         for row in csv_measur_reader:
             new_measurement = Measurement(name=row[0])
             db.session.add(new_measurement)
         db.session.commit()
 
-    with open('flaskr/static/CourseType.csv') as coursetypefile:
+    with open('static/CourseType.csv') as coursetypefile:
         csv_course_reader = csv.reader(coursetypefile, delimiter=",")
         for row in csv_course_reader:
             new_course = Coursetype(name=row[0])
             db.session.add(new_course)
         db.session.commit()
 
-    with open('flaskr/static/products.csv') as productfile:
+    with open('static/products.csv') as productfile:
         csv_reader = csv.reader(productfile, delimiter=",")
         i = 1
         for row in csv_reader:
@@ -424,3 +415,11 @@ def initialDbLoad():
             db.session.add(new_product)
             i += 1 
         db.session.commit()
+    
+    admin_role = Role(name='admin')
+    chef_role = Role(name='chef')
+    family_member_role=Role(name='family_member')
+    db.session.add(admin_role)
+    db.session.add(chef_role)
+    db.session.add(family_member_role)
+    db.session.commit()

@@ -64,7 +64,12 @@ async function createRecipesRepresentation(data, origin){
         h3.appendChild(document.createTextNode(recipeItem.name))
         h3.setAttribute('class', `recipe-title recipe-id=${recipeItem.id} text-unimportant-title`)
         let img = document.createElement('img')
-        img.setAttribute('src', recipeItem.picture)
+        if (recipeItem.picture){
+            img.setAttribute('src', recipeItem.picture)
+        }
+        else{
+            img.setAttribute('src', "../static/images/intro1s.jpg" )
+        }
         a.appendChild(h3)
         a.appendChild(img)
         searchedRecipesParentUL.appendChild(a)

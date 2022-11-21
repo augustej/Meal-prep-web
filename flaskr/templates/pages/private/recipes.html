@@ -65,6 +65,8 @@
                 </h3>
                 {% if adminRecipesPictDict[recipe.id] != "" %}
                 <img src='{{ adminRecipesPictDict[recipe.id] }}'/>
+                {% else %}
+                <img src='../../../static/images/intro1s.jpg'/>
                 {% endif %}
             </a>
             {% endfor %}
