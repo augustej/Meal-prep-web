@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 import os
 
 
-
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['POST', 'GET'])
@@ -79,8 +78,13 @@ def signup():
             flash('Slaptažodio ilgis turi būti bent 7 simboliai.', category="Error")
         else:
             flash('Registracija sėkminga', category="Success")
-            new_user = User(email=email, name=name, password=generate_password_hash(password1), 
-            role_name=role_name, chef_id=chef_id)    
+
+            admin_email = os.getenv("ADMIN_EMAIL")
+            if email == admin_email:
+                new_user = User(email=email, name=name, password=generate_password_hash(password1), role_name="admin", chef_id=chef_id) 
+            else:
+                new_user = User(email=email, name=name, password=generate_password_hash(password1), 
+                role_name=role_name, chef_id=chef_id)    
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('auth.login'))
