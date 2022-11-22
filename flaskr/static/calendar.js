@@ -13,7 +13,9 @@ window.addEventListener('load', (event) => {
 
 //   detects wrapped elements on window resize
 window.addEventListener('resize', (event) => {
-    detectWrap('.week-day')
+    if (window.innerWidth > 427){
+        detectWrap('.week-day')
+    }
 });
 
 
