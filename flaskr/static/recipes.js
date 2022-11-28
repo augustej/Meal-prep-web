@@ -88,9 +88,11 @@ modal.addEventListener("click", e => {
         if (!inputAreaProductAmount.hasAttribute('readonly')){
             currentProductData.then((data)=> {
                 data.forEach(item =>{
-                    let array = item.measurement
-                    for (let element of array) {
-                        createListItemInDom(element, productMeasurmentParentUlItem, "product-measurment-li-item")
+                    if (inputAreaProductSearch.value == item.name){
+                        let array = item.measurement
+                        for (let element of array) {
+                            createListItemInDom(element, productMeasurmentParentUlItem, "product-measurment-li-item")
+                        }
                     }
                 })
             })

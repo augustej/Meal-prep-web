@@ -56,11 +56,11 @@
             <div class="ingredients-of-recipe dashboard-card-shape">
                 <div class="ingredients-of-recipe--text-area">
                     <h2 class="bold-uppercase-normal">Ingredientai</h2>
-                    <!-- display ingredients with subtitles -->
                     {% for subtitle in subtitlelist %}
-                        {% if subtitle %}
-                        <h3 class="text-unimportant-title">{{ subtitle }}</h3>
-                            <ul class="subtitle-display-ul">
+                        {% if subtitle != "empty" %}
+                            <h3 class="text-unimportant-title">{{ subtitle }}</h3>
+                                <ul class="subtitle-display-ul">
+                        {% endif %}
                                 {% for ingredient in recipe.recipeIngredients %}
                                     {% if ingredient.subtitle == subtitle %}
                                         <li class="ingredient-list-li">
@@ -76,26 +76,9 @@
                                         </li>
                                     {% endif %}
                                 {% endfor %}
-                            </ul>
+                        {% if subtitle != "empty" %}
+                                </ul>
                         {% endif %}
-                    {% endfor %}
-                    <!-- display ingredients without subtitles -->
-                    {% for ingredient in recipe.recipeIngredients %}
-                        {% if not ingredient.subtitle %}
-                            <li class="ingredient-list-li">
-                                <p>{{ ingredient.name}}</p>                             
-                                <p>{{ ingredient.amount}}</p>
-                                <p>
-                                {% for key in measurmentDict %}
-                                    {% if key == ingredient.measurement_id %}
-                                        {{measurmentDict[key]}}
-                                    {% endif%}
-                                {% endfor %}
-                                </p>
-                            </li>
-                        {% endif %}
-                        
-
                     {% endfor %}
                 </div>
             </div>
@@ -138,54 +121,35 @@
                 </li>
                 <li class="new-recipe-li bottom-border">
                     <label for="all-ingredients"><h2 class="bold-uppercase-normal">Ingredientai</h2></label>
-                    <div id="all-ingredients">    
+                    <div id="all-ingredients">                              
+                        {% set indexOfDictItem = 0 %}
+  
                         <ul class="confirmed-ingredients-ul">
-                            {% set indexOfDictItem = 0 %}
-
+                            <!-- subtitle list if empty has 1 item -->
                             {% for subtitle in subtitlelist %}
-                                {% if subtitle %}
-                                    <li class="confirmed-ingredients-li ingredient-subtitle">{{ subtitle }}
+                                {% if subtitle != "empty" and subtitle != "" %}
+                                     <li class="confirmed-ingredients-li ingredient-subtitle">{{ subtitle }}
                                         <button class="deleteSubtitleBtn" type="button">X</button>
                                     </li>
-                                        {% for ingredient in recipe.recipeIngredients %}
-                                            {% if ingredient.subtitle == subtitle %}
-                                                <li class="confirmed-ingredients-li">
-                                                    <p>{{ ingredient.name}}</p> 
-                                                    <p>{{ ingredient.amount}}
-                                                    
-                                                    {% for key in measurmentDict %}
-                                                        {% if key == ingredient.measurement_id %}
-                                                            {{measurmentDict[key]}}
-                                                        {% endif%}
-                                                    {% endfor %}
-                                                    </p>
-                                                    <button class="deleteIngredientBtn" id="deleteIngredientBtn{{ indexOfDictItem }}" type="button">X</button>
-                                                    {% set indexOfDictItem = (indexOfDictItem + 1) %}
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %}
                                 {% endif %}
+                                {% for ingredient in recipe.recipeIngredients %}
+                                    {% if ingredient.subtitle == subtitle %}
+                                        <li class="confirmed-ingredients-li">
+                                            <p>{{ ingredient.name}}</p> 
+                                            <p>{{ ingredient.amount}}
+                                            
+                                            {% for key in measurmentDict %}
+                                                {% if key == ingredient.measurement_id %}
+                                                    {{measurmentDict[key]}}
+                                                {% endif%}
+                                            {% endfor %}
+                                            </p>
+                                            <button class="deleteIngredientBtn" id="deleteIngredientBtn{{ loop.index - 1 }}" type="button">X</button>
+                                            {% set indexOfDictItem = (indexOfDictItem + 1) %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
-
-                            {% for ingredient in recipe.recipeIngredients %}
-                            {% if not ingredient.subtitle %}
-                                <li class="confirmed-ingredients-li">
-                                    <p>{{ ingredient.name}}</p>                             
-                                    <p>{{ ingredient.amount}}
-                                    
-                                    {% for key in measurmentDict %}
-                                        {% if key == ingredient.measurement_id %}
-                                            {{measurmentDict[key]}}
-                                        {% endif%}
-                                    {% endfor %}
-                                    </p>
-                                    <button class="deleteIngredientBtn" id="deleteIngredientBtn{{ indexOfDictItem }}" type="button">X</button>
-                                    {% set indexOfDictItem = (indexOfDictItem + 1) %}
-                                </li>
-                            {% endif %}
-                            
-    
-                        {% endfor %}
 
                         </ul>
                         <div class="ingredient-input-and-button subtitle-add-container">

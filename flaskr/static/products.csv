@@ -1,2 +1,366 @@
-pomidoras,"Labai sveika raudona daržovė",šviežios daržovės,vegetariška;veganiška;keto,g;kg;vnt,1;1000;200,0.18
-bulve,"Mažiau sveika žemėta daržovė",šviežios daržovės,vegetariška;veganiška,g;kg;vnt,1;1000;215,1
+pomidorai,aprašymas,šviežios daržovės,vegetariška;veganiška;keto,g;kg;vnt,1;1000;200,0.18
+bananai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;155,0.89
+citrinos,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;120,0.29
+obuoliai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;200,0.52
+šilauogės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;190,0.57
+pievagrybiai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;20,0.22
+bulvės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;170,0.77
+bulvės (mažosios),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;60,0.77
+paprikos (raudonos),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;130,0.31
+česnakai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;40,1.49
+avokadai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;150,1.6
+vynuogės (raudonos),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;5,0.7
+greipfrutai (raudonieji),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;225,0.42
+paprikos (raudonos aštrios),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;26,0.4
+špinatai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;30,0.23
+pomidoriukai (maži),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;45,0.25
+gražgarstės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;20,0.31
+sultenės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;56,0.2
+ridikėliai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;25,0.16
+baklažanai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;350,0.25
+svogūnų laiškai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;vnt;v.š.,1;2;2,0.2
+morkos,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;160,0.41
+svogūnai (raudoni),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;150,0.42
+svogūnai (balti),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;200,0.4
+svogūnai (geltoni),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;150,0.4
+agurkai (ilgavaisiai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;300,0.15
+agurkai (trumpavaisiai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;100,0.15
+persimonai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;170,1.3
+apelsinai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;140,0.47
+kiviai (geltonieji),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;70,0.7
+kiviai (žalieji),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;71,0.6
+vynuogės (žalios),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;5,0.7
+kriaušės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;180,0.57
+brokoliai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;200,0.34
+granatai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;250,0.83
+batatai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;150,0.86
+cukinija (žalioji),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;200,0.17
+burokėliai (virti),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.53
+salotos,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;150,0.17
+krapai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.43
+kalafijoras,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;800,0.25
+kopūstas,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;700,0.25
+greipfrutai (pomelo),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;550,0.38
+laimai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;65,0.3
+salierų stiebai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;40,0.14
+burokėliai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;110,0.43
+porai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;320,0.61
+slyvos,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;60,0.46
+imbierų šaknys,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;a.š.,1;1000;2,0.8
+mangai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;150,0.6
+petražolės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.36
+kalendros,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.23
+bazilikai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.22
+šalavijai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,1.1
+mėtos,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.06
+čiobreliai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,1.01
+moliūgai (sviestiniai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;1000,0.45
+moliūgai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.26
+kopūstai (kininiai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;700,0.12
+kukurūzų burbuolės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;300,0.64
+ananasai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;500,0.5
+paprikos (geltonos),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;130,0.27
+pastarnokai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;115,0.75
+ridikai (baltieji),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;1000,0.18
+kopūstai (ropiniai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;150,0.27
+datulės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;8,2.82
+mandarinai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;88,0.53
+paprikos (žalios),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;131,0.2
+melionai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;2000,0.34
+briuselio kopūstai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;10,0.43
+pupelės (šparaginės),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.31
+žirnių ankštys,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.34
+braškės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt;stiklinės,1;1000;12;166,0.33
+kopūstai (kale),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;67,0.49
+gervuogės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės;vnt,1;1000;150;7,0.43
+rozmarinai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,1.3
+smidrai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;16,0.2
+gvakamolė (šviežia),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;v.š.,1;15,1.57
+ropės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;130,0.28
+želmenys (kviečių),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.21
+grybai (šhiitake),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.34
+kopūstai (raudoni),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;550,0.31
+grybai (portobela),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;60,0.22
+kokosas,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,3.54
+kokosai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;100,6.6
+kokosų drožlės,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;100,6.6
+papaja,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;700,0.32
+česnakai (laiškiniai),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;v.š.,1;3,0.3
+spanguolės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;110,0.46
+bruknės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;120,0.53
+greipfrutai (žalieji),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;200,0.32
+burokėlių lapai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;38,0.22
+paprikos (žalios aštrios),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;25,0.28
+citrinžolės,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,1
+daigai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;200,0.3
+melisos,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,0.48
+anonos,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;200,0.94
+artišokai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;400,0.47
+raudonėliai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g,1,3.06
+salotos (iceberg),aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;550,0.14
+persikai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;160,0.39
+nektarinai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;140,0.44
+arbūzai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.3
+trešnės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;140,0.63
+vyšnios,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;140,0.5
+avietės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno;keto,g;kg;stiklinės,1;1000;125,0.53
+mėlynės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;150,0.57
+agrastai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;150,0.44
+serbentai (raudoni),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;120,0.6
+serbentai (juodi),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;120,0.6
+serbentai (balti),aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;120,0.6
+žirniai,aprašymas,šviežios daržovės,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;140,0.81
+žemuogės,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.41
+ličiai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;20,0.66
+abrikosai,aprašymas,švieži vaisiai/uogos,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;35,0.48
+abrikosai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;7,2.41
+bananai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg,1;1000,3.4
+bertoletijų riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;5,6.56
+graikiniai riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;2.4,6.56
+žemės riešutai (sūdyti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,5.67
+žemės riešutai (nesūdyti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,5.85
+makadamijų riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;2.6,7.18
+migdolai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;1.1,5.76
+pekano riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;kg;vnt,1;1000;1.5,6.9
+slyvos (džiovintos),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;10,2.4
+ananasai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;8.2,2.45
+anakardžių riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg;vnt,1;1000;2.8,5.53
+mangai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg,1;1000,3.14
+pistacijos (sūdytos),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg,1;1000,5.62
+pistacijos (nesūdytos),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg,1;1000,5.62
+lazdyno riešutai,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;kg,1;1000,6.28
+sūris (čederio),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,4.02
+majonezas,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;a.š.;v.š.,1;4.8;14.5,6.8
+pienas (avižų),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno,g;ml;stiklinės;v.š.,1;1;235;14,0.42
+pienas (sojų),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno,g;ml;stiklinės;v.š.,1;1;235;14,0.54
+pienas (migdolų),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;14,0.4
+pienas (karvės),aprašymas,pieno produktai,vegetariška;be gliuteno,g;ml;stiklinės;v.š.,1;1;235;14,0.5
+pienas (kokosų),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;14,2.3
+sūris (kietasis),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;v.š.,1;14,3.92
+sviestas (ghee),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;stiklinės;v.š.,1;225;14,8.9
+sviestas,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;stiklinės;v.š.,1;225;14,7.17
+kiaušiniai (vištos),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;vnt,1;50,1.43
+kiaušiniai (putpelės),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;vnt,1;10,1.58
+grietinė (30%),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;15,2.9
+grietinėlė (35%),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;14,3.45
+kefyras,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;14,0.54
+varškė (liesa biri),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,0.98
+varškė (pusriebė biri),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,1.59
+varškė (liesa),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,0.98
+varškė (pusriebė),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,1.59
+sūris (fermentinis),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,3.38
+mocarela,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,2.1
+rikota,aprašymas,pieno produktai,vegetariška;be gliuteno,g;kg,1;1000,1.7
+maskarponė,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,4.35
+jogurtas (graikiškas),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1.2;285;17.5,0.8
+varškė (grūdėta),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,1.19
+jogurtas,aprašymas,pieno produktai,vegetariška;be gliuteno,g;kg,1;1000,1
+sūris (philadelphia),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg;v.š.,1;1000;15,2.35
+varškės sūreliai,aprašymas,pieno produktai,vegetariška;be gliuteno,g,1,3.8
+burata,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;kg,1;1000,3.5
+pasukos,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;14,0.32
+varškės užtepėlė,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;v.š.,1;15,2.67
+saldintas sutirštintas pienas,aprašymas,pieno produktai,vegetariška;be gliuteno,g;stiklinės;v.š.,1;340;19,3.25
+saldintas sutirštintas pienas (karamelizuotas),aprašymas,pieno produktai,vegetariška;be gliuteno,g;stiklinės;v.š.,1;340;20,3.32
+feta,aprašymas,pieno produktai,vegetariška;be gliuteno,g;kg,1;1000,2.64
+feta (aliejuje),aprašymas,pieno produktai,vegetariška;be gliuteno,g;kg,1;1000,2.64
+grietinėlė (10%),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;235;15,1.19
+tofu,aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,1.2
+pelėsinis sūris (mėlynasis),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,3.49
+pelėsinis sūris (baltas),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,3.57
+pelėsinis sūris (keptas),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,2.87
+halumis,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,3.5
+varškės sūris,aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,2.13
+varškės sūris (saldūs),aprašymas,pieno produktai,vegetariška;be gliuteno,g,1,3.05
+varškės sūris (džiovintas),aprašymas,pieno produktai,vegetariška;be gliuteno;keto,g,1,3.48
+batonas,aprašymas,duonos gaminiai,vegetariška,g;riekės,1;48,2.6
+batonas (prancūziškas),aprašymas,duonos gaminiai,vegetariška;veganiška,g;vnt,1;250,2.37
+duona (balta),aprašymas,duonos gaminiai,vegetariška,g;riekės,1;48,2.46
+duona (juoda),aprašymas,duonos gaminiai,vegetariška;veganiška,g;riekės,1;48,2.4
+duona (sėklų),aprašymas,duonos gaminiai,vegetariška;veganiška,g;riekės,1;50,3.12
+trapučiai (ryžių),aprašymas,duonos gaminiai,vegetariška;be gliuteno;veganiška,g;vnt,1;9,3.74
+trapučiai (kukurūzų),aprašymas,duonos gaminiai,vegetariška;be gliuteno;veganiška,g;vnt,1;8,3.72
+bandelės (mėsainiams),aprašymas,duonos gaminiai,vegetariška,g;vnt,1;80,3.64
+bandelės (dešrainiams),aprašymas,duonos gaminiai,vegetariška,g;vnt,1;60,2.92
+duonos lazdelės,aprašymas,duonos gaminiai,vegetariška;veganiška,g;vnt,1;7,4.94
+meduoliai,aprašymas,duonos gaminiai,vegetariška,g,1,3.85
+džiūvėsiai,aprašymas,duonos gaminiai,vegetariška;veganiška,g;vnt,1;8,4.32
+duoniukai,aprašymas,duonos gaminiai,vegetariška;veganiška,g;vnt,1;5,3.69
+tortilijos,aprašymas,duonos gaminiai,vegetariška;veganiška,g;vnt,1;40,2.97
+tacos laiveliai,aprašymas,duonos gaminiai,vegetariška;be gliuteno;veganiška,g;vnt,1;11.25,4.59
+šoninė (š.rūkyta),aprašymas,mėsa,mėsa;be gliuteno,g;riekės,1;12,3.89
+tunas (kons. aliejuje),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.95
+tunas (kons. sultyse),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.01
+kiaulienos kumpis (vytintas),aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.21
+vištienos krūtinėlė,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.1
+vištienos šlaunelės,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.09
+vištienos blauzdelės,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.09
+vištienos faršas,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.37
+višta,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.16
+kiaulienos mentė,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.89
+kiaulienos nugarinė,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.4
+kiaulienos nugarinė (k.rūkyta),aprašymas,mėsa,mėsa;be gliuteno,g,1,1.24
+kiaulienos nugarinė (š.rūkyta),aprašymas,mėsa,mėsa;be gliuteno,g,1,1.89
+dešra (vytinta),aprašymas,mėsa,mėsa;be gliuteno,g,1,4.45
+dešra (š.rūkyta),aprašymas,mėsa,mėsa;be gliuteno,g,1,5.23
+kalakutienos krūtinėlė,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.03
+kalakutienos šlaunelės,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.44
+kalakutienos faršas,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.28
+kiaulienos faršas,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.46
+kiaulienos ir jautienos faršas,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,2.11
+jautienos faršas,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.69
+lašiša (filė),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg,1;1000,2.27
+lašiša (didkepsniai),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg,1;1000,2.08
+pieniškos dešrelės (virtos),aprašymas,mėsa,,g;vnt,1;62,2.73
+lašišų filė (sūdyta),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.94
+lašišų filė (rūkyta),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.93
+kalakutų krūtinėle (k.rūkyta),aprašymas,mėsa,mėsa;be gliuteno,g,1,0.96
+kiaulienos kumpis (prosciutto),aprašymas,mėsa,mėsa;be gliuteno,g,1,3.69
+saliamis,aprašymas,mėsa,mėsa;be gliuteno,g,1,3.69
+antienos krūtinėlė,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.57
+jautienos išpjova,aprašymas,mėsa,mėsa;be gliuteno,g;kg,1;1000,1.23
+daržovainiai,aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;vnt,1;80,2.16
+gnocchi (bulvinukai),aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g,1, 1.59
+ravioliai,aprašymas,augalinės kilmės produktai,vegetariška,g,1,2.14
+chorizo,aprašymas,mėsa,mėsa;be gliuteno,g,1,4.45
+krabų lazdelės,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;vnt,1;50,0.8
+pica,aprašymas,duonos gaminiai,vegetariška,g;vnt,1;370,2.29
+šamo filė,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.4
+tuno kepsnys,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg,1;1000,1.3
+jūrų lydekos filė,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg,1;1000,0.72
+jautienos mėsa (burgeriams),aprašymas,mėsa,mėsa;be gliuteno,g;vnt,1;125,2.17
+krevetės (virtos šaldytos),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg;vnt,1;1000;15,0.84
+krevetės (nevirtos šaldytos),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg;vnt,1;1000;20,0.94
+krevetės (šviežios),aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg;vnt,1;1000;20,1.06
+upėtakio filė,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g;kg,1;1000,1.3
+kalmarų žiedai,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.07
+švieži makaronai,aprašymas,augalinės kilmės produktai,vegetariška,g,1,3.13
+ikrai,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.74
+silkė,aprašymas,žuvis ir jūros gėrybės,žuvis;be gliuteno,g,1,1.66
+spagečiai,aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.56
+makaronai,aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.51
+makaronai (pino grūdo),aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.44
+miltai (kvietiniai),aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.5
+miltai (speltos),aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.5
+makaronai (lazanijai),aprašymas,augalinės kilmės produktai,vegetariška;veganiška,g;kg,1;1000,3.5
+avinžirniai,aprašymas,augalinės kilmės produktai,vegetariška;veganiška;keto;be gliuteno,g,1,4.12
+pupelės (raudonos),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;keto;be gliuteno,g,1,3.76
+pupelės (baltos),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;keto;be gliuteno,g,1,3.77
+lęšiai (žali),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;keto;be gliuteno,g,1,3.44
+lęšiai (raudoni),aprašymas,augalinės kilmės produktai,vegetariška;veganiška;keto;be gliuteno,g,1,3.46
+šokoladas (juodas),aprašymas,saldumynai,vegetariška;be gliuteno,g,1,5.58
+šokoladas (baltas),aprašymas,saldumynai,vegetariška;be gliuteno,g,1,5.51
+šokoladas (pieninis),aprašymas,saldumynai,vegetariška;be gliuteno,g,1,5.39
+pipirai (juodieji),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,2.96
+paprikos prieskoniai (rūkyta),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,2.8
+paprikos prieskoniai (aštri),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,2.8
+paprikos prieskoniai (saldi),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,2.8
+druska (smulki),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.;v.š.,1;7;17,0
+druska (stambi),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;7;17,0
+rozmarinai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;1.12,3.6
+raudonėliai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;1,5.5
+bazilikai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;0.7,5.7
+cinamonas,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.6,2.3
+ciberžolė (džiovinta),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;3.5,3.5
+kuminas,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.0,3.75
+kmynai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2,3.75
+lauro lapai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;vnt,1;0.2,0
+provanso prieskoniai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2,2
+svogūnų prieskoniai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2,4
+česnako prieskoniai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;3.1,3.3
+citrinpipiriai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;5,2.1
+krapų prieskoniai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;1,3
+vanilės ekstraktas,aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno,g;a.š.,1;4.2,2.97
+muskatas,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.2,5
+pipirai (kvapieji),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,2.96
+karis,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,3.25
+čiobreliai (džiovinti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;0.9,4.4
+kalendros (džiovintos),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;1.7,2.98
+imbiero prieskoniai (malti),aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.8,3.47
+gvazdikėliai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,0
+mairūnai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,3.23
+meduolių prieskoniai,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;2.3,3.5
+aguonos,aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;3;9,5.25
+šafranas,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;a.š.,1;0.7,3
+kokosai (džiovinti),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;1.5;4.4,6.6
+razinos,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;3.3;9.9,3
+moliūgų sėklos,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;2.48;7.44,4
+saulėgrąžų sėklos,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;2.77;8.75,6
+liofilizuotos uogos,aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;2;6,3.5
+kečupas,aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5;17,1.02
+pomidorų pasta,aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5;17,1.01
+garstyčios (grūdėtos),aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5;17,1.08
+garstyčios (be grūdelių),aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5;17,1.08
+sojų padažas,aprašymas,padažai,vegetariška;veganiška;keto;be gliuteno,g;a.š.;v.š.;stiklinės,1;5.5;16.6;2.65,1.07
+vorčesterio padažas,aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5.5;16.6,0.97
+saldžiaaštris paprikų padažas,aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;5.5;16.6,1.26
+sriracha,aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;6.5;18,1.74
+agurkėliai (marinuoti),aprašymas,konservuoti,vegetariška;veganiška;keto;be gliuteno,g;kg,1;1000,0.27
+alyvuogės,aprašymas,konservuoti,vegetariška;veganiška;keto;be gliuteno,g;vnt,1;5,1.45
+pomidorai (konservuoti),aprašymas,konservuoti,vegetariška;veganiška;keto;be gliuteno,g;kg,1;1000,0.21
+kukurūzai (konservuoti),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.8
+pupelės (baltos konservuotos),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.91
+avinžirniai (konservuoti),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,1.21
+žirneliai (konservuoti),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.81
+daržovių sultinys,aprašymas,prieskoniai,vegetariška;veganiška;keto;be gliuteno,g;vnt,1;10,0.06
+pupelės (raudonos konservuotos),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,0.71
+pupelės (aštrios konservuotos),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg,1;1000,1.06
+vaisiai (konservuoti),aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g,1,0.7
+uogienė,aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;6.5;20;315,2.3
+medus,aprašymas,cukrai,vegetariška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;7.08;21;340,3
+cukrus (rudas),aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;5;12.6;200,4
+cukrus (baltas),aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;5;12.6;200,3.85
+cukraus pudra,aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;2.6;7.8;130,4
+cukrus (kokosų),aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;5;12.6;200,3.75
+agavės sirupas,aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;7.1;21.2;350,3.1
+klevų sirupas,aprašymas,cukrai,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;7.08;21;340,3
+obuolių tyrė,aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;5.2;15.6;250,0.58
+slyvų tyrė,aprašymas,konservuoti,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;5.2;15.6;250,0.69
+grikiai,aprašymas,kruopos,vegetariška;veganiška;be gliuteno,g;kg;stiklinės,1;1000;151,3.62
+avižiniai dribsniai,aprašymas,kruopos,vegetariška;veganiška,g;kg;v.š.;stiklinės,1;1000;5.6;90,3.59
+manų kruopos,aprašymas,kruopos,vegetariška;veganiška,g;kg;v.š.;stiklinės,1;1000;10.4;180,3.31
+kuskusas,aprašymas,kruopos,vegetariška;veganiška,g;kg;v.š.;stiklinės,1;1000;10.4;180,3.42
+bolivinė balanda (kinva),aprašymas,kruopos,vegetariška;veganiška,g;kg;v.š.;stiklinės,1;1000;10.8;170,3.57
+ispaninis šalavijas (chia),aprašymas,kruopos,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;3.4;15,4.56
+bulguras,aprašymas,kruopos,vegetariška;veganiška,g;kg;v.š.;stiklinės,1;1000;11.9;182,3.42
+aliejus (kokosų),aprašymas,aliejai,vegetariška;veganiška;be gliuteno;keto,g;kg;a.š.;v.š.;stiklinės,1;1000;4.55;14;216,8.84
+aliejus (saulėgrąžų),aprašymas,aliejai,vegetariška;veganiška;be gliuteno;keto,g;kg;a.š.;v.š.;stiklinės,1;1000;4.73;14.2;227,8.28
+aliejus (alyvuogių),aprašymas,aliejai,vegetariška;veganiška;be gliuteno;keto,g;kg;a.š.;v.š.;stiklinės,1;1000;4.53;13.3;213,8.24
+aliejus,aprašymas,aliejai,vegetariška;veganiška;be gliuteno;keto,g;kg;a.š.;v.š.;stiklinės,1;1000;4.53;13.3;214,8.5
+actas (obuolių),aprašymas,padažai,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;4.8;14.4,0.22
+actas (balto vyno),aprašymas,padažai,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;4.8;14.4,0.19
+actas (balzaminis),aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.,1;4.8;14.4,1.11
+sausainiai (damų piršteliai),aprašymas,duonos gaminiai,vegetariška,g;vnt,1;8.3,3.78
+sausainiai (selga/gaidelis),aprašymas,duonos gaminiai,vegetariška,g,1,4.28
+arbata (juoda),aprašymas,bakalėja,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;240;14.8,0
+arbata (žalia),aprašymas,bakalėja,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;240;14.8,0
+kava,aprašymas,bakalėja,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;240;14.8,0.02
+sushi lakštai,aprašymas,augalinės kilmės produktai,vegetariška;veganiška;be gliuteno;keto,g;vnt,1;2.5,3.07
+actas (ryžių),aprašymas,padažai,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;4.8;14.4,0.15
+ryžiai (sushi),aprašymas,kruopos,vegetariška;veganiška;be gliuteno;keto,g;kg;v.š.;stiklinės,1;1000;11.5;185,3.7
+krienai,aprašymas,padažai,vegetariška;veganiška,g;a.š.,1;5,1.54
+krienai (wasabi),aprašymas,padažai,vegetariška;veganiška;be gliuteno,g;a.š.,1;6,3.12
+kokosų kremas,aprašymas,bakalėja,vegetariška;veganiška;be gliuteno;keto,g;kg;ml;stiklinės;v.š.,1;1000;0.96;240;14,2.38
+sausi pusryčiai (žiedeliai),aprašymas,bakalėja,vegetariška;veganiška,g;stiklinės,1;40,3.85
+granola,aprašymas,bakalėja,vegetariška;veganiška,g;stiklinės;v.š.,1;110;7,4.1
+riešutų sviestas (žemės),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;v.š.;stiklinės,1;16;250,6.25
+riešutų sviestas (migdolų),aprašymas,džiovinti vaisiai/riešutai,vegetariška;veganiška;be gliuteno;keto,g;v.š.;stiklinės,1;16;250,6.5
+želatina,aprašymas,prieskoniai,mėsa;be gliuteno;keto,g;a.š.;v.š.,1;3.08;9.25,0.62
+agar,aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;3.08;9.25,0.26
+mielės (sausos),aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno;keto,g;a.š.;v.š.,1;3.1;9.3,2.9
+želė (sausa),aprašymas,prieskoniai,mėsa,g,1,0.52
+kakava (kepinių),aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno,g;a.š.;v.š.;stiklinės,1;2.46;7.38;120,4.46
+krakmolas (bulvių),aprašymas,bakalėja,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;3.3;10;190,3.21
+krakmolas (kukurūzų),aprašymas,bakalėja,vegetariška;veganiška;be gliuteno,g;kg;a.š.;v.š.;stiklinės,1;1000;2.5;7.5;122,3.56
+šaldyta sluoksniuota tešla (bemielė),aprašymas,šaldyti produktai,vegetariška,g;kg,1;1000,3.67
+šaldyta sluoksniuota tešla (mielinė),aprašymas,šaldyti produktai,vegetariška,g;kg,1;1000,3.35
+daržovių mišinys (šaldytas),aprašymas,šaldyti produktai,vegetariška;veganiška;be gliuteno;keto,g;kg,1;1000,0.56
+mineralinis,aprašymas,gėrimai,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;240;14.8,0
+vynas (baltas),aprašymas,gėrimai,vegetariška;veganiška;be gliuteno,g;ml;stiklinės;v.š.,1;1;240;14.8,0.82
+vanduo,aprašymas,gėrimai,vegetariška;veganiška;be gliuteno;keto,g;ml;stiklinės;v.š.,1;1;240;14.8,0
+kūčiukai,aprašymas,duonos gaminiai,vegetariška;veganiška,g,1,4.13
+ryžiai (bismati),aprašymas,kruopos,vegetariška;veganiška;be gliuteno;keto,g;kg;v.š.;stiklinės,1;1000;11.5;185,3.5
+ryžiai (laukiniai),aprašymas,kruopos,vegetariška;veganiška;be gliuteno;keto,g;kg;v.š.;stiklinės,1;1000;11.5;185,3.6
+vynas (baltas),aprašymas,gėrimai,vegetariška;veganiška;be gliuteno,g;ml;stiklinės;v.š.,1;1;240;14.8,0.85
+kepimo milteliai,aprašymas,prieskoniai,vegetariška;veganiška,g;a.š.,1;4.8,1.21
+soda,aprašymas,prieskoniai,vegetariška;veganiška;be gliuteno;keto,g;a.š.,1;4.8,0

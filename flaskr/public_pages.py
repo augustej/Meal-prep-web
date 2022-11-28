@@ -363,28 +363,28 @@ def filteredRecipeDataConvertionToJsonList(filteredRecipeData, limitValue, offse
 
 def initialDbLoad():
 
-    with open('static/type.csv') as typefile:
+    with open('flaskr/static/type.csv') as typefile:
         csv_type_reader = csv.reader(typefile, delimiter=",")
         for row in csv_type_reader:
             new_type = Foodtype(name=row[0])
             db.session.add(new_type)
         db.session.commit()
 
-    with open('static/Measurement.csv') as measurementfile:
+    with open('flaskr/static/Measurement.csv') as measurementfile:
         csv_measur_reader = csv.reader(measurementfile, delimiter=",")
         for row in csv_measur_reader:
             new_measurement = Measurement(name=row[0])
             db.session.add(new_measurement)
         db.session.commit()
 
-    with open('static/CourseType.csv') as coursetypefile:
+    with open('flaskr/static/CourseType.csv') as coursetypefile:
         csv_course_reader = csv.reader(coursetypefile, delimiter=",")
         for row in csv_course_reader:
             new_course = Coursetype(name=row[0])
             db.session.add(new_course)
         db.session.commit()
 
-    with open('static/products.csv') as productfile:
+    with open('flaskr/static/products.csv') as productfile:
         csv_reader = csv.reader(productfile, delimiter=",")
         i = 1
         for row in csv_reader:

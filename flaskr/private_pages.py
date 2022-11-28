@@ -225,6 +225,7 @@ def add_ingredient():
 
         recipeToAddIngredientTo = Recipe.query.filter_by(id=idOfRecipeToModify).first()
 
+
         if recipeToAddIngredientTo == None:
             recipeToAddIngredientTo = Recipe(name="inprogress")
             db.session.add(recipeToAddIngredientTo)
@@ -238,7 +239,11 @@ def add_ingredient():
             product_id = Product.query.filter_by(name=ingredientItem['name']).first().id
             measurement_id = Measurement.query.filter_by(name=ingredientItem['measurement']).first().id
             recipe_id = recipeToAddIngredientTo.id
-            new_ingredient = Ingredient(name = ingredientItem['name'], subtitle =ingredientItem['subtitle'], amount=ingredientItem['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
+            if 'subtitle' in ingredientItem.keys(): 
+                subtitle =ingredientItem['subtitle']
+            else:
+                subtitle = ""
+            new_ingredient = Ingredient(name = ingredientItem['name'], subtitle = subtitle, amount=ingredientItem['amount'], measurement_id=measurement_id, product_id=product_id, recipe_id=recipe_id)
             db.session.add(new_ingredient)
             db.session.commit()
             
@@ -253,6 +258,7 @@ def add_recipe():
     cookingtime = request.form.get('preparation-time')
     portions = request.form.get('portions')
     current_recipe = Recipe.query.filter_by(name="inprogress").first()
+
     # adding image
     if 'recipe-image' in request.files:
         file = request.files['recipe-image']
@@ -275,6 +281,11 @@ def add_recipe():
     current_recipe.user_id = user_id
     current_recipe.cookingtime=cookingtime
     current_recipe.portions=portions
+
+    # if recipe is modified
+    db.session.query(recipeCoursetype).filter_by(recipe_id=current_recipe.id).delete()
+    db.session.query(recipeTypes).filter_by(recipe_id=current_recipe.id).delete()
+            
 
     allProductsOfRecipe = Ingredient.query.filter_by(recipe_id=current_recipe.id).all()
     numberOfIngredients = len(allProductsOfRecipe)
@@ -420,6 +431,10 @@ def deleteRecipe(recipeID):
     if request.method == 'DELETE':
         if userCanModify(Recipe, recipeID) == True:
             Recipe.query.filter_by(id=recipeID).delete()
+            Ingredient.query.filter_by(recipe_id=recipeID).delete()
+            db.session.query(recipeIngredients).filter_by(recipe_id=recipeID).delete()
+            db.session.query(recipeCoursetype).filter_by(recipe_id=recipeID).delete()
+            db.session.query(recipeTypes).filter_by(recipe_id=recipeID).delete()
             db.session.commit()
     return Response('', 200)
 
