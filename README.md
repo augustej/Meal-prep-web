@@ -16,10 +16,19 @@ Meal-prep-web helps to plan your meals for the whole week.
 1. Download files.
 2. Create .env file inside Meal-prep-web folder. 
 3. Inside .env declare variables:
-a. SECRET_KEY = " {your-key-here} "
-b. MAIL_SERVER="smtp.gmail.com"
-c. MAIL_PORT = 465
-d. MAIL_USE_SSL = True
-e. MAIL_USERNAME = "{your-gmail-account}@gmail.com"
-f. MAIL_PASSWORD = " {password-generated} "
-g. ADMIN_EMAIL = " {your-email-here} "
+a) SECRET_KEY = " {your-key-here} "
+b) MAIL_SERVER="smtp.gmail.com"
+c) MAIL_PORT = 465
+d) MAIL_USE_SSL = True
+e) MAIL_USERNAME = "{websites-gmail-account}@gmail.com"
+f) MAIL_PASSWORD = " {password-generated} " - read below
+g) ADMIN_EMAIL = " {admin-email-here} "
+4. In terminal run python3 main.py. Once page loads, register first user with admin email.
+
+#### How to create gmail app password
+1. Create 2 step verification on your gmail account.
+2. Go to your Google Account and Select Security.
+3. Under "Signing in to Google," select App Passwords.
+4. At the bottom, choose Select app and choose the app you using and then Select device and choose the device you’re using and then Generate. (I picked Mail as app and Other as device (typed in Web app - {app name}).
+5. This is the password you need for the app.
+
