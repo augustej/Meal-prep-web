@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask, session, render_template, redirect, request, url_for, jsonify, Response
+from flask import Blueprint, Flask, session, render_template, redirect, request, url_for, jsonify, Response, flash
 from flask_login import current_user, login_required
 from . import UPLOAD_FOLDER, db, ALLOWED_EXTENSIONS, public_pages
 import os, math, json
@@ -237,15 +237,15 @@ def add_ingredient():
 
         recipeToAddIngredientTo = Recipe.query.filter_by(id=idOfRecipeToModify).first()
 
-
         if recipeToAddIngredientTo == None:
-            recipeToAddIngredientTo = Recipe(name="inprogress")
+            recipeToAddIngredientTo = Recipe(name="inprogress", user_id=current_user.id)
             db.session.add(recipeToAddIngredientTo)
             db.session.commit()
         else:
             recipeToAddIngredientTo.name = "inprogress"
             Ingredient.query.filter_by(recipe_id=idOfRecipeToModify).delete()
             db.session.query(recipeIngredients).filter_by(recipe_id=idOfRecipeToModify).delete()
+            db.session.add(recipeToAddIngredientTo)
             db.session.commit()
         for ingredientItem in data[keys]:
             product_id = Product.query.filter_by(name=ingredientItem['name']).first().id
@@ -269,14 +269,16 @@ def add_recipe():
     user_id=current_user.id
     cookingtime = request.form.get('preparation-time')
     portions = request.form.get('portions')
-    current_recipe = Recipe.query.filter_by(name="inprogress").first()
-
+    current_recipe = Recipe.query.filter_by(name="inprogress", user_id=current_user.id).first()
+    print(current_recipe, "current-recipe")
     # adding image
     if 'recipe-image' in request.files:
         file = request.files['recipe-image']
         if file.filename != '':
             # if a new image is added, remove previous one
             previousPict = current_recipe.picture
+            print(previousPict, "previousPict")
+
             if previousPict:
                 os.remove(previousPict)
 
@@ -491,11 +493,20 @@ def deleteCalendarFromDb(id):
 def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')
-        if calendarIDtoLoad == "current":
-            calendarIDtoLoad = Calendars.query.filter(Calendars.user_id==current_user.id, Calendars.calendarName=='currentCalendar').first().id
-        if availableForFamily(Calendars, calendarIDtoLoad) == True:
-            calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
-    return calendarToLoad
+        if not calendarIDtoLoad == "current":
+            if availableForFamily(Calendars, calendarIDtoLoad) == True:
+                calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
+                return calendarToLoad
+
+        calendarItemToLoad = Calendars.query.filter(
+            Calendars.user_id==current_user.id, 
+            Calendars.calendarName=='currentCalendar'
+            ).first()
+        if calendarItemToLoad:
+            calendarToLoad = calendarItemToLoad.calendarData
+
+        return calendarToLoad
+        
 
 @private_pages.route('/get-daily-calories', methods=['POST'])
 @login_required
@@ -507,7 +518,11 @@ def getDailyCalories():
             caloriesSum = 0
             for recipeId in data[key]:
                 singleRecipeCalories = calculateCalories(recipeId)
-                caloriesSum += singleRecipeCalories
+                if singleRecipeCalories == 'error':
+                    flash('Į planą įtraukti nebeegzistuojantys receptai. Kalendorius tinkamai veiks, kai juos pašalinsite', category="Error")
+                    return 'error'
+                else:
+                    caloriesSum += singleRecipeCalories
             responseDict[key] = caloriesSum
         return responseDict
 
@@ -617,6 +632,10 @@ def availableForFamily(model, itemid):
 
 def calculateCalories(recipeID):
     recipeToVisualize = Recipe.query.filter_by(id=recipeID).first()
+    if not recipeToVisualize:
+        response = 'error'
+        return response
+
     # calculate calories of a recipe
     ingredientItems = recipeToVisualize.recipeIngredients
     portionsOfRecipe =recipeToVisualize.portions

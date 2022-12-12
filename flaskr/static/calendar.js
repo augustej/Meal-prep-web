@@ -501,11 +501,13 @@ function getDataFromSessionStorage(SessionStoragedata){
         })
     }
     getDailyCalories(dailyRecipesDict).then(data =>{
-        for (weekday of Object.keys(data)){
-            let dayToAddCalories = document.querySelector(`.${weekday}-calories`)
-            let pEl = document.createElement('p')
-            pEl.appendChild(document.createTextNode(data[weekday]))
-            dayToAddCalories.appendChild(pEl)
+        if (data != 'error'){
+            for (weekday of Object.keys(data)){
+                let dayToAddCalories = document.querySelector(`.${weekday}-calories`)
+                let pEl = document.createElement('p')
+                pEl.appendChild(document.createTextNode(data[weekday]))
+                dayToAddCalories.appendChild(pEl)
+            }
         }
     })
 }
