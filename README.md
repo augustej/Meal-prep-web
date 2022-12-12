@@ -14,11 +14,12 @@ Meal-prep-web helps to plan your meals for the whole week.
 
 ## How to run the page on your local machine
 1. Download files.
-2. Create .env folder and inside it declare variables:
-      SECRET_KEY = " {your-key-here} "
-      MAIL_SERVER="smtp.gmail.com"
-      MAIL_PORT = 465
-      MAIL_USE_SSL = True
-      MAIL_USERNAME = "{your-gmail-account}@gmail.com"
-      MAIL_PASSWORD = " {password-generated} "
-      ADMIN_EMAIL = " {your-email-here} "
+2. Create .env file inside Meal-prep-web folder. 
+3. Inside .env declare variables:
+a. SECRET_KEY = " {your-key-here} "
+b. MAIL_SERVER="smtp.gmail.com"
+c. MAIL_PORT = 465
+d. MAIL_USE_SSL = True
+e. MAIL_USERNAME = "{your-gmail-account}@gmail.com"
+f. MAIL_PASSWORD = " {password-generated} "
+g. ADMIN_EMAIL = " {your-email-here} "
