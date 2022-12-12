@@ -3,12 +3,7 @@ function mobileNavTransformation() {
     var mobileNavItems = document.querySelectorAll('.web-mob, .mobile, .nav-ul');
 
     mobileNavItems.forEach( function (item) {
-        if (item.classList.contains('responsive')) {
-            item.classList.remove('responsive');
-
-        } else {
-            item.classList.add('responsive');
-        }
+        item.classList.toggle('responsive')
     })
 }
 
@@ -58,11 +53,10 @@ if (backBtn){
 function go_back()
     {window.location.href = document.referrer};
 
-// save sessionStorage data about calendar, if /calendar loads, or if it the refferer
 window.addEventListener( "load", event =>{
-    if ((`${window.location.origin}/calendar` == window.location.href) || 
-        (`${window.location.origin}/calendar` == document.referrer)) {
 
+    // save sessionStorage data about calendar, if /calendar loads, or if it the refferer
+    if ( (`${window.location.origin}/calendar` == document.referrer)) {
         let calendarName = 'currentCalendar'
         let jsonBody = {}
         jsonBody[calendarName] = sessionStorage.getItem('plan')

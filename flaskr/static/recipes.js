@@ -134,16 +134,6 @@ modal.addEventListener("click", e => {
         })
     }
 
-    if (e.target == confirmRecipeBtn){
-        analyseIngredientSubtitles()
-        if (confirmRecipeBtn.getAttribute('name')){
-            IdOfRecipe = confirmRecipeBtn.getAttribute('name').slice('recipeID='.length)
-        } else{IdOfRecipe = 0}
-        addIngredientToTable(ingredientDictList, IdOfRecipe).then((data) =>{
-            addRecipeForm.submit()
-        })
-       
-    }
     // delete subtitles
     if (deleteSubtitleBtn){
         deleteSubtitleBtn.forEach(suvtitleItem =>{
@@ -154,6 +144,28 @@ modal.addEventListener("click", e => {
     }
 })
 }
+
+
+
+addRecipeForm.addEventListener('submit', function(event){
+    event.preventDefault()
+    console.log("submit1")
+
+    // loading icon display
+    let spinner = document.querySelector('.loading-container')
+    spinner.classList.remove('invisible')
+
+    analyseIngredientSubtitles()
+    if (confirmRecipeBtn.getAttribute('name')){
+        IdOfRecipe = confirmRecipeBtn.getAttribute('name').slice('recipeID='.length)
+    } else{IdOfRecipe = 0}
+
+    addIngredientToTable(ingredientDictList, IdOfRecipe).then((data) =>{
+        console.log("submit")
+        addRecipeForm.submit()
+    })
+})
+
 
 // product search for recipe, to add ingredients
 async function checkForProductInDb(

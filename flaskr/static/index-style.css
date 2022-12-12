@@ -913,8 +913,8 @@ aside h4{
     display:flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: stretch; 
-    width: 45%;
+    align-items: center; 
+    width: 75%;
 }
 
 .confirmed-ingredients-li p{
@@ -1090,10 +1090,6 @@ aside h4{
     .ingredient-label-and-input-area label{
         align-self:auto;
     }
-    .confirmed-ingredients-li{
-        width: 70%;
-        max-width: 244.8px;
-    }   
 }
 
 @media (max-width: 600px){
@@ -1269,6 +1265,12 @@ aside h4{
         padding-left: 0.5em;
         font-size: 0.9em;
     }
+    .text-and-picture-display, .ingredients-and-preparation-display{
+        margin:0;
+    }
+    .text-and-picture-display{
+        margin-bottom: 1em;
+    }
 }
 
 /* end of single recipe template */
@@ -1307,6 +1309,7 @@ aside h4{
 
 .href-link-to-all-recipes{
     margin:1em auto;
+    color: var(--purple);
 }
 
 .href-link-to-all-recipes a{
@@ -1321,6 +1324,17 @@ aside h4{
 .href-link-to-all-recipes a:hover{
     color: var(--black);
 }
+
+/* visible only to admin */
+.add-new-ingredient{
+    margin-top: 1em;
+}
+
+.add-new-ingredient a{
+    color: white;
+    text-decoration: none;
+}
+
 
 /* my-recipes AND my-favorites AND various-recipes page style */
 .my-recipes-inner-container{
@@ -1794,6 +1808,11 @@ aside h4{
     box-shadow:1px 0px 2px var(--textgrey);
 }
 
+.groc-subtitle{
+    font-size: 1.5em;
+    padding-bottom: 0em;
+}
+
 .groceries-item-in-list{
     display: flex;
     flex-direction: row;
@@ -1889,4 +1908,77 @@ margin-top: 1.5em;
 .spacer{
     height: 2em;
     width: 100%;
+}
+
+@media (max-width:415px){
+    .add-family-container button{
+        margin: 1em auto;
+    }
+    .add-family-container input{
+        width: 100%;
+    }
+}
+
+/* add new product */
+.new-product-form{
+    max-width: 600px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.checkbox-option input{
+    flex-basis: 10%;
+    min-height: fit-content;
+}
+
+.reg-form .inner .new-product-checkbox-label{
+    visibility:visible;
+    font-size: 1em;
+}
+
+.checkbox-option .conversion-input{
+    max-width: 100px;
+    margin: 0 1em;
+    margin-left: auto;
+
+}
+
+/* loading icon */
+
+.loading-container{
+    position: fixed;
+    top: calc(50vh - 50px);
+    left: calc(50% - 50px);
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 1400px rgba(83, 81, 81, 0.4);
+    z-index: 15;
+}
+
+.loading-icon{
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    background-color: var(--brgrey);
+    border-radius: 50%;
+    animation: spiner 1s ease-in infinite;
+    box-shadow: 2px 2px 5px var(--purple);
+    text-align: center;
+}
+
+.loading-container p{
+    width: 70px;
+    position: absolute;
+    top: 40%;
+    left:calc(50% - 35px);
+}
+
+@keyframes spiner{
+    0% {border-bottom: 5px solid var(--purple);}
+    25% {border-left: 5px solid var(--purple);}
+    50% {border-top: 5px solid var(--purple);}
+    75% {border-right: 5px solid var(--purple);}
 }

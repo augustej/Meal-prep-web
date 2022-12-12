@@ -30,6 +30,10 @@
             <a href="my-recipes" class="text-unimportant-title">Žiūrėti visus >></a>
         </div>
         <button id="add-recipe-button" class="button">Pridėti naują receptą</button>
+        
+        {% if user.role_name == 'admin'  %}
+        <button id="add-new-ingredient-button" class="button add-new-ingredient"><a href='new-ingredient'>Pridėti naują ingredientą</a></button>
+        {% endif %}
 
         <div class="divider"></div>
         <h2 class="bold-uppercase-normal">Mėgstamiausi receptai</h2>

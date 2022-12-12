@@ -67,20 +67,20 @@ document.addEventListener('click', e=>{
     allCheckboxes.forEach(checkbox =>{
         if (e.target == checkbox){
             let liElementOfProduct = checkbox.parentElement
+            liElementOfProduct.classList.toggle('line-through')
             let IDofItem = liElementOfProduct.getAttribute('name').slice('groceries-itemID'.length)
             let groceriesDictForCheckboxes = JSON.parse(sessionStorage.getItem('groceriesDictForCheckboxes'))
 
             // if session storage checked-uncheck is already created
             if (groceriesDictForCheckboxes != null){
+
                 if (groceriesDictForCheckboxes[IDofItem] == 'checked'){
                     // if person clicked on already checked element - uncheck it
                     groceriesDictForCheckboxes[IDofItem] = 'unchecked'
-                    liElementOfProduct.classList.remove('line-through')
                 }
                 else{
                     // if person clicked on NOT checked element - check it
                     groceriesDictForCheckboxes[IDofItem] = 'checked'
-                    liElementOfProduct.classList.add('line-through')
                 }
             }
             // if session storage checked-uncheck is NOT created

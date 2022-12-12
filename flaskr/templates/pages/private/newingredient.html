@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="new-ingredient-page page-outer-container">
+    <h1 class="wide-purple-bk page-title-text">Naujas Produktas</h1>
+    <div class="page-inner-container">
+        <form class="new-product-form reg-form" method="POST" action="new-ingredient">
+            <div class="outer">
+                <div class="inner">
+                    <label for="new-product-name">Pavadinimas:</label>
+                    <input class="simple-text" type="text" id="new-product-name" name="new-product-name"  placeholder="Pavadinimas"/>
+                </div>
+                <div class="inner">
+                    <label for="new-product-kcal">Kcal/1g:</label>
+                    <input class="simple-text" type="number" step="0.01" min="0" id="new-product-kcal" name="new-product-kcal"  placeholder="Kcal/1g" />
+                </div>
+                <div class="inner">
+                    <h3 class="simple-text">Maisto tipas:</h3>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="meat" value="mėsa"/>
+                        <label class="new-product-checkbox-label" for="meat">Mėsa</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="fish" value="žuvis"/>
+                        <label class="new-product-checkbox-label" for="fish">Žuvis</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="vegetarian" value="vegetariška"/>
+                        <label class="new-product-checkbox-label" for="vegetarian">Vegetariška</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="vegan" value="veganiška"/>
+                        <label class="new-product-checkbox-label" for="vegan">Veganiška</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="gluten-free" value="be gliuteno"/>
+                        <label class="new-product-checkbox-label" for="gluten-free">Be gliuteno</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-foodtype" id="keto" value="keto"/>
+                        <label class="new-product-checkbox-label" for="keto">Keto</label>
+                    </div>
+                </div>
+
+                <div class="inner">
+                    <h3 class="simple-text">Matavimo vienetai:</h3>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="g" value="g" checked/>
+                        <label class="new-product-checkbox-label" for="g">g</label>
+                        <input class="simple-text conversion-input" type="number" name="g-conversion" placeholder="1g" value='1'/>
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="kg" value="kg"/>
+                        <label class="new-product-checkbox-label" for="kg">kg</label>
+                        <input class="simple-text conversion-input" type="number" name="kg-conversion" placeholder="1kg = Xg"/>
+                    </div>
+                   
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="ml" value="ml"/>
+                        <label class="new-product-checkbox-label" for="ml">ml</label>
+                        <input class="simple-text conversion-input" type="number" name="ml-conversion" placeholder="1ml = Xg" />
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="l" value="l"/>
+                        <label class="new-product-checkbox-label" for="l">l</label>
+                        <input class="simple-text conversion-input" type="number" name="l-conversion" placeholder="1l = Xg" />
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="unit" value="vnt"/>
+                        <label class="new-product-checkbox-label" for="unit">vnt</label>
+                        <input class="simple-text conversion-input" type="number" name="vnt-conversion" placeholder="1vnt = Xg" />
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="tsp" value="a.š."/>
+                        <label class="new-product-checkbox-label" for="tsp">a.š.</label>
+                        <input class="simple-text conversion-input" type="number" name="a.š.-conversion" placeholder="1a.š. = Xg" />
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="tbsp" value="v.š."/>
+                        <label class="new-product-checkbox-label" for="tbsp">v.š.</label>
+                        <input class="simple-text conversion-input" type="number" name="v.š.-conversion" placeholder="1v.š. = Xg" />
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="cup" value="stiklinės"/>
+                        <label class="new-product-checkbox-label" for="cup">stiklinės</label>
+                        <input class="simple-text conversion-input" type="number" name="stiklinės-conversion" placeholder="1stik. = Xg" />
+
+                    </div>
+                    <div class="checkbox-option">
+                        <input  class="simple-text" type="checkbox" name="new-product-measurement" id="slice" value="riekės"/>
+                        <label class="new-product-checkbox-label" for="slice">riekės</label>
+                        <input class="simple-text conversion-input" type="number" name="riekės-conversion" placeholder="1riekė = Xg" />
+
+                    </div>
+                </div>
+                <div class="inner">
+                    <label>Skyrius parduotuvėjė:</label>
+                    <select class="simple-text" type="text" id="new-product-shoparea" name="new-product-shoparea"  placeholder="Vardas">
+                        <option disabled selected value>-- Parduotuvės skyrius --</option>
+                        <option value="birūs">birūs</option>
+                        <option value="duonos gaminiai">duonos gaminiai</option>
+                        <option value="džiovinti vaisiai/riešutai">džiovinti vaisiai/riešutai</option>
+                        <option value="egzotika">egzotika</option>
+                        <option value="gėrimai">gėrimai</option>
+                        <option value="kava/arbata">kava/arbata</option>
+                        <option value="konservuoti/padažai">konservuoti/padažai</option>
+                        <option value="mėsa">mėsa</option>
+                        <option value="pieno produktai">pieno produktai</option>
+                        <option value="prieskoniai">prieskoniai</option>
+                        <option value="pusgaminiai">pusgaminiai</option>
+                        <option value="saldumynai">saldumynai</option>
+                        <option value="sausainiai/trapučiai">sausainiai/trapučiai</option>
+                        <option value="šaldyti produktai">šaldyti produktai</option>
+                        <option value="šviežios daržovės/vaisiai">šviežios daržovės/vaisiai</option>
+                        <option value="žuvis ir jūros gėrybės">žuvis ir jūros gėrybės</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="button" type="submit">Išsaugoti</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

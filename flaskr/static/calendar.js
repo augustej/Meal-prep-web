@@ -31,9 +31,20 @@ if  (familyCalendar){
             })
     }
 }
-// on window load get items from sessionStorage
+// on window load get items from db
 else{
-    getDataFromSessionStorage(planValue)
+    if ((`${window.location.origin}/calendar` == window.location.href) != 
+    (`${window.location.origin}/calendar` == document.referrer)){
+        
+        loadFromDb().then(data =>{
+            sessionStorage.setItem('plan', JSON.stringify(data))
+            planValue = JSON.parse(sessionStorage.getItem('plan'))
+            getDataFromSessionStorage(planValue)
+        })
+    }
+    else{
+        getDataFromSessionStorage(planValue)
+    } 
 }
 
 // highlight todays column
@@ -93,20 +104,15 @@ document.addEventListener('click', e =>{
     for (let addItemBtn of addItemToCalendarBtns){
         if (e.target == addItemBtn){
             let activeCalendarField = addItemBtn.parentElement
-            if (addItemBtn.classList.contains('activated-add-button')){
-                addItemBtn.classList.remove('activated-add-button')
-                activeCalendarField.classList.remove('active-calendar-field')
-            }
-            else{
-                let previouslyActivatedCalendarField = document.querySelector('.active-calendar-field')
-                if(previouslyActivatedCalendarField){
-                    previouslyActivatedCalendarField.classList.remove('active-calendar-field')
-                    let previouslyActivatedBtn = previouslyActivatedCalendarField.querySelector('.add-item-to-calendar')
-                    previouslyActivatedBtn.classList.remove('activated-add-button')
-                }
-                addItemBtn.classList.add('activated-add-button')
-                activeCalendarField.classList.add('active-calendar-field')
-            }   
+            let previouslyActivatedCalendarField = document.querySelector('.active-calendar-field')
+            addItemBtn.classList.toggle('activated-add-button')
+            activeCalendarField.classList.toggle('active-calendar-field')
+
+            if(previouslyActivatedCalendarField){
+                previouslyActivatedCalendarField.classList.remove('active-calendar-field')
+                let previouslyActivatedBtn = previouslyActivatedCalendarField.querySelector('.add-item-to-calendar')
+                previouslyActivatedBtn.classList.remove('activated-add-button')
+            } 
         }
     }
 
@@ -528,6 +534,11 @@ async function sendGetRequestAwaitforResponse(url, data){
     {
         method: 'GET'
     })
+    return response.json()
+}
+
+async function loadFromDb(){
+    let response = await fetch('/load-calendar-from-db?calendarID=current')
     return response.json()
 }
 

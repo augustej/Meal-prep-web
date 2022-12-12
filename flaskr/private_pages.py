@@ -59,13 +59,25 @@ def groclist():
     else:
         groceriesList = Groceries.query.filter_by(user_id=current_user.id).all()
     relatedProductsDict = {}
+    shopareasList=[]
+    conversionToUnitsDict = {}
+    unitsIDinMeasurement = Measurement.query.filter_by(name='vnt').first().id
     if groceriesList:
-        for productItem in groceriesList:
-            productItemID = productItem.product_id
-            productItemName = Product.query.filter_by(id=productItemID).first().name
-            relatedProductsDict[productItem.id] = productItemName
-    return render_template('/pages/private/groc_list.html', 
-    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList, role_name=user.role_name)
+        for grocItem in groceriesList:
+            productItemID = grocItem.product_id
+            productItem = Product.query.filter_by(id=productItemID).first()
+            relatedProductsDict[grocItem.id] = [productItem.name, productItem.shoparea]
+            hasUnits = db.session.query(productMeasurements).filter_by(product_measurement_id=unitsIDinMeasurement, product_id=productItemID).first()
+            if hasUnits:
+                weightOfOneUnit = hasUnits.product_conversion_to_gram
+                approxUnits = round(grocItem.product_amount_in_grams / weightOfOneUnit, 1)
+                conversionToUnitsDict[grocItem.id] = approxUnits
+            
+            if not productItem.shoparea in shopareasList:
+                shopareasList.append(productItem.shoparea)
+    return render_template('/pages/private/groc_list.html',
+    relatedProductsDict=relatedProductsDict, groceriesList= groceriesList, role_name=user.role_name, 
+    shopareasList=shopareasList, conversionToUnitsDict=conversionToUnitsDict)
 
 @private_pages.route('/groceries-check-update', methods=['POST'])
 @login_required
@@ -263,6 +275,11 @@ def add_recipe():
     if 'recipe-image' in request.files:
         file = request.files['recipe-image']
         if file.filename != '':
+            # if a new image is added, remove previous one
+            previousPict = current_recipe.picture
+            if previousPict:
+                os.remove(previousPict)
+
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filePath=os.path.join(UPLOAD_FOLDER, filename)
@@ -290,6 +307,7 @@ def add_recipe():
     allProductsOfRecipe = Ingredient.query.filter_by(recipe_id=current_recipe.id).all()
     numberOfIngredients = len(allProductsOfRecipe)
     foodDict ={}
+    foodTypesList=[]
     for oneProductOfRecipe in allProductsOfRecipe:
         singleProductId = oneProductOfRecipe.product_id
         singleIngredientId=oneProductOfRecipe.id
@@ -300,7 +318,6 @@ def add_recipe():
 
          # check each ingredient to determine food type recipetypes
         foodtypeObjectList = productObject.productFoodtypes
-        foodTypesList=[]
         for singleFoodTypeObject in foodtypeObjectList:
             if (singleFoodTypeObject.name == 'mėsa') or (singleFoodTypeObject.name == 'žuvis'):
                 if not singleFoodTypeObject.id in foodTypesList:
@@ -430,6 +447,7 @@ def checkIfFavorite():
 def deleteRecipe(recipeID):
     if request.method == 'DELETE':
         if userCanModify(Recipe, recipeID) == True:
+            os.remove(Recipe.query.filter_by(id=recipeID).first().picture)
             Recipe.query.filter_by(id=recipeID).delete()
             Ingredient.query.filter_by(recipe_id=recipeID).delete()
             db.session.query(recipeIngredients).filter_by(recipe_id=recipeID).delete()
@@ -473,6 +491,8 @@ def deleteCalendarFromDb(id):
 def loadCalendarFromDb():
     if request.method == "GET":
         calendarIDtoLoad = request.args.get('calendarID')
+        if calendarIDtoLoad == "current":
+            calendarIDtoLoad = Calendars.query.filter(Calendars.user_id==current_user.id, Calendars.calendarName=='currentCalendar').first().id
         if availableForFamily(Calendars, calendarIDtoLoad) == True:
             calendarToLoad = Calendars.query.filter_by(id=calendarIDtoLoad).first().calendarData
     return calendarToLoad
@@ -491,6 +511,38 @@ def getDailyCalories():
             responseDict[key] = caloriesSum
         return responseDict
 
+@private_pages.route('/new-ingredient', methods=['GET', 'POST'])
+def new_ingredient():
+    if request.method == 'GET':
+        return render_template('/pages/private/newingredient.html')
+    if request.method == 'POST':
+        name = request.form.get('new-product-name')
+        kcal = request.form.get('new-product-kcal')
+        shoparea = request.form.get('new-product-shoparea')
+        foodtypes = request.form.getlist('new-product-foodtype')
+        measurementsList = request.form.getlist('new-product-measurement')
+        newProduct = Product(name = name, kcal=kcal, shoparea=shoparea)
+        db.session.add(newProduct)
+        db.session.commit()
+
+        all_types_possible = Foodtype.query.all()
+        for single_type in all_types_possible:
+            for product_type in foodtypes:
+                if (single_type.name == product_type):
+                    insertStatment1 = productFoodtypes.insert().values(product_foodtype_id=single_type.id, product_id=newProduct.id)
+                    db.session.execute(insertStatment1)
+                    db.session.commit() 
+
+        all_measurements_possible = Measurement.query.all()
+        for single_measurement in all_measurements_possible:
+            for product_measurement in measurementsList:
+                if (single_measurement.name == product_measurement):
+                    conversionToGramValue = request.form.get(f'{product_measurement}-conversion')
+                    insertStatment2 = productMeasurements.insert().values(product_measurement_id=single_measurement.id, product_id=newProduct.id, product_conversion_to_gram=conversionToGramValue)
+                    db.session.execute(insertStatment2)
+                    db.session.commit()
+
+        return redirect(url_for('private_pages.recipes'))
 
 def allowed_file(filename):
     return '.' in filename and \

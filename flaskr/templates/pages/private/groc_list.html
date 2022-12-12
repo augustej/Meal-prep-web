@@ -122,14 +122,26 @@
         <!-- shopping list display -->
         {% if groceriesList %}
             <ul class="all-groceries-ul-container"> 
-                {% for groceriesItem in groceriesList %}
-                    {% set x = groceriesItem.id %}
-                    
-                    <li class='groceries-item-in-list' name="groceries-itemID{{x}}">
-                        <input type="checkbox" class="groceries-checkbox">
-                        <p class="bold-uppercase-small product-name-groceries">{{ relatedProductsDict[groceriesItem.id] }}</p>
-                        <p class="simple-text-small">{{ groceriesItem.product_amount_in_grams }} g</p>
-                    </li>
+                {% for shoparea in shopareasList %}
+                <h4 class="groc-subtitle curly-title-like">{{shoparea}}</h4>
+
+                    {% for groceriesItem in groceriesList %}
+                        {% if relatedProductsDict[groceriesItem.id][1] == shoparea %}
+                            {% set x = groceriesItem.id %}
+                            
+                            <li class='groceries-item-in-list' name="groceries-itemID{{x}}">
+                                <input type="checkbox" class="groceries-checkbox">
+                                <p class="bold-uppercase-small product-name-groceries">{{ relatedProductsDict[groceriesItem.id][0] }}</p>
+                                <p class="simple-text-small">
+                                    {% if conversionToUnitsDict[groceriesItem.id] %} 
+                                        {{conversionToUnitsDict[groceriesItem.id]}} vnt ||
+                                    {% endif %}
+                                    {{ groceriesItem.product_amount_in_grams }} g
+                                </p>
+                            </li>
+                            
+                        {% endif%}
+                    {% endfor %}
                 {% endfor %}
             </ul>
 
