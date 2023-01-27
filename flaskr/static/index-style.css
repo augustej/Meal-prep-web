@@ -258,6 +258,27 @@ ul{
     background-color: var(--grey);
 }
 
+.save-calendar-changes{
+    background-color: var(--purple);
+    border:none;
+    box-shadow: var(--purpleboxshadow);
+    color:white;
+    font-family: var(--text);
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+.save-calendar-changes:hover{
+    background-color: var(--midpurple);
+    cursor: pointer;
+}
+
+.previous-day-btn, .next-day-btn{
+    border: none;
+    background-color: var(--orange);
+    padding: 0.5rem 1rem;
+    margin: -0.5rem auto;
+}
+
 input[type="file"] {
     display: none;
 }

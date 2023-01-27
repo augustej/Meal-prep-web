@@ -53,24 +53,6 @@ if (backBtn){
 function go_back()
     {window.location.href = document.referrer};
 
-window.addEventListener( "load", event =>{
-
-    // save sessionStorage data about calendar, if /calendar loads, or if it the refferer
-    if ( (`${window.location.origin}/calendar` == document.referrer)) {
-        let calendarName = 'currentCalendar'
-        let jsonBody = {}
-        jsonBody[calendarName] = sessionStorage.getItem('plan')
-        // if user tries to save just emptied calendar - create an empty template
-        if (jsonBody[calendarName] == null ){
-            planValue = createSessionStorageTemplate()
-            sessionStorage.setItem('plan', JSON.stringify(planValue))
-            jsonBody[calendarName] = sessionStorage.getItem('plan')
-        }
-        loadCalendarToDb(jsonBody)
-    }
-
-})
-
 async function loadCalendarToDb(jsonBody){
     let response = await fetch('/load-calendar-to-db',
         {

@@ -18,6 +18,10 @@ window.addEventListener('resize', (event) => {
     }
 });
 
+// alert before leaving page
+window.onbeforeunload = function(){
+    return 'Ar išsaugojote Savaitės plano pakeitimus ir norite palikti svetainę?';
+};
 
 // on load, check if this is family member
 if  (familyCalendar){
@@ -228,17 +232,18 @@ document.addEventListener('click', e =>{
         location.reload()
     }
 
+    // save changes of current calendar
+    let saveCalendarChangesBtn = document.querySelector(".save-calendar-changes")
+    if (e.target == saveCalendarChangesBtn){
+        let calendarName = "currentCalendar"
+        let jsonBody = prepareSessionDataForDbLoad(calendarName)
+        loadCalendarToDb(jsonBody)
+    }
+
     // save calendar to db
     if (e.target == saveCalendarBtn){
         let calendarName = calendarNameInputField.value
-        let jsonBody = {}
-        jsonBody[calendarName] = sessionStorage.getItem('plan')
-        // if user tries to save just emptied calendar - create an empty template
-        if (jsonBody[calendarName] == null ){
-            planValue = createSessionStorageTemplate()
-            sessionStorage.setItem('plan', JSON.stringify(planValue))
-            jsonBody[calendarName] = sessionStorage.getItem('plan')
-        }
+        prepareSessionDataForDbLoad(calendarName)
         loadCalendarToDb(jsonBody).then(data =>{
             location.reload()
         })
@@ -270,6 +275,18 @@ document.addEventListener('click', e =>{
             }
     })
 })
+
+function prepareSessionDataForDbLoad(calendarName){
+    let jsonBody = {}
+    jsonBody[calendarName] = sessionStorage.getItem('plan')
+    // if user tries to save just emptied calendar - create an empty template
+    if (jsonBody[calendarName] == null ){
+        planValue = createSessionStorageTemplate()
+        sessionStorage.setItem('plan', JSON.stringify(planValue))
+        jsonBody[calendarName] = sessionStorage.getItem('plan')
+    }
+    return jsonBody
+}
 
 async function filterQueryToDb(name, queryNumber, referrer){
     let url = ""
