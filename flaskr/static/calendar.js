@@ -141,6 +141,7 @@ document.addEventListener('click', e =>{
         }
         updateSessionStorage(currentWeekday, currentCoursetype , nameIteself, idIteself, 'remove')
         button.parentElement.remove()
+        let saveCalendarChangesBtn = document.querySelector(".save-calendar-changes")
         if (!saveCalendarChangesBtn.classList.contains('unsaved')){
             saveCalendarChangesBtn.classList.replace('saved', 'unsaved')
         }
