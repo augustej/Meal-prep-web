@@ -266,6 +266,7 @@ ul{
     padding: 0.5rem;
     border-radius: 10px;
 }
+
 .save-calendar-changes.unsaved:hover{
     background-color: var(--midpurple);
     cursor: pointer;
@@ -282,7 +283,6 @@ ul{
 .save-calendar-changes.saved{
     display: none;
 }
-
 
 .previous-day-btn, .next-day-btn{
     border: none;
@@ -1423,6 +1423,7 @@ aside h4{
 }
 
 .table-part-of-weekdays{
+    width:100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -1443,10 +1444,6 @@ aside h4{
     min-width: 150px;
 }
 
-.table-part-of-weekdays{
-    width:100%;
-}
-
 .first-column{
     display: flex;
     flex-direction: column;
@@ -1454,7 +1451,6 @@ aside h4{
     align-items: flex-start;
     max-width: 150px;
     min-width: 100px;
-    /* width: 20%; */
 }
 
 .calendar-cell{

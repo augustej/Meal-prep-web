@@ -449,7 +449,9 @@ def checkIfFavorite():
 def deleteRecipe(recipeID):
     if request.method == 'DELETE':
         if userCanModify(Recipe, recipeID) == True:
-            os.remove(Recipe.query.filter_by(id=recipeID).first().picture)
+            pictureExists = Recipe.query.filter_by(id=recipeID).first().picture
+            if pictureExists:
+                os.remove(pictureExists)
             Recipe.query.filter_by(id=recipeID).delete()
             Ingredient.query.filter_by(recipe_id=recipeID).delete()
             db.session.query(recipeIngredients).filter_by(recipe_id=recipeID).delete()
