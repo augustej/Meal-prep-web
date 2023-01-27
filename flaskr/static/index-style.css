@@ -259,18 +259,30 @@ ul{
 }
 
 .save-calendar-changes{
-    background-color: var(--purple);
     border:none;
-    box-shadow: var(--purpleboxshadow);
-    color:white;
+    box-shadow: 0px 2px 5px var(--dkorange);
+    color:var(--black);
     font-family: var(--text);
     padding: 0.5rem;
     border-radius: 10px;
 }
-.save-calendar-changes:hover{
+.save-calendar-changes.unsaved:hover{
     background-color: var(--midpurple);
     cursor: pointer;
+    box-shadow: var(--purpleboxshadow);
+    color: white;
 }
+
+.save-calendar-changes.unsaved{
+    background-color: var(--hotpink);
+    color: white;
+    box-shadow: var(--purpleboxshadow);
+}
+
+.save-calendar-changes.saved{
+    display: none;
+}
+
 
 .previous-day-btn, .next-day-btn{
     border: none;
@@ -1426,9 +1438,13 @@ aside h4{
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    width: 20%;
-    max-width: 150px;
+    flex-basis: 100%;
+    max-width: 181px;
     min-width: 150px;
+}
+
+.table-part-of-weekdays{
+    width:100%;
 }
 
 .first-column{
@@ -1438,7 +1454,7 @@ aside h4{
     align-items: flex-start;
     max-width: 150px;
     min-width: 100px;
-    width: 20%;
+    /* width: 20%; */
 }
 
 .calendar-cell{
@@ -1659,12 +1675,20 @@ aside h4{
     }
     .calendar-name-label-and-input, .save-calendar{
         width: 90%;
+    } 
+    .calendar-column{
+        max-width: 218px;
+    }
+}
+@media(max-width:567px){
+    .calendar-column{
+        max-width: 400px;
     }
 }
 @media (max-width: 430px){
     .calendar-column{
-        width: 80%;
-        min-width: 220px;
+        width: 90%;
+        min-width: 250px;
     }
     .my-calendars-list li{
     flex-wrap: wrap    

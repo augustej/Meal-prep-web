@@ -9,7 +9,7 @@ var familyCalendar = document.querySelector('.familyCalendar')
 // detects wrapped elements on window load
 window.addEventListener('load', (event) => {
     detectWrap('.week-day')
-});
+})
 
 //   detects wrapped elements on window resize
 window.addEventListener('resize', (event) => {
@@ -20,7 +20,7 @@ window.addEventListener('resize', (event) => {
 
 // alert before leaving page
 window.onbeforeunload = function(){
-    return 'Ar išsaugojote Savaitės plano pakeitimus ir norite palikti svetainę?';
+    return 'Are you sure you want to leave?';
 };
 
 // on load, check if this is family member
@@ -116,6 +116,11 @@ document.addEventListener('click', e =>{
                 previouslyActivatedCalendarField.classList.remove('active-calendar-field')
                 let previouslyActivatedBtn = previouslyActivatedCalendarField.querySelector('.add-item-to-calendar')
                 previouslyActivatedBtn.classList.remove('activated-add-button')
+            }
+            // display "save-changes" btn
+            let saveCalendarChangesBtn = document.querySelector(".save-calendar-changes")
+            if (!saveCalendarChangesBtn.classList.contains('unsaved')){
+                saveCalendarChangesBtn.classList.replace('saved', 'unsaved')
             } 
         }
     }
@@ -136,6 +141,9 @@ document.addEventListener('click', e =>{
         }
         updateSessionStorage(currentWeekday, currentCoursetype , nameIteself, idIteself, 'remove')
         button.parentElement.remove()
+        if (!saveCalendarChangesBtn.classList.contains('unsaved')){
+            saveCalendarChangesBtn.classList.replace('saved', 'unsaved')
+        }
       }
     })
 
@@ -238,6 +246,7 @@ document.addEventListener('click', e =>{
         let calendarName = "currentCalendar"
         let jsonBody = prepareSessionDataForDbLoad(calendarName)
         loadCalendarToDb(jsonBody)
+        saveCalendarChangesBtn.classList.replace('unsaved', 'saved')   
     }
 
     // save calendar to db
