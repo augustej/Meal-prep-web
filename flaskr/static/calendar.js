@@ -252,8 +252,9 @@ document.addEventListener('click', e =>{
 
     // save calendar to db
     if (e.target == saveCalendarBtn){
+        console.log("load")
         let calendarName = calendarNameInputField.value
-        prepareSessionDataForDbLoad(calendarName)
+        let jsonBody = prepareSessionDataForDbLoad(calendarName)
         loadCalendarToDb(jsonBody).then(data =>{
             location.reload()
         })

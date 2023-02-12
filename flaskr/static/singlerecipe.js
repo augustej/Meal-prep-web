@@ -21,7 +21,6 @@ document.addEventListener('click', event =>{
     }
     // modify recipe. Works together with recipes.js functions
     if (event.target == modifyRecipeBtn){
-        
 
         let recipeToModifyName = modifyRecipeBtn.getAttribute('name')
         let recipeToModifyId = recipeToModifyName.slice('recipeID='.length)
@@ -44,15 +43,6 @@ document.addEventListener('click', event =>{
             favoritesTableAddOrRemove(extractedRecipeID, response)
             heartBtn.classList.toggle('favorited')
 
-
-            // if (heartBtn.classList.contains('favorited')){
-            //     heartBtn.classList.remove('favorited')
-            //     favoritesTableAddOrRemove(extractedRecipeID, 'NO')
-            // }
-            // else{
-            //     heartBtn.classList.add('favorited')
-            //     favoritesTableAddOrRemove(extractedRecipeID, 'YES')
-            // }
         }
     }
 })
